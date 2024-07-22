@@ -17,13 +17,13 @@ Want to make more friends? Eat more donuts? Touch grass? UBC DONUTS is just the 
 
 ## Dev roadmap
 ### Minimum viability
-(Tentatively)
+Goes without saying, list is tentative. We don't want to split the work sequentially between FE and BE so that we can test the app more effectively as we develop. 
 1. Setup project (FE & BE)
     - FE: React setup with manifest.json for PWA
     - BE: Initialize server, open db connection using oracledb
 2. Implement auth layer (FE & BE)
-    - FE: Login screen
-    - BE: Setup routes to service auth handshake between oauth and FE
+    - FE: Create login screen, create helper function for cookie/auth header handling?
+    - BE: Setup route to service auth handshake between oauth and FE, create auth middleware
 3. Implement pages and components (FE)
     - Home/Feed screen
        - Aggregated posts component
