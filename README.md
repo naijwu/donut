@@ -27,11 +27,13 @@ Goes without saying, list is tentative. We don't want to split the work sequenti
 3. Implement pages and components (FE)
     - Home/Feed screen `donald` `david` `jaewu`
        - Aggregated posts component
+       - Profile + Notifications link components
     - Post screen `donald` `david` `jaewu`
        - Post component
        - Comment component
        - Reaction component
     - Profile screen `donald` `david` `jaewu`
+       - Profile details component
        - Edit profile component
        - Settings component
     - Notifications screen `donald` `david` `jaewu`
