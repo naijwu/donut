@@ -16,7 +16,7 @@ Want to make more friends? Eat more donuts? Touch grass? UBC DONUTS is just the 
 - websockets?
 
 ## Dev roadmap
-### Minimum viability
+### Minimum viability (MVP)
 Goes without saying, list is tentative. We don't want to split the work sequentially between FE and BE so that we can test the app more effectively as we develop. 
 1. Setup project (FE & BE)
     - FE: React setup with manifest.json for PWA `jaewu`
