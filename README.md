@@ -66,7 +66,6 @@ Goes without saying, list is tentative. We don't want to split the work sequenti
 ### Nice to haves + Potential challenges
 7. Implement realtime chat websockets `donald`
 8. Implementing an algorithm (e.g. YouTube) to show trending posts at the top `donald`
-9. PWA will be a challenge, but we will aim to get this working as this is the main component of our projectt `jae wu`, `donald`
 
 ## Milestone Deliverables
 The deliverables from milestones 1 and 2 are available in the repository.
