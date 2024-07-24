@@ -84,6 +84,8 @@ Post:
 
 Profile:
 
+![Profile Screen](https://media.github.students.cs.ubc.ca/user/21790/files/3bd7eedf-04f6-499d-93e0-c79dcda59346)
+
 Edit Profile:
 
 ![editprofile](https://media.github.students.cs.ubc.ca/user/17165/files/e62afcaa-d341-490a-a33f-f7268271f094)
