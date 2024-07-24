@@ -2,6 +2,8 @@
 
 Want to make more friends? Eat more donuts? Touch grass? UBC DONUTS is just the app for you
 
+UBC donuts makes it easy for you to make new friends through assigned hangouts, or Donut dates, done at a regular interval. You'll be matched based on similar interests, age, and other factors that you can decide are relevant. Share your donut dates with others as well by posting images for what you did on the date
+
 ## Tech overview
 ### Frameworks
 - React
