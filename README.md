@@ -19,7 +19,7 @@ Want to make more friends? Eat more donuts? Touch grass? UBC DONUTS is just the 
 ### Minimum viability (MVP)
 Goes without saying, list is tentative. We don't want to split the work sequentially between FE and BE so that we can test the app more effectively as we develop. 
 1. Setup project (FE & BE) `Deadline: Friday July 26th`
-    - FE: React setup with manifest.json for PWA `jaewu`
+    - FE: React setup with manifest.json for PWA `jaewu` `donald`
     - BE: Initialize server, open db connection using oracledb `jaewu`
 2. Implement auth layer (FE & BE) `Deadline: Friday July 26th`
     - FE: Create login screen, create helper function for cookie/auth header handling? `david`
@@ -65,7 +65,7 @@ Goes without saying, list is tentative. We don't want to split the work sequenti
     - BE: Store push notif endpoint to Profile.settings
 ### Nice to haves
 7. Implement realtime chat websockets `donald`
-
+8. Implement an algorithm to show trending posts `donald`
 
 ## Designs
 [Figma](https://www.figma.com/design/5MwsKv2K0UF992YiA5SHGG/UBC-Donut?node-id=0-1&t=1UEKMSak5VygBJRv-0)
