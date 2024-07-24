@@ -73,7 +73,7 @@ The deliverables from milestones 1 and 2 are available in the repository.
 
 ## Designs
 [Figma](https://www.figma.com/design/5MwsKv2K0UF992YiA5SHGG/UBC-Donut?node-id=0-1&t=1UEKMSak5VygBJRv-0)
-- Can also be found below
+- Screenshots of the UI/UX components can be found in this readme.md below
 
 Login:
 
