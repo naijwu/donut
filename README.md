@@ -70,3 +70,37 @@ Goes without saying, list is tentative. We don't want to split the work sequenti
 ## Designs
 [Figma](https://www.figma.com/design/5MwsKv2K0UF992YiA5SHGG/UBC-Donut?node-id=0-1&t=1UEKMSak5VygBJRv-0)
 
+Login:
+
+![login](https://media.github.students.cs.ubc.ca/user/17165/files/852f1534-a7ce-4ceb-877a-3ad46173c7d4)
+
+Home/Feed:
+
+![homefeed](https://media.github.students.cs.ubc.ca/user/17165/files/91064e99-717b-484e-b1c0-23f422eb3443)
+
+Post:
+
+![post](https://media.github.students.cs.ubc.ca/user/17165/files/1e3746fa-adf6-40d6-80de-59aa224f4e2a)
+
+Profile:
+
+Edit Profile:
+
+![editprofile](https://media.github.students.cs.ubc.ca/user/17165/files/e62afcaa-d341-490a-a33f-f7268271f094)
+
+Donuts:
+
+![donuts](https://media.github.students.cs.ubc.ca/user/17165/files/d01adefd-ac26-4546-9793-6d2ff22221ec)
+
+Donut/GC:
+
+![donutgc](https://media.github.students.cs.ubc.ca/user/17165/files/cc66e53b-782e-43ba-a420-2d815adc2aa1)
+
+Edit Post:
+
+![editpost](https://media.github.students.cs.ubc.ca/user/17165/files/0240d80f-ffde-487c-9317-1c8f2b7a41db)
+
+Notifications:
+
+![notifications](https://media.github.students.cs.ubc.ca/user/17165/files/a9290c7d-24fc-4577-855b-5ec8a38f9f12)
+
