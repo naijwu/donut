@@ -18,13 +18,13 @@ Want to make more friends? Eat more donuts? Touch grass? UBC DONUTS is just the 
 ## Dev roadmap
 ### Minimum viability (MVP)
 Goes without saying, list is tentative. We don't want to split the work sequentially between FE and BE so that we can test the app more effectively as we develop. 
-1. Setup project (FE & BE)
+1. Setup project (FE & BE) `Deadline: Friday July 26th`
     - FE: React setup with manifest.json for PWA `jaewu`
     - BE: Initialize server, open db connection using oracledb `jaewu`
-2. Implement auth layer (FE & BE)
+2. Implement auth layer (FE & BE) `Deadline: Friday July 26th`
     - FE: Create login screen, create helper function for cookie/auth header handling? `david`
     - BE: Setup route to service auth handshake between oauth and FE, create auth middleware `david` `jaewu`
-3. Implement pages and components (FE)
+3. Implement pages and components (FE) `Deadline: Monday July 29th`
     - Home/Feed screen `donald` `david` `jaewu`
        - Aggregated posts component
        - Profile + Notifications link components
@@ -41,7 +41,7 @@ Goes without saying, list is tentative. We don't want to split the work sequenti
     - Donut/Groupchat screen `donald` `david` `jaewu`
        - Donut component
        - Message component 
-4. Implement routes (BE) `donald` `david` `jaewu`
+4. Implement routes (BE) `donald` `david` `jaewu` `Deadline: Wednesday July 31st`
 
 | Entity/Domain  | Request | Endpoint | Description |
 | ------------- | --------- | -------|------|
@@ -57,10 +57,10 @@ Goes without saying, list is tentative. We don't want to split the work sequenti
 | Donut  | GET  | /donut/:donutID/messages | Get all messages of that donut groupchat |
 | Donut  | POST  | /donut/:donutID/message | Send a message to a donut groupchat |
 
-5. Implement pair scheduling `donald` `david`
+5. Implement pair scheduling `donald` `david` `Deadline: Wednesday July 31st`
     - Task scheduler
     - Pair matching function
-6. Implement notifications `jaewu`
+6. Implement notifications `jaewu` `Deadline: Friday August 2nd`
     - FE: Push Notification permission request
     - BE: Store push notif endpoint to Profile.settings
 ### Nice to haves
