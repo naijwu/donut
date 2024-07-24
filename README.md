@@ -63,12 +63,17 @@ Goes without saying, list is tentative. We don't want to split the work sequenti
 6. Implement notifications `jaewu` `Deadline: Friday August 2nd`
     - FE: Push Notification permission request
     - BE: Store push notif endpoint to Profile.settings
-### Nice to haves
+### Nice to haves + Potential challenges
 7. Implement realtime chat websockets `donald`
-8. Implement an algorithm to show trending posts `donald`
+8. Implementing an algorithm (e.g. YouTube) to show trending posts at the top `donald`
+9. PWA will be a challenge, but we will aim to get this working as this is the main component of our projectt `jae wu`, `donald`
+
+## Milestone Deliverables
+The deliverables from milestones 1 and 2 are available in the repository.
 
 ## Designs
 [Figma](https://www.figma.com/design/5MwsKv2K0UF992YiA5SHGG/UBC-Donut?node-id=0-1&t=1UEKMSak5VygBJRv-0)
+- Can also be found below
 
 Login:
 
