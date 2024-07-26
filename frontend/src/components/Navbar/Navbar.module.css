@@ -1,0 +1,23 @@
+.container {
+  position: fixed;
+  bottom: 0;
+  border-style: solid none none none;
+  border-width: 1px;
+  border-color: var(--color-ui-10);
+  width: 100%;
+}
+
+.tray {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.btn {
+  color: var(--color-ui-60);
+  padding: 1.5rem;
+  transition: all 0.13s ease-in-out;
+}
+.btn.active {
+  color: var(--color-ui-100);
+}
