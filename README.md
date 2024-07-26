@@ -112,3 +112,6 @@ Notifications:
 
 ![notifications](https://media.github.students.cs.ubc.ca/user/17165/files/a9290c7d-24fc-4577-855b-5ec8a38f9f12)
 
+## ERD
+![304 drawio](https://media.github.students.cs.ubc.ca/user/17165/files/0258b3e4-52f6-45f2-bd07-b9e5592f0e1a)
+
