@@ -1,0 +1,15 @@
+{
+  "name": "ubcdonuts",
+  "version": "1.0.0",
+  "description": "donutty",
+  "main": "server.js",
+  "keywords": [],
+  "author": {
+    "name": "dough nut"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.3",
+    "oracledb": "https://github.com/oracle/node-oracledb/releases/download/v5.2.0/oracledb-src-5.2.0.tgz"
+  }
+}
