@@ -9,6 +9,7 @@
   },
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.3",
     "oracledb": "https://github.com/oracle/node-oracledb/releases/download/v5.2.0/oracledb-src-5.2.0.tgz"
   }

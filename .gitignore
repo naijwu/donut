@@ -1,0 +1,6 @@
+/frontend/.env
+/frontend/local.env
+/frontend/node_modules
+/server/.env
+/server/node_modules
+/server/_scripts
