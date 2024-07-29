@@ -1,6 +1,7 @@
 "use client";
 
 import Navbar from "@/components/Navbar/Navbar";
+import { useAuthContext } from "@/utility/Auth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -21,10 +22,12 @@ export default function AppLayout({
       .catch((err) => console.log("sw.js registration fail: ", err));
   }, []);
 
+  const { loggedIn } = useAuthContext();
+
   return (
     <>
       {children}
-      <Navbar />
+      {loggedIn && <Navbar />} 
     </>
   )
 }

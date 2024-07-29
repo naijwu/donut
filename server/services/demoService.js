@@ -1,13 +1,12 @@
-const oracledb = require('oracledb');
-const loadEnvFile = require('../utils/envUtil');
+// const oracledb = require('oracledb');
+import oracledb from 'oracledb'
 
-const envVariables = loadEnvFile('./.env');
 
 // Database configuration setup. Ensure your .env file has the required database credentials.
 const dbConfig = {
-    user: envVariables.ORACLE_USER,
-    password: envVariables.ORACLE_PASS,
-    connectString: `${envVariables.ORACLE_HOST}:${envVariables.ORACLE_PORT}/${envVariables.ORACLE_DBNAME}`,
+    user: process.env.ORACLE_USER,
+    password: process.env.ORACLE_PASS,
+    connectString: `${process.env.ORACLE_HOST}:${process.env.ORACLE_PORT}/${process.env.ORACLE_DBNAME}`,
     poolMin: 1,
     poolMax: 3,
     poolIncrement: 1,
@@ -15,7 +14,7 @@ const dbConfig = {
 };
 
 // initialize connection pool
-async function initializeConnectionPool() {
+export async function initializeConnectionPool() {
     try {
         await oracledb.createPool(dbConfig);
         console.log('Connection pool started');
@@ -24,7 +23,7 @@ async function initializeConnectionPool() {
     }
 }
 
-async function closePoolAndExit() {
+export async function closePoolAndExit() {
     console.log('\nTerminating');
     try {
         await oracledb.getPool().close(10); // 10 seconds grace period for connections to finish
@@ -45,7 +44,7 @@ process
 
 // ----------------------------------------------------------
 // Wrapper to manage OracleDB actions, simplifying connection handling.
-async function withOracleDB(action) {
+export async function withOracleDB(action) {
     let connection;
     try {
         connection = await oracledb.getConnection(); // Gets a connection from the default pool 
@@ -68,7 +67,7 @@ async function withOracleDB(action) {
 // ----------------------------------------------------------
 // Core functions for database operations
 // Modify these functions, especially the SQL queries, based on your project's requirements and design.
-async function testOracleConnection() {
+export async function testOracleConnection() {
     return await withOracleDB(async (connection) => {
         return true;
     }).catch(() => {
@@ -76,7 +75,7 @@ async function testOracleConnection() {
     });
 }
 
-async function fetchDemotableFromDb() {
+export async function fetchDemotableFromDb() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute('SELECT * FROM DEMOTABLE');
         return result.rows;
@@ -85,7 +84,7 @@ async function fetchDemotableFromDb() {
     });
 }
 
-async function initiateDemotable() {
+export async function initiateDemotable() {
     return await withOracleDB(async (connection) => {
         try {
             await connection.execute(`DROP TABLE DEMOTABLE`);
@@ -105,7 +104,7 @@ async function initiateDemotable() {
     });
 }
 
-async function insertDemotable(id, name) {
+export async function insertDemotable(id, name) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
             `INSERT INTO DEMOTABLE (id, name) VALUES (:id, :name)`,
@@ -119,7 +118,7 @@ async function insertDemotable(id, name) {
     });
 }
 
-async function updateNameDemotable(oldName, newName) {
+export async function updateNameDemotable(oldName, newName) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
             `UPDATE DEMOTABLE SET name=:newName where name=:oldName`,
@@ -133,7 +132,7 @@ async function updateNameDemotable(oldName, newName) {
     });
 }
 
-async function countDemotable() {
+export async function countDemotable() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute('SELECT Count(*) FROM DEMOTABLE');
         return result.rows[0][0];
@@ -141,12 +140,3 @@ async function countDemotable() {
         return -1;
     });
 }
-
-module.exports = {
-    testOracleConnection,
-    fetchDemotableFromDb,
-    initiateDemotable, 
-    insertDemotable, 
-    updateNameDemotable, 
-    countDemotable
-};

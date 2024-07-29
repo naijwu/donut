@@ -1,6 +1,8 @@
 {
   "name": "ubcdonuts",
   "version": "1.0.0",
+  "type": "module",
+  "module": "index.js",
   "description": "donutty",
   "main": "server.js",
   "keywords": [],
@@ -9,8 +11,13 @@
   },
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.7.2",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
     "express": "^4.17.3",
-    "oracledb": "https://github.com/oracle/node-oracledb/releases/download/v5.2.0/oracledb-src-5.2.0.tgz"
+    "jsonwebtoken": "^9.0.2",
+    "oracledb": "https://github.com/oracle/node-oracledb/releases/download/v5.2.0/oracledb-src-5.2.0.tgz",
+    "query-string": "^9.1.0"
   }
 }
