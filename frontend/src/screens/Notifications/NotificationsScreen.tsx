@@ -1,13 +1,13 @@
-import { Header1 } from "@/components/Typography/Typography";
+import { Title } from "@/components/Typography/Typography";
 
 export default function NotificationsScreen() {
 
 
     return (
         <div>
-            <Header1>
+            <Title>
                 Notifications
-            </Header1>
+            </Title>
         </div>
     )
 }

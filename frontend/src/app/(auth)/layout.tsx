@@ -33,7 +33,7 @@ export default function AppLayout({
   return (
     <>
       <div style={{
-        padding: '1.1rem 1.1rem calc(0.5rem + 76px) 1.1rem'
+        padding: '1.1rem 1.1rem calc(1.1rem + 76px) 1.1rem'
       }}>
         {children}
       </div>

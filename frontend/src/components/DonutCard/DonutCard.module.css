@@ -2,16 +2,32 @@
 .card {
   border: 1px solid var(--color-ui-10);
   border-radius: 18px;
+  overflow: hidden;
 }
 .top {
   padding: 1rem 1rem 0 1rem;
 }
 .cardInner {
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
 }
 .postWrapper {
   padding: 1rem;
+}
+.indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding-bottom: 1.2rem;
+}
+.dot {
+  height: 0.6rem;
+  width: 0.6rem;
+  background: var(--color-ui-20);
+  border-radius: 1rem;
+  transition: all 0.2s cubic-bezier(0.62, 0.13, 0.15, 0.97);
+}
+.dot.active {
+  background: var(--color-ui-100);
 }
 
 /* post/inner card styles */
@@ -27,16 +43,6 @@
 }
 .pictures {
   padding: 0.2rem 0;
-}
-.author {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-.author_text {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
 }
 .reactions {
   display: flex;

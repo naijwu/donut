@@ -1,5 +1,5 @@
 import Logout from "@/components/Logout";
-import { Header1 } from "@/components/Typography/Typography";
+import { Title } from "@/components/Typography/Typography";
 import { useAuthContext } from "@/utility/Auth"
 
 
@@ -9,9 +9,9 @@ export default function ProfileScreen() {
 
     return (
         <div>
-            <Header1>
+            <Title>
                 Profile
-            </Header1>
+            </Title>
             {JSON.stringify(user)}
             <Logout />
         </div>

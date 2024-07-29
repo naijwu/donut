@@ -1,13 +1,13 @@
-import { Header1 } from "@/components/Typography/Typography";
+import { Title } from "@/components/Typography/Typography";
 
 export default function DonutsScreen() {
 
 
     return (
         <div>
-            <Header1>
+            <Title>
                 Donuts
-            </Header1>
+            </Title>
         </div>
     )
 }

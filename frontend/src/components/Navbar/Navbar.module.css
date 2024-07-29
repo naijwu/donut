@@ -5,6 +5,7 @@
   border-width: 1px;
   border-color: var(--color-ui-10);
   width: 100%;
+  background: white;
 }
 
 .tray {
