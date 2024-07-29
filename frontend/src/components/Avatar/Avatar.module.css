@@ -1,0 +1,21 @@
+.avatar {
+  position: relative;
+  height: 2.8rem;
+  width: 2.8rem;
+  border-radius: 100%;
+  overflow: hidden;
+}
+
+.group {
+  display: flex;
+  margin: -3.5px;
+}
+.group > div {
+  border: 3.5px solid white;
+  position: relative;
+  border-radius: 100%;
+  margin-left: -10px;
+}
+.group > div:first-child {
+  margin-left: 0;
+}

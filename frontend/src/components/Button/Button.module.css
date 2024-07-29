@@ -1,0 +1,29 @@
+.base {
+  padding: 0.3rem 0.8rem;
+  transition: all 0.13s ease-in-out;
+  display: table;
+  border-radius: 12px;
+  border: none;
+  font-size: 1rem;
+  background-color: var(--color-ui-60);
+}
+
+/* variant variants */
+.base.ghost {
+  background-color: rgba(255, 255, 255, 0);
+  color: var(--color-ui-100);
+}
+.base.ghost:hover {
+  background: var(--color-ui-20);
+}
+.base.ghost.active {
+  background: var(--color-ui-20);
+}
+.solid {
+}
+
+/* size variants */
+.medium {
+}
+.small {
+}

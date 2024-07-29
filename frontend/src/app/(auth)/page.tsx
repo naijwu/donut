@@ -1,14 +1,8 @@
 "use client"
 
-import { useAuthContext } from "@/utility/Auth"
+import FeedScreen from "@/screens/Feed/FeedScreen";
 
 export default function App() {
-    
-    const { user } = useAuthContext();
 
-  return (
-    <div>
-        Welcome to UBC Donuts, {user?.name}
-    </div>
-  )
+  return <FeedScreen />
 }

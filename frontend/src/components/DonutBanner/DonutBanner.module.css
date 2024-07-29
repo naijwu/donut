@@ -1,0 +1,19 @@
+.container {
+  border: 1px solid var(--color-ui-10);
+  border-radius: 18px;
+  padding: 1rem;
+}
+.container.borderless {
+  padding: 0;
+  border: none;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.donutAbout {
+  display: flex;
+  gap: 0.3rem;
+}

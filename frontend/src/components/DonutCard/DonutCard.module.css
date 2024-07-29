@@ -1,0 +1,45 @@
+/* card styles */
+.card {
+  border: 1px solid var(--color-ui-10);
+  border-radius: 18px;
+}
+.top {
+  padding: 1rem 1rem 0 1rem;
+}
+.cardInner {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+}
+.postWrapper {
+  padding: 1rem;
+}
+
+/* post/inner card styles */
+.postContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.pictures {
+  padding: 0.2rem 0;
+}
+.author {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.author_text {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.reactions {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}

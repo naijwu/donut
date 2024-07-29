@@ -1,11 +1,8 @@
 "use client"
 
-export default function Notifications() {
-    
+import NotificationsScreen from "@/screens/Notifications/NotificationsScreen"
 
-  return (
-    <div>
-        Notifications
-    </div>
-  )
+export default function Notifications() {
+
+  return <NotificationsScreen />
 }

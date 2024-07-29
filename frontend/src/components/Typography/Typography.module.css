@@ -1,0 +1,19 @@
+.h1 {
+  padding-top: 3rem;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  font-size: 2rem;
+}
+
+.p {
+  color: var(--color-ui-60);
+  font-size: 1.13rem;
+  font-weight: 300;
+}
+.bold {
+  font-weight: 500;
+  color: var(--color-ui-100);
+}
+.small {
+  font-size: 1.1rem;
+}
