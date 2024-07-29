@@ -22,7 +22,13 @@ export default function AppLayout({
       .catch((err) => console.log("sw.js registration fail: ", err));
   }, []);
 
-  const { loggedIn } = useAuthContext();
+  const { loading, loggedIn } = useAuthContext();
+
+  const router = useRouter();
+
+  if (!loading && !loggedIn) {
+    router.push('/auth')
+  }
 
   return (
     <>
