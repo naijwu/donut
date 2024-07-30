@@ -47,8 +47,8 @@ Goes without saying, list is tentative. We don't want to split the work sequenti
 
 | Entity/Domain  | Request | Endpoint | Description |
 | ------------- | --------- | -------|------|
-| Comment  | GET  | /comments/:donutID/:title | Get comments of a post |
-| Comment  | POST  | /comment/:donutID/:title | Post a comment on a post (requires comment data as payload) |
+| Comment  | GET  | /comments/:donutID/:postOrder | Get comments of a post |
+| Comment  | POST  | /comment/:donutID/:postOrder | Post a comment on a post (requires comment data as payload) |
 | Comment  | PATCH  | /comment/:commentID | Update a comment |
 | Post  | GET, POST, PATCH, DELETE | /post | CRUD a Post |
 | Reaction  | POST  | /reaction/:[comment,post]/:commentID | Make a Reaction. We're assuming reactions will later be queried as a joined table with Comment |
