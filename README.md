@@ -47,11 +47,11 @@ Goes without saying, list is tentative. We don't want to split the work sequenti
 
 | Entity/Domain  | Request | Endpoint | Description |
 | ------------- | --------- | -------|------|
-| Comment  | GET  | /comments/:donutID/:postOrder | Get comments of a post |
-| Comment  | POST  | /comment/:donutID/:postOrder | Post a comment on a post (requires comment data as payload) |
-| Comment  | PATCH  | /comment/:commentID | Update a comment |
+| Thread  | GET  | /threads/:donutID/:postOrder | Get comments of a post |
+| Thread  | POST  | /threads/:donutID/:postOrder | Post a comment on a post (requires comment data as payload) |
+| Thread  | PATCH  | /threads/:threadID | Update a comment |
+| Thread  | PATCH  | /threads/:threadID/reaction | Create a reaction |
 | Post  | GET, POST, PATCH, DELETE | /post | CRUD a Post |
-| Reaction  | POST  | /reaction/:[comment,post]/:commentID | Make a Reaction. We're assuming reactions will later be queried as a joined table with Comment |
 | Profile  | GET, POST, PATCH, DELETE  | /profile/:email | CRUD a Profile |
 | Notification  | GET  | /notifications/:email | Get all notifications for a user |
 | Notification  | DELETE  | /notifications/:notificationID | Delete a notification |
