@@ -1,3 +1,4 @@
+import { withOracleDB } from "./demoService.js";
 
 /**
  * 
@@ -8,11 +9,22 @@ export async function findPartner(email) {
 }
 
 /**
- * 
+ * Finds profile of given email
  * @param {*} email the email of the profile to return
  */
 export async function getProfile(email) {
-
+    if(!email) return false;
+    
+    return await withOracleDB(async (connection) => {
+        try {
+            const result = await connection.execute(`SELECT * FROM Profile WHERE email=${email}`);
+            return result;
+        } catch(err) {
+            console.log('err: ', err);
+        }
+    }).catch((err) => {
+        return err;
+    });
 }
 
 /**

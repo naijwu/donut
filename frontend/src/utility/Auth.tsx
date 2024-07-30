@@ -24,6 +24,7 @@ export const AuthProvider = ({ children }: any) => {
 
       setLoggedIn(logged_in);
       user && setUser(user);
+      console.log(user);
 
       if (!logged_in) {
         setUser(null);
