@@ -7,6 +7,11 @@ import cookieParser from 'cookie-parser'
 
 import demoRoute from './routes/demo.js';
 import authRoute from './routes/auth.js';
+import profileRoute from './routes/profile.js';
+import donutRoute from './routes/donut.js';
+import postRoute from './routes/post.js';
+import threadsRoute from './routes/threads.js';
+import notificationsRoute from './routes/notifications.js'
 
 const app = express();
 app.use(cors({
@@ -24,6 +29,11 @@ app.use(express.json());             // Parse incoming JSON payloads
 
 app.use('/', demoRoute);
 app.use('/auth', authRoute);
+app.use('/profile', profileRoute);
+app.use('/donut', donutRoute);
+app.use('/post', postRoute);
+app.use('/threads', threadsRoute);
+app.use('/notifications', notificationsRoute);
 
 // ----------------------------------------------------------
 // Starting the server

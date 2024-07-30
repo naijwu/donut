@@ -38,8 +38,9 @@ export const DEMO_THREADS = [
 export const DEMO_FEED: Donut[] = [
     {
         donutID: '',
-        createdAt: '',
+        createdAt: 'July 17, 2024',
         isCompleted: true,
+        name: 'hiking!',
         posts: [{
             donutID: '0',
             title: 'Went on an amazing hike today',
@@ -64,8 +65,9 @@ export const DEMO_FEED: Donut[] = [
         }]
     },{
         donutID: '',
-        createdAt: '',
+        createdAt: 'July 17, 2024',
         isCompleted: true,
+        name: 'hiking!',
         posts: [{
             donutID: '0',
             title: 'Went on an amazing hike today',
@@ -161,7 +163,8 @@ export const DEMO_DONUTS: Donut[] = [
 
 export const DEMO_DONUT: Donut = {
     donutID: '',
-    createdAt: '',
+    createdAt: 'July 17, 2024',
+    name: 'hiking donut!',
     isCompleted: true,
     posts: [{
         donutID: '0',

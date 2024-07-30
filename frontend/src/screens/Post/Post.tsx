@@ -47,7 +47,6 @@ export default function Post({
         setThreadNodes(roots);
     }
     useEffect(() => {
-
         listToTree();
     }, [])
 
