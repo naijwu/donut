@@ -1,6 +1,12 @@
 
 import express from 'express'
 import { auth } from '../middleware/auth.js';
+import {
+    findPartner,
+    getProfile,
+    updateProfile,
+    deleteProfile
+} from '../services/profileService.js'
 
 const router = express.Router();
 
@@ -9,8 +15,7 @@ router.get('/:email/findpartner', auth, async (req, res) => {
     try {
         const { email } = req.params;
 
-        // return all from select Post, Donut, PostReaction
-        const data = {}
+        const data = await findPartner(email);
 
         res.status(200).json(data)
     } catch (err) {
@@ -26,7 +31,7 @@ router.get('/:email', auth, async (req, res) => {
         const { email } = req.params;
 
         // select Profile
-        const data = {}
+        const data = await getProfile(email);
 
         res.status(200).json(data)
     } catch (err) {
@@ -58,7 +63,7 @@ router.patch('/:email', auth, async (req, res) => {
         const { profile } = req.body;
 
         // TODO: Edit data
-        const editedProfile = {}
+        const editedProfile = await updateProfile(email, profile);
         
         res.status(200).json({
             data: editedProfile
@@ -75,7 +80,8 @@ router.delete('/:email', auth, async(req, res) => {
     try {
         const { email } = req.params;
 
-        // TODO: Delete post
+        // Delete profile
+        await deleteProfile(email);
 
         res.status(200).json({
             message: 'Profile deleted'

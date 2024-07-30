@@ -1,6 +1,7 @@
 
 import express from 'express'
 import { auth } from '../middleware/auth.js';
+import { getUserNotifications } from '../services/notificationsService.js';
 
 const router = express.Router();
 
@@ -9,7 +10,7 @@ router.get('/:email', auth, async (req, res) => {
         const { email } = req.params;
 
         // return all Notification of a user
-        const data = {}
+        const data = await getUserNotifications(email);
 
         res.status(200).json(data)
     } catch (err) {
@@ -24,8 +25,8 @@ router.delete('/:notificationID', auth, async (req, res) => {
     try {
         const { notificationID } = req.params;
 
-        // TODO: Delete notification
-        const query = {}
+        // Deletes notificatioin
+        await deleteNotification(notificationID);
         
         res.status(200).json({
             message: `Deleted notification ${notificationID}`

@@ -1,6 +1,12 @@
 
 import express from 'express'
 import { auth } from '../middleware/auth.js';
+import { 
+    getDonutsOfUser, 
+    getDonut, 
+    getDonutMessages, 
+    sendDonutMessage 
+} from '../services/donutService.js';
 
 const router = express.Router();
 
@@ -8,8 +14,8 @@ router.get('/:email', auth, async (req, res) => {
     try {
         const { email } = req.params;
 
-        // return all Donut + Profile of a user
-        const data = {}
+        // return all Donut + Profile(s) of a Profile
+        const data = await getDonutsOfUser(email);
 
         res.status(200).json(data)
     } catch (err) {
@@ -24,8 +30,8 @@ router.get('/:donutID', auth, async (req, res) => {
     try {
         const { donutID } = req.params;
 
-        // select Donut + Profile
-        const data = {}
+        // select Donut + Profile(s)
+        const data = await getDonut(donutID);
 
         res.status(200).json(data)
     } catch (err) {
@@ -41,7 +47,7 @@ router.get('/:donutID/messages', auth, async (req, res) => {
         const { donutID } = req.params;
 
         // select all messages of this donutID
-        const data = {}
+        const data = await getDonutMessages(donutID);
 
         res.status(200).json(data)
     } catch (err) {
@@ -66,8 +72,8 @@ router.post('/:donutID/message', auth, async (req, res) => {
          */
         const { message } = req.body;
 
-        // TODO: Insert data
-        const newMessage = {}
+        // Sends a message to the donut/groupchat
+        const newMessage = await sendDonutMessage(donutID, message);
         
         res.status(200).json({
             data: newMessage

@@ -1,9 +1,11 @@
 
 import express from 'express'
 import { auth } from '../middleware/auth.js';
-import axios from 'axios'
-import jwt from 'jsonwebtoken'
-import queryString from 'query-string'
+import {
+    createThread,
+    updateThread,
+    createThreadReaction
+} from '../services/threadsService.js';
 
 const router = express.Router();
 
@@ -19,12 +21,10 @@ router.post('/:donutID/:postOrder', auth, async (req, res) => {
          */
         const { thread } = req.body;
 
-        // TODO: Insert data
-        const query = {}
+        // create thread
+        const data  = await createThread(donutID, postOrder, thread);
         
-        res.status(200).json({
-            message: `Successfully added thread of ${thread.threadID} to ${donutID}, ${postOrder}`
-        })
+        res.status(200).json({ data })
     } catch (err) {
         console.log(err);
         res.status(500).json({
@@ -36,13 +36,12 @@ router.post('/:donutID/:postOrder', auth, async (req, res) => {
 router.patch('/:threadID', auth, async (req, res) => {
     try {
         const { threadID } = req.params;
+        const { thread } = req.body;
 
-        // TODO: Update comment
-        const query = {}
+        // Update the thread
+        const data = await updateThread(threadID, thread)
         
-        res.status(200).json({
-            message: `Successfully updated thread ${threadID}`
-        })
+        res.status(200).json({ data })
     } catch (err) {
         console.log(err);
         res.status(500).json({
@@ -65,7 +64,7 @@ router.post('/:threadID/reaction', auth, async(req, res) => {
         const { reaction } = req.body;
 
         // create a reaction
-        const data = {}
+        const data = await createThreadReaction(threadID, reaction);
 
         res.status(200).json(data)
     } catch (err) {

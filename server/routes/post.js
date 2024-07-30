@@ -1,6 +1,14 @@
 
 import express from 'express'
 import { auth } from '../middleware/auth.js';
+import {
+    getAllPosts,
+    getPost,
+    createPost,
+    updatePost,
+    createPostReaction,
+    deletePost
+} from '../services/postService.js';
 
 const router = express.Router();
 
@@ -8,7 +16,7 @@ router.get('/', auth, async (req, res) => {
     try {
 
         // return all from select Post, Donut, PostReaction
-        const data = {}
+        const data = await getAllPosts();
 
         res.status(200).json(data)
     } catch (err) {
@@ -24,7 +32,7 @@ router.get('/:donutID/:postOrder', auth, async (req, res) => {
         const { donutID, postOrder } = req.params;
 
         // select from Post, Donut, PostReaction, Thread, ThreadsReaction - return post + comments
-        const data = {}
+        const data = await getPost(donutID, postOrder);
 
         res.status(200).json(data)
     } catch (err) {
@@ -49,8 +57,8 @@ router.post('/:donutID', auth, async (req, res) => {
          */
         const { post } = req.body;
 
-        // TODO: Insert data
-        const newPost = {}
+        // Create a post
+        const newPost = await createPost(donutID, post);
         
         res.status(200).json({
             data: newPost
@@ -77,8 +85,8 @@ router.patch('/:donutID/:postOrder', auth, async (req, res) => {
          */
         const { post } = req.body;
 
-        // TODO: Edit data
-        const editedPost = {}
+        // Edit post
+        const editedPost = await updatePost(donutID, postOrder, post)
         
         res.status(200).json({
             data: editedPost
@@ -106,7 +114,7 @@ router.post('/:donutID/:postOrder/reaction', auth, async (req, res) => {
         const { reaction } = req.body;
 
         // create a reaction
-        const data = {}
+        const data = createPostReaction(donutID, postOrder, reaction);
 
         res.status(200).json(data)
     } catch (err) {
@@ -121,7 +129,8 @@ router.delete('/:donutID/:postOrder', auth, async(req, res) => {
     try {
         const { donutID, postOrder } = req.params;
 
-        // TODO: Delete post
+        // Deletes post
+        await deletePost(donutID, postOrder);
 
         res.status(200).json({
             message: 'Post deleted'
