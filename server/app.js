@@ -12,6 +12,7 @@ import donutRoute from './routes/donut.js';
 import postRoute from './routes/post.js';
 import threadsRoute from './routes/threads.js';
 import notificationsRoute from './routes/notifications.js'
+import queryRoute from './routes/query.js';
 
 const app = express();
 app.use(cors({
@@ -34,6 +35,7 @@ app.use('/donut', donutRoute);
 app.use('/post', postRoute);
 app.use('/threads', threadsRoute);
 app.use('/notifications', notificationsRoute);
+app.use('/query', queryRoute);
 
 // ----------------------------------------------------------
 // Starting the server
