@@ -20,15 +20,13 @@ export default function DonutBanner({
                 </Avatars>
                 <div className={styles.donutAbout}>
                     <P bold small>
-                        Hiking!
-                        {/* data?.name */}
+                        {partial?.name}
                     </P>
                     <P>
                         &middot;
                     </P>
                     <P small>
-                        July 10, 2024
-                        {/* data?.createdAt */}
+                        {partial?.createdAt}
                     </P>
                 </div>
             </div>

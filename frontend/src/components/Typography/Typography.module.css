@@ -17,7 +17,7 @@
 .p {
   color: var(--color-ui-60);
   font-size: 1.13rem;
-  font-weight: 300;
+  font-weight: 350;
 }
 .bold {
   font-weight: 500;
@@ -27,6 +27,5 @@
   font-size: 1.1rem;
 }
 .dark {
-  font-weight: 450;
   color: var(--color-ui-100);
 }

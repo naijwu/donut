@@ -1,5 +1,6 @@
+import Avatar from "@/components/Avatar/Avatar";
 import Logout from "@/components/Logout";
-import { Title } from "@/components/Typography/Typography";
+import { Header1, Title } from "@/components/Typography/Typography";
 import { useAuthContext } from "@/utility/Auth"
 
 
@@ -12,7 +13,10 @@ export default function ProfileScreen() {
             <Title>
                 Profile
             </Title>
-            {JSON.stringify(user)}
+            <Avatar pictureUrl={user.picture} size="xlarge" />
+            <Header1>
+                {user.name}
+            </Header1>
             <Logout />
         </div>
     )

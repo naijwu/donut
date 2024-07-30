@@ -1,0 +1,41 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-top: 1rem;
+}
+.replies {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-left: 1.2rem;
+}
+.thread {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.threadInner {
+  display: flex;
+  gap: 0.7rem;
+}
+.content {
+  padding-left: 0.7rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  border-style: none none none solid;
+  border-width: 0.6px;
+  border-color: var(--color-ui-10);
+}
+.poster {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+.reactions {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}

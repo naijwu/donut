@@ -1,9 +1,25 @@
 .avatar {
   position: relative;
-  height: 2.8rem;
-  width: 2.8rem;
   border-radius: 100%;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-ui-10);
+}
+.avatar.s_small {
+  height: 2rem;
+  width: 2rem;
+  font-size: 0.8rem;
+}
+.avatar.s_medium {
+  height: 2.8rem;
+  width: 2.8rem;
+}
+.avatar.s_xlarge {
+  height: 5rem;
+  width: 5rem;
+  font-size: 0.8rem;
 }
 
 .group {

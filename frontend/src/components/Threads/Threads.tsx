@@ -4,27 +4,22 @@
  * threadNode -> nodes of the tree-ified comments data
  */
 
+import styles from './Threads.module.css'
+import { ThreadNode, ThreadData } from "@/lib/types"
 import Avatar from "../Avatar/Avatar"
-
-type ThreadsT = {
-    threadNodes?: any[]
-}
-type ThreadNodeT = {
-    node: any
-}
-type ThreadT = {
-    data: any,
-    children?: any
-}
+import { P } from '../Typography/Typography'
+import Button from '../Button/Button'
 
 export default function Threads({
     threadNodes
-}: ThreadsT) {
+}: {
+    threadNodes?: ThreadNode[]
+}) {
 
     return (
-        <div>
-            {threadNodes?.map((thread, ind) => (
-                <ThreadNode {...thread} />
+        <div className={styles.wrapper}>
+            {threadNodes?.map((n, ind) => (
+                <ThreadNode node={n} />
             ))}
         </div>
     )
@@ -32,11 +27,13 @@ export default function Threads({
 
 function ThreadNode({
     node,
-}: ThreadNodeT) {
+}: {
+    node: any
+}) {
     return (
         <Thread data={node}>
             {node.children?.length > 0 && (
-                <div>
+                <div className={styles.replies}>
                     {node.children?.map((reply: any, ind: number) => (
                         <Thread data={reply} />
                     ))}
@@ -49,13 +46,38 @@ function ThreadNode({
 function Thread({
     data,
     children
-}: ThreadT) {
+}: {
+    data: ThreadData,
+    children?: any
+}) {
 
     return (
-        <div>
-            <div>
-                <Avatar />
-                {JSON.stringify(data)}
+        <div className={styles.thread}>
+            <div className={styles.threadInner}>
+                <Avatar size="small" name={data.author} pictureUrl={data.pictureUrl} />
+                <div className={styles.content}>
+                    <div className={styles.poster}>
+                        <P small dark bold>
+                            {data.author}
+                        </P>
+                        <P small>
+                            &middot;
+                        </P>
+                        <P small>
+                            {data.createdAt}
+                        </P>
+                    </div>
+                    <div className={styles.comment}>
+                        <P dark>
+                            {data.text}
+                        </P>
+                    </div>
+                    <div className={styles.reactions}>
+                        <Button active onClick={()=>console.log('reaction')} variant="ghost" size="small">
+                            😍 3
+                        </Button>
+                    </div>
+                </div>
             </div>
 
             {/* replies are here */}

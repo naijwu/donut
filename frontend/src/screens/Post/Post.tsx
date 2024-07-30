@@ -6,18 +6,50 @@ import DonutBanner from '@/components/DonutBanner/DonutBanner'
 import Tag from '@/components/Tag/Tag'
 import Threads from '@/components/Threads/Threads'
 import { Header1, P } from '@/components/Typography/Typography'
-import { Donut, DonutPost } from '@/lib/types'
+import { Donut, DonutPost, ThreadNodeList } from '@/lib/types'
+import { useEffect, useState } from 'react'
 import styles from './Post.module.css'
 
 type PostT = {
     donut: Donut,
-    post: DonutPost
+    post: DonutPost,
+    threads: any[]
 }
 
 export default function Post({
     donut,
-    post
+    post,
+    threads
 }: PostT) {
+    const [threadNodes, setThreadNodes] = useState<ThreadNodeList>()
+
+    // this is such a fucking tight piece of code i love it
+    const listToTree = () => {
+        const  threadList = threads;
+        const map: any = {};
+        const roots: any = [];
+        let node: any;
+
+        for (let i = 0; i < threadList.length; i++) {
+            map[threadList[i].threadID] = i
+            threadList[i].children = []
+        }
+
+        for (let i = 0; i < threadList.length; i++) {
+            node = threadList[i]
+            if(node.parentID !== null) {
+                threadList[map[node.parentID]].children?.push(node)
+            } else {
+                roots.push(node)
+            }
+        }
+
+        setThreadNodes(roots);
+    }
+    useEffect(() => {
+
+        listToTree();
+    }, [])
 
     return (
         <div className={styles.wrapper}>
@@ -47,7 +79,10 @@ export default function Post({
                 <P small dark>
                     Comments
                 </P>
-                <Threads />
+                <Threads threadNodes={threadNodes} />
+            </div>
+            <div className={styles.commentField}>
+                <input type="text" placeholder="Add a comment..." />
             </div>
         </div>
     )

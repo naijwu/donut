@@ -1,0 +1,21 @@
+.container {
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.notif {
+  display: flex;
+  gap: 0.5rem;
+}
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.whoWhen {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
