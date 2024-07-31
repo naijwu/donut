@@ -7,3 +7,4 @@
 /server/node_modules
 /server/_scripts
 /server/local-start.sh
+/server/local-start.cmd
