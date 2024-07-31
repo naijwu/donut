@@ -3,6 +3,7 @@
 import { useAuthContext } from "@/utility/Auth";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Button from "./Button/Button";
 
 export default function Logout() {
     
@@ -23,8 +24,8 @@ export default function Logout() {
   }
 
   return (
-    <button onClick={handleLogout}>
+    <Button onClick={handleLogout} size="medium" variant="solid">
         Logout    
-    </button>
+    </Button>
   )
 }

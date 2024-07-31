@@ -18,6 +18,17 @@ const DROP_QUERIES = [
     `DROP TABLE PostalLocation`,
 ]
 
+const INSERT_HOBBIES = [
+    `INSERT INTO Hobby VALUES ('Hiking', 'Exploring nature by walking.')`,
+    `INSERT INTO Hobby VALUES ('Anime', 'Discussing Japanese animation and manga.')`,
+    `INSERT INTO Hobby VALUES ('Driving', 'Racing or commuting by vehicle.')`,
+    `INSERT INTO Hobby VALUES ('Investing', 'Buying equities.')`,
+    `INSERT INTO Hobby VALUES ('Running', 'Walking fast for fitness and enjoyment.')`,
+    `INSERT INTO Hobby VALUES ('Singing', 'Enjoying vocal music.')`,
+    `INSERT INTO Hobby VALUES ('Building', 'Creating various projects.')`,
+    `INSERT INTO Hobby VALUES ('Weightlifting', 'Lifting weights.')`
+]
+
 const CREATE_QUERIES = [
     `CREATE TABLE PostalLocation(
         postalCode CHAR(6),
@@ -27,12 +38,12 @@ const CREATE_QUERIES = [
     `CREATE TABLE Profile(
         email VARCHAR2(255 CHAR),
         pictureURL VARCHAR2(1000 CHAR),
-        gender CHAR(6) NOT NULL,
-        age INT NOT NULL,
+        gender CHAR(6),
+        age INT,
         fullName VARCHAR2(255 CHAR) NOT NULL,
-        enabled CHAR(1) DEFAULT '1' NOT NULL,
-        year INT NOT NULL,
-        major VARCHAR2(255 CHAR) NOT NULL,
+        enabled CHAR(1) DEFAULT '1',
+        year INT,
+        major VARCHAR2(255 CHAR),
         settings VARCHAR2(255 CHAR),
         address VARCHAR2(255 CHAR),
         postalCode CHAR(6),
@@ -137,19 +148,6 @@ const CREATE_QUERIES = [
         FOREIGN KEY (threadID) REFERENCES Thread(threadID) ON DELETE CASCADE)`
 ]
 
-export async function runQuery(query) {
-    return await withOracleDB(async (connection) => {
-        try {
-            const result = await connection.execute(query);
-            return result;
-        } catch(err) {
-            console.log('Error');
-        }
-    }).catch((err) => {
-        return err;
-    });
-}
-
 export async function dropAllTables() {
     return await withOracleDB(async (connection) => {
         try {
@@ -188,4 +186,25 @@ export async function createTable() {
     }).catch((err) => {
         return err;
     });
+}
+
+export async function insertHobbies() {
+    return await withOracleDB(async (conn) => {
+        try {
+            console.log('inserting hobbies')
+
+            for (let i = 0; i < INSERT_HOBBIES.length; i++) {
+                try {
+                    await conn.execute(INSERT_HOBBIES[i], {}, {autoCommit: true})
+                } catch (err) {
+                    console.log(err);
+                }
+            }
+            return 'Successfully inserted hobbies';
+        } catch (err) {
+            console.log('error inserting hobbies', err)
+        }
+    }).catch((err) => {
+        return err;
+    })
 }

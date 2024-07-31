@@ -1,14 +1,23 @@
 
 // User
-export interface User {
-    fullName?: string,
-    pictureUrl?: string
+export interface Profile {
+    email: string;
+    fullName?: string;
+    pictureURL?: string;
+    gender?: string;
+    age?: number;
+    enabled?: any;
+    year?: number;
+    major?: string;
+    settings?: string;
+    address?: string;
+    postalCode?: string;
 }
 
 // Notifications
 export interface Notification {
     causer: string;
-    pictureUrl: string;
+    pictureURL: string;
     notificationID: string;
     time: any;
     message: string;
@@ -21,7 +30,7 @@ export interface Donut {
     isCompleted: any,
     name?: string,
     posts?: DonutPost[],
-    members?: User[]
+    members?: Profile[]
 }
 
 export interface DonutPost {
@@ -36,7 +45,7 @@ export interface DonutPost {
 // Threads
 export type ThreadData = {
     author: any;
-    pictureUrl?: string;
+    pictureURL?: string;
     threadID: any;
     createdAt: any;
     text: string;

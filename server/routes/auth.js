@@ -3,8 +3,7 @@ import express from 'express'
 import axios from 'axios'
 import jwt from 'jsonwebtoken'
 import queryString from 'query-string'
-import { getProfile } from '../services/profileService.js';
-import { createProfile } from '../services/authService.js';
+import { checkUser, createProfile } from '../services/authService.js';
 
 const router = express.Router();
 
@@ -72,9 +71,8 @@ router.get('/token', async (req, res) => {
         const user = jwt.decode(id_token);
 
         // keep db up to date
-        const existingUser = getProfile(user.email); // TODO: oracledb query authService.js
-        let userId = existingUser?._id;
-        if (!existingUser) {
+        const existingProfile = await checkUser(user.email);
+        if (existingProfile == 0) {
             // create new user
             await createProfile(user);
         } 
@@ -83,7 +81,6 @@ router.get('/token', async (req, res) => {
         const token = jwt.sign({ 
                 user: { 
                     ...user, 
-                    _id: userId, 
                     accessTokenExpiry: (new Date()).getTime() + expires_in 
                 } },
                 config.tokenSecret, 

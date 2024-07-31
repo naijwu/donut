@@ -3,7 +3,7 @@ import express from 'express'
 import {
     createTable,
     dropAllTables,
-    runQuery
+    insertHobbies
 } from '../services/queryService.js'
 
 const router = express.Router();
@@ -38,12 +38,12 @@ router.post('/create', async (req, res) => {
     }
 });
 
-router.post('/testquery', async(req, res) => {
+router.post('/inserthobbies', async(req, res) => {
     try {
-        const result = runQuery(req.body.query);
+        const result = await insertHobbies();
 
         res.status(200).json({
-            message: `res: ${JSON.stringify(result)}`
+            message: `inserted`
         })
     } catch (err) {
         console.log(err);

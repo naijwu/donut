@@ -5,19 +5,19 @@ import Avatar from '@/components/Avatar/Avatar';
 
 function Notification({
     causer,
-    pictureUrl,
+    pictureURL,
     time,
     message
 }: {
     causer: string;
-    pictureUrl: string;
+    pictureURL: string;
     time: any;
     message: string
 }) {
     return (
         <div className={styles.notif}>
             <div>
-                <Avatar pictureUrl={pictureUrl} />
+                <Avatar pictureURL={pictureURL} />
             </div>
             <div className={styles.content}>
                 <P dark>

@@ -54,7 +54,7 @@ function Thread({
     return (
         <div className={styles.thread}>
             <div className={styles.threadInner}>
-                <Avatar size="small" name={data.author} pictureUrl={data.pictureUrl} />
+                <Avatar size="small" name={data.author} pictureURL={data.pictureURL} />
                 <div className={styles.content}>
                     <div className={styles.poster}>
                         <P small dark bold>

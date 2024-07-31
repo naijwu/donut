@@ -1,4 +1,4 @@
-import { Donut, User } from '@/lib/types'
+import { Donut, Profile } from '@/lib/types'
 import Avatar, { Avatars } from '../Avatar/Avatar'
 import { P } from '../Typography/Typography'
 import styles from './DonutBanner.module.css'
@@ -14,8 +14,8 @@ export default function DonutBanner({
         <div className={`${styles.container} ${borderless ? styles.borderless : ''}`}>
             <div className={styles.top}>
                 <Avatars>
-                    {partial?.members?.map((u: User) => (
-                        <Avatar key={u.pictureUrl} name={u.fullName} pictureUrl={u.pictureUrl} />
+                    {partial?.members?.map((u: Profile) => (
+                        <Avatar key={u.pictureURL} name={u.fullName} pictureURL={u.pictureURL} />
                     ))}
                 </Avatars>
                 <div className={styles.donutAbout}>
