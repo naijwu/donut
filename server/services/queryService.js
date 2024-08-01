@@ -87,7 +87,7 @@ const CREATE_QUERIES = [
         description VARCHAR2(1000 CHAR) NOT NULL,
         PRIMARY KEY (donutID, postOrder),
         FOREIGN KEY (author) REFERENCES Profile(email) ON DELETE CASCADE,
-        FOREIGN KEY (donutID) REFERENCES Donut(donutID) ON DELETE SET NULL)`,
+        FOREIGN KEY (donutID) REFERENCES Donut(donutID) ON DELETE CASCADE)`,
     `CREATE TABLE Picture(
         pictureURL VARCHAR2(1000 CHAR),
         donutID CHAR(36),
