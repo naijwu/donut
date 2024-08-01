@@ -13,6 +13,14 @@ import {
 
 const router = express.Router();
 
+// for handling the images
+const multerMid = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+      fileSize: 10 * 1024 * 1024,
+    },
+});
+
 router.get('/', auth, async (req, res) => {
     try {
 
@@ -59,22 +67,20 @@ router.get('/donut/:donutID/profile/:profile', auth, async (req, res) => {
     }
 });
 
-router.post('/:donutID', auth, async (req, res) => {
+router.post('/:donutID', auth, multerMid.array("files"), async (req, res) => {
     try {
         const { donutID } = req.params;
         /**
          * type post = {
-         *    donutID: string;
          *    title: string;
-         *    postOrder: number;
-         *    createdAt: date;
+         *    description: string;
          *    author: string;
          * }
          */
-        const { post } = req.body;
+        const { title, author, description } = req.body;
 
         // Create a post
-        const newPost = await createPost(donutID, post);
+        const newPost = await createPost(donutID, { title, author, description }, req.files);
         
         res.status(200).json({
             data: newPost

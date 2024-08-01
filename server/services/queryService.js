@@ -217,7 +217,7 @@ const SMC = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','
  * @param {*} date the date to turn into SQL date format
  * @returns a string compatible with SQL date format
  */
-function sqlifyDate(date) {
+export function sqlifyDate(date) {
 
     const pad = (num) => ('00'+num).slice(-2)
     const newDate = pad(date.getUTCDate()) + '-' + 

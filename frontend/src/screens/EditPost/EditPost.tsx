@@ -7,6 +7,10 @@ import styles from './EditPost.module.css'
 import ContentEditable from "react-contenteditable"
 import Button from '@/components/Button/Button';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import SwipeAlerter from '@/utility/SwipeAlerter';
+import { useAuthContext } from '@/utility/Auth';
+import axios from 'axios';
 
 const mtmap: {[key: string]: string} = {
     "image/jpeg": ".jpeg",
@@ -70,17 +74,22 @@ export default function EditPost({
 
     const router = useRouter();
 
+    const { user } = useAuthContext();
+
     const [title, setTitle] = useState<string>();
     const [description, setDescription] = useState<string>();
     const [images, setImages] = useState<any>();
+    const [activeIndex, setActiveIndex] = useState<number>(0);
 
-    async function handleAddImage(args: any) {
-        const updatedImages = JSON.parse(JSON.stringify(images));
+    const [loading, setLoading] = useState<boolean>(false)
+
+    async function handleAddImage(e: any) {
+        const updatedImages = JSON.parse(JSON.stringify(images || []));
         
         // MIME checking isn't robust
         //      TODO: need to read header data via buffer, but also change that on server-side too
         //      or, convert any other images on our end via some api (i.e. cloudconvert) or JS client-side
-        const mt = args.event.target.files[0]?.type;
+        const mt = e.target.files[0]?.type;
         if (!mtmap[mt]) {
             console.log('Unsupported type')
             return
@@ -88,31 +97,67 @@ export default function EditPost({
 
         let validSize = false
 
-        const fileBytes = args.event.target.files[0]?.size
+        const fileBytes = e.target.files[0]?.size
         const maxMB = 2;
         if (fileBytes < (maxMB * 1000 * 1000)) {
             validSize = true
         }
 
         if (!validSize) {
-            console.log('File too big damn')
+            console.log('The file is yo mama (too big)')
             return
         }
 
         updatedImages.push({
-            name: args.event.target.files[0].name,
-            url: URL.createObjectURL(args.event.target.files[0])
+            name: e.target.files[0].name,
+            url: URL.createObjectURL(e.target.files[0])
         })
         setImages(updatedImages)
     }
-    async function handleRemoveImage(index: string) {
+    async function handleRemoveImage(index: number) {
         const updatedImages = JSON.parse(JSON.stringify(images));
         updatedImages.splice(index, 1)
         setImages(updatedImages);
+        if (activeIndex > (updatedImages.length - 1)) {
+            setActiveIndex(activeIndex - 1);
+        }
     }
 
     async function handleSave() {
+        if (!title || !description || !user ) return
+        if (loading) return
+        setLoading(true)
 
+        let formData = new FormData();
+        for (let i = 0; i < images.length; i++) {
+            if (images[i].url !== '') {
+                let blob = await fetch(images[i].url).then(r => r.blob())
+                formData.append(`files`, blob);
+            }
+        }
+        formData.append('donutID', donut[List_DonutCols.donutID])
+        formData.append('title', title);
+        formData.append('description', description);
+        formData.append('author', user.email)
+
+        try {
+            await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/post/${donut[0]}`, 
+                formData,
+                {
+                    withCredentials: true,
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+            
+            setLoading(false);
+            router.push(`/${donut[0]}`)
+        } catch (err) {
+            console.error(err)
+            setLoading(false);
+        }
+
+        setLoading(false);
     }
 
     return (
@@ -138,7 +183,7 @@ export default function EditPost({
                     ]
                 }} />
                 <div className={styles.tray}>
-                    <Button size="medium" variant="solid" onClick={()=>router.push(`donuts/${donut[List_DonutCols.donutID]}`)}>
+                    <Button size="medium" variant="solid" onClick={()=>router.push(`/donuts/${donut[List_DonutCols.donutID]}`)}>
                         Return
                     </Button>
                     <Button size="medium" variant="solid" onClick={handleSave}>
@@ -152,7 +197,54 @@ export default function EditPost({
                 <textarea value={description} onChange={e=>setDescription(e.target.value)} placeholder="Tell us what you did!"></textarea>
             </div>
             <div className={styles.images}>
-                <input type="file" id="image" name="image" accept="image/png, image/jpeg" onChange={e=>handleAddImage(e.target)} />
+                <div className={styles.gallery}>
+                    <div 
+                      className={styles.galleryInner} 
+                      style={{
+                        transition: 'all 0.2s cubic-bezier(.62,.13,.15,.97)',
+                        transform: `translateX(calc(-100% * ${activeIndex}))`}
+                      }>
+                        <SwipeAlerter 
+                          onSwipeLeft={()=>{
+                            if (activeIndex == (images.length - 1)) return
+                            setActiveIndex(activeIndex + 1);
+                          }} onSwipeRight={() => {
+                            if (activeIndex == 0) return
+                            setActiveIndex(activeIndex - 1);
+                          }}>
+                            <div 
+                              className={styles.galleryScroll} 
+                              style={{
+                                width: `calc(100% * ${images?.length})`,
+                                display: 'grid',
+                                gridTemplateColumns: `repeat(${images?.length}, 1fr)`,
+                              }}>
+                                {images?.map(({name, url}: {name: string; url: string;}, index: number) => (
+                                    <div key={url} className={styles.image}>
+                                        <div className={styles.imageContainer}>
+                                            <img src={url} alt={name} />
+                                        </div>
+                                        <Button size="small" variant="solid" onClick={()=>handleRemoveImage(index)}>
+                                            Remove image
+                                        </Button>
+                                    </div>
+                                ))}
+                            </div>
+                        </SwipeAlerter>
+                    </div>
+                </div>
+
+                <div className={styles.uploadBtn}>
+                    <label 
+                      htmlFor="upload" 
+                      className={styles.addImage}>
+                        + Add image
+                    </label>
+                    <input 
+                      id="upload"
+                      type="file"
+                      onChange={handleAddImage} />
+                </div>
             </div>
         </div>
     )

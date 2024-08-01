@@ -18,6 +18,7 @@
   font-size: 1.1rem;
   color: var(--color-ui-100);
   outline: none;
+  min-height: 300px;
 }
 .editing textarea::placeholder {
   color: var(--color-ui-60);
@@ -48,4 +49,27 @@
 }
 .display {
   opacity: 1;
+}
+
+.gallery {
+  width: 100%;
+}
+.image {
+  width: 100%;
+}
+.imageContainer img {
+  width: 100%;
+  position: relative;
+  max-height: 200px;
+  border-radius: 10px;
+  object-fit: cover;
+  object-position: 50% 0%;
+}
+.uploadBtn input[type="file"] {
+  display: none;
+}
+.uploadBtn label {
+  box-sizing: border-box;
+  display: table;
+  padding: 0.5rem 0.7rem;
 }
