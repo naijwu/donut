@@ -1,5 +1,25 @@
 import { withOracleDB } from "../dbConfig.js";
+import { uploadFile } from "../utils/storage.js";
+import { sqlifyDate } from "./queryService.js";
 
+const uploadFiles = async (files, path) => {
+    if (files.length === 0) return [];
+  
+    // NOTE: Image names are numbers for no particular reason
+    const uploadPromises = files.map(async (file, index) => {
+      return await uploadFile(file, path, index);
+    });
+  
+    try {
+      const publicUrls = await Promise.all(uploadPromises);
+      console.log("All files uploaded:", publicUrls);
+      return publicUrls;
+    } catch (error) {
+      console.error("Error uploading files:", error);
+      throw error;
+    }
+};
+  
 /**
  * Returns all posts
  */
@@ -72,18 +92,55 @@ export async function getDonutPost(donutID, postOrder) {
  * @param {*} postData the data that will populate the Post entity
  * @returns the post that is created
  */
-export async function createPost(donutID, postData) {
+export async function createPost(donutID, postData, files) {
     return await withOracleDB(async (connection) => {
         try {
-            const result = await connection.execute(
+            // check if there exists a post in this donut already (to determine postOrder)
+            let postOrder = 1;
+            const existing = await connection.execute(`SELECT COUNT(*) FROM Post WHERE donutID=:donutID`, { donutID })
+            if(existing.rows[0][0] > 0) postOrder = 2; // because there exists a post
+
+            // save the post
+            const { title, author, description } = postData;
+            const createdAt = sqlifyDate(new Date());
+
+            await connection.execute(
                 `INSERT INTO Post VALUES (:donutID, :title, :postOrder, :createdAt, :author, :description)`, {
                     donutID,
-                    postOrder
+                    title: title,
+                    postOrder,
+                    createdAt,
+                    author,
+                    description
                 }, {
                     autoCommit: true
                 }
             );
-            return result.rows;
+
+            // upload the images and get the URLs of the upload images
+            let pictureURLs = await uploadFiles(files, `${donutID}_${postOrder}`);
+
+            // save the images PostImage
+            for (let i = 0; i < pictureURLs.length; i++) {
+                if (pictureURLs[i]) {
+                    try {
+                        console.log(pictureURLs[i], donutID, postOrder)
+                         await connection.execute(
+                            `INSERT INTO Picture VALUES(:picture, :donutID, :postOrder, :alt)`, {
+                                picture: `${pictureURLs[i]}`,
+                                donutID,
+                                postOrder,
+                                alt: `Picture ${i}`
+                            }, {
+                                autoCommit: true
+                            })
+                    } catch (err) {
+                        console.log('Error while saving image URLs', err)
+                    }
+                }
+            }
+            
+            return 'Successfully created a post';
         } catch(err) {
             console.log('err: ', err);
         }
@@ -120,5 +177,5 @@ export async function createPostReaction(donutID, postOrder, reactionData) {
  * @param {*} postOrder to identify the post
  */
 export async function deletePost(donutID, postOrder) {
-
+    
 }
