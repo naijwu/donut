@@ -1,0 +1,8 @@
+.chatBox {
+    position: relative;
+}
+.chatBoxInput {
+    background: #fff;
+    width: 100%;
+    border: none;
+}
