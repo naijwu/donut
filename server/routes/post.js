@@ -10,6 +10,7 @@ import {
     deletePost,
     getProfileDonutPost
 } from '../services/postService.js';
+import multer from 'multer'
 
 const router = express.Router();
 
