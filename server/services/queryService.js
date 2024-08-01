@@ -70,6 +70,7 @@ const CREATE_QUERIES = [
         isCompleted CHAR(1) DEFAULT '0' NOT NULL,
         course VARCHAR2(8 CHAR),
         suggestedActivity VARCHAR2(2000 CHAR),
+        groupName VARCHAR2(200 CHAR),
         PRIMARY KEY (donutID))`,
     `CREATE TABLE AssignedTo(
         donutID CHAR(36),
@@ -83,7 +84,7 @@ const CREATE_QUERIES = [
         postOrder INT,
         createdAt DATE NOT NULL,
         author VARCHAR2(255 CHAR) NOT NULL,
-        description VARCHAR2(255 CHAR) NOT NULL,
+        description VARCHAR2(1000 CHAR) NOT NULL,
         PRIMARY KEY (donutID, postOrder),
         FOREIGN KEY (author) REFERENCES Profile(email) ON DELETE CASCADE,
         FOREIGN KEY (donutID) REFERENCES Donut(donutID) ON DELETE SET NULL)`,
@@ -334,9 +335,9 @@ export async function makeRandomPairings() {
                         console.log('Im creating a BeenPaired record')
                         await connection.execute(
                             `INSERT INTO BeenPaired(profileA, profileB, pairedDate) VALUES (:profileA, :profileB, :pairedDate)`, {
-                                profileA: pairs[i][0],
-                                profileB: pairs[i][1],
-                                pairedDate: createdAt
+                                profileA: `${pairs[i][0]}`,
+                                profileB: `${pairs[i][1]}`,
+                                pairedDate: `${createdAt}`
                             }
                         )
                     }

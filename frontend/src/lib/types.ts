@@ -28,7 +28,7 @@ export interface Donut {
     donutID: any,
     createdAt: any,
     isCompleted: any,
-    name?: string,
+    groupName?: string,
     posts?: DonutPost[],
     members?: Profile[]
 }

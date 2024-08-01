@@ -10,6 +10,15 @@ export default function DonutBanner({
     borderless?: boolean,
     partial: Donut
 }) {
+
+    const readableDate = (date: string) => {
+        const months = ['','Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct','Nov', 'Dec']
+        const year = date.substring(0, 4);
+        const month = parseInt(date.substring(5, 7));
+        const day = parseInt(date.substring(8, 10));
+        return `${months[month]} ${day}`
+    }
+
     return (
         <div className={`${styles.container} ${borderless ? styles.borderless : ''}`}>
             <div className={styles.top}>
@@ -20,13 +29,13 @@ export default function DonutBanner({
                 </Avatars>
                 <div className={styles.donutAbout}>
                     <P bold small>
-                        {partial?.name}
+                        {partial?.groupName || 'New Donut'}
                     </P>
                     <P>
                         &middot;
                     </P>
                     <P small>
-                        {partial?.createdAt}
+                        {readableDate(partial?.createdAt)}
                     </P>
                 </div>
             </div>

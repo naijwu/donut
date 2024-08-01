@@ -1,18 +1,69 @@
+import { withOracleDB } from "../dbConfig.js";
 
 /**
  * Returns all posts
  */
 export async function getAllPosts() {
-
+    return await withOracleDB(async (connection) => {
+        try {
+            const result = await connection.execute(
+                `SELECT * FROM Post p, Donut d WHERE p.donutID = d.donutID`, {
+                    profile: email
+                }
+            );
+            return result.rows;
+        } catch(err) {
+            console.log('err: ', err);
+        }
+    }).catch((err) => {
+        return err;
+    });
 }
 
 /**
  * 
- * @param {*} donutID to the identify the post
+ * @param {*} donutID the donut to which the post belongs to
+ * @param {*} email the profile to which the post belongs to
+ */
+export async function getProfileDonutPost(donutID, email) {
+    return await withOracleDB(async (connection) => {
+        try {
+            const result = await connection.execute(
+                `SELECT * FROM Post p, Donut d WHERE p.donutID=:donutID AND p.donutID = d.donutID AND p.author=:profile`, {
+                    donutID,
+                    profile: email
+                }
+            );
+            return result.rows;
+        } catch(err) {
+            console.log('err: ', err);
+        }
+    }).catch((err) => {
+        return err;
+    });
+}
+
+/**
+ * 
+ * @param {*} donutID to identify the post
  * @param {*} postOrder to identify the post
  */
-export async function getPost(donutID, postOrder) {
-
+export async function getDonutPost(donutID, postOrder) {
+    return await withOracleDB(async (connection) => {
+        try {
+            const result = await connection.execute(
+                `SELECT * FROM Post p, Donut d WHERE p.donutID=:donutID AND p.donutID = d.donutID AND postOrder=:postOrder`, {
+                    donutID,
+                    postOrder
+                }
+            );
+            return result.rows;
+        } catch(err) {
+            console.log('err: ', err);
+        }
+    }).catch((err) => {
+        return err;
+    });
 }
 
 /**
@@ -22,7 +73,23 @@ export async function getPost(donutID, postOrder) {
  * @returns the post that is created
  */
 export async function createPost(donutID, postData) {
-
+    return await withOracleDB(async (connection) => {
+        try {
+            const result = await connection.execute(
+                `INSERT INTO Post VALUES (:donutID, :title, :postOrder, :createdAt, :author, :description)`, {
+                    donutID,
+                    postOrder
+                }, {
+                    autoCommit: true
+                }
+            );
+            return result.rows;
+        } catch(err) {
+            console.log('err: ', err);
+        }
+    }).catch((err) => {
+        return err;
+    });
 }
 
 /**

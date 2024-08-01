@@ -14,10 +14,17 @@ export const ProfileCols = {
     postalCode: 10
 }
 
-export const DonutCols = {
+export const List_DonutCols = {
     donutID: 0,
     createdAt: 1,
     isCompleted: 2,
     course: 3,
-    suggestedActivity: 4
+    suggestedActivity: 4,
+    groupName: 5,
+    member1: 6,
+    member1name: 7,
+    member1picture: 8,
+    member2: 9,
+    member2name: 10,
+    member2picture: 11
 }

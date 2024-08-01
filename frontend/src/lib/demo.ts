@@ -40,7 +40,7 @@ export const DEMO_FEED: Donut[] = [
         donutID: '',
         createdAt: 'July 17, 2024',
         isCompleted: true,
-        name: 'hiking!',
+        groupName: 'hiking!',
         posts: [{
             donutID: '0',
             title: 'Went on an amazing hike today',
@@ -69,7 +69,7 @@ export const DEMO_FEED: Donut[] = [
         donutID: '',
         createdAt: 'July 17, 2024',
         isCompleted: true,
-        name: 'hiking!',
+        groupName: 'hiking!',
         posts: [{
             donutID: '0',
             title: 'Went on an amazing hike today',
@@ -119,7 +119,7 @@ export const DEMO_DONUTS: Donut[] = [
         donutID: '1',
         createdAt: 'June 10, 2024',
         isCompleted: true,
-        name: 'hiking donut!',
+        groupName: 'hiking donut!',
         members: [
             {
                 email: '',
@@ -137,7 +137,7 @@ export const DEMO_DONUTS: Donut[] = [
         donutID: '2',
         createdAt: 'May 24, 2024',
         isCompleted: true,
-        name: 'lets play pool',
+        groupName: 'lets play pool',
         members: [
             {
                 email: '',
@@ -155,7 +155,7 @@ export const DEMO_DONUTS: Donut[] = [
         donutID: '3',
         createdAt: 'February 10, 2023',
         isCompleted: true,
-        name: 'unnamed donut',
+        groupName: 'unnamed donut',
         members: [
             {
                 email: '',
@@ -174,7 +174,7 @@ export const DEMO_DONUTS: Donut[] = [
 export const DEMO_DONUT: Donut = {
     donutID: '',
     createdAt: 'July 17, 2024',
-    name: 'hiking donut!',
+    groupName: 'hiking donut!',
     isCompleted: true,
     posts: [{
         donutID: '0',

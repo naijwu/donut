@@ -14,10 +14,11 @@ export default function Donuts() {
 
   async function fetchDonuts() {
     try {
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/donut/${user.email}`, {
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/donut/profile/${user.email}`, {
         withCredentials: true
       });
       setDonutData(res.data);
+      console.log(res.data);
     } catch (err) {
       console.error(err);
     }
