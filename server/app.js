@@ -5,7 +5,7 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser'
 
-import demoRoute from './routes/demo.js';
+// import demoRoute from './routes/demo.js';
 import authRoute from './routes/auth.js';
 import profileRoute from './routes/profile.js';
 import donutRoute from './routes/donut.js';
@@ -28,7 +28,7 @@ app.use(cookieParser());
 app.use(express.static('public'));  // Serve static files from the 'public' directory
 app.use(express.json());             // Parse incoming JSON payloads
 
-app.use('/', demoRoute);
+// app.use('/', demoRoute);
 app.use('/auth', authRoute);
 app.use('/profile', profileRoute);
 app.use('/donut', donutRoute);

@@ -1,4 +1,4 @@
-import { withOracleDB } from "./demoService.js";
+import { withOracleDB } from "../dbConfig.js";
 
 /**
  * 

@@ -1,13 +1,11 @@
-const oracledb = require('oracledb');
-const loadEnvFile = require('./utils/envUtil');
-
-const envVariables = loadEnvFile('./.env');
+import oracledb from 'oracledb'
+oracledb.autoCommit = true;
 
 // Database configuration setup. Ensure your .env file has the required database credentials.
 const dbConfig = {
-    user: envVariables.ORACLE_USER,
-    password: envVariables.ORACLE_PASS,
-    connectString: `${envVariables.ORACLE_HOST}:${envVariables.ORACLE_PORT}/${envVariables.ORACLE_DBNAME}`,
+    user: process.env.ORACLE_USER,
+    password: process.env.ORACLE_PASS,
+    connectString: `${process.env.ORACLE_HOST}:${process.env.ORACLE_PORT}/${process.env.ORACLE_DBNAME}`,
     poolMin: 1,
     poolMax: 3,
     poolIncrement: 1,
@@ -56,8 +54,11 @@ export async function withOracleDB(action) {
     } finally {
         if (connection) {
             try {
+                console.log('closing connection...')
                 await connection.close();
+                console.log('connection closed')
             } catch (err) {
+                console.log('finally error);')
                 console.error(err);
             }
         }

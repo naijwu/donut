@@ -13,3 +13,11 @@ export const ProfileCols = {
     address: 9,
     postalCode: 10
 }
+
+export const DonutCols = {
+    donutID: 0,
+    createdAt: 1,
+    isCompleted: 2,
+    course: 3,
+    suggestedActivity: 4
+}

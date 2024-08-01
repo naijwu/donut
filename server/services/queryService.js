@@ -1,4 +1,5 @@
-import { withOracleDB } from "./demoService.js";
+import { withOracleDB } from "../dbConfig.js";
+import { v4 as uuidv4 } from 'uuid';
 
 const DROP_QUERIES = [
     `DROP TABLE ThreadReaction`,
@@ -203,6 +204,151 @@ export async function insertHobbies() {
             return 'Successfully inserted hobbies';
         } catch (err) {
             console.log('error inserting hobbies', err)
+        }
+    }).catch((err) => {
+        return err;
+    })
+}
+
+const SMC = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC']
+/**
+ * 
+ * @param {*} date the date to turn into SQL date format
+ * @returns a string compatible with SQL date format
+ */
+function sqlifyDate(date) {
+
+    const pad = (num) => ('00'+num).slice(-2)
+    const newDate = pad(date.getUTCDate()) + '-' + 
+                    SMC[date.getUTCMonth()] + '-' +
+                    date.getUTCFullYear()
+                    
+    return newDate;
+}
+
+/**
+ * 
+ * @param {*} date the date to turn into SQL date format
+ * @returns a string compatible with SQL date format
+ */
+function sqlifyDatetime(date) {
+    const pad = (num) => ('00'+num).slice(-2)
+    const newDate = date.getUTCFullYear() + '-' +
+                    pad(date.getUTCMonth() + 1) + '-' +
+                    pad(date.getUTCDate()) + ' ' +
+                    pad(date.getUTCHours()) + ':' +
+                    pad(date.getUTCMinutes()) + ':' +
+                    pad(date.getUTCSeconds());
+    return newDate;
+}
+
+/**
+ * 
+ * @param {*} arr the array to select an item from randomly
+ * @returns an item from the array selected randomly, or false if arry is empty
+ */
+function returnRandom(arr) {
+    if (arr.length == 0) {
+        return false;
+    }
+    let maxIndex = arr.length - 1;
+    let randomIndex = Math.floor(Math.random() * maxIndex);
+    return arr[randomIndex];
+}
+
+export async function makeRandomPairings() {
+    return await withOracleDB(async (connection) => {
+        try {
+            console.log('creating pairings')
+
+            let profilesToBePaired;
+            try {
+                const result = await connection.execute(`SELECT email FROM Profile WHERE enabled=1`)
+                profilesToBePaired = result.rows
+            } catch (err) {
+                console.log(err);
+            }
+
+            let pairs = [];
+
+            while(profilesToBePaired.length > 0) {
+                let pair = []
+
+                const firstProfile = returnRandom(profilesToBePaired);
+                pair.push(firstProfile)
+                const fpi = profilesToBePaired.indexOf(firstProfile);
+                profilesToBePaired.splice(fpi,1)
+
+                const secondProfile = returnRandom(profilesToBePaired);
+                if (secondProfile) {
+                    // possibly the last element, thus check
+                    pair.push(secondProfile);
+                    const spi = profilesToBePaired.indexOf(secondProfile);
+                    profilesToBePaired.splice(spi,1)
+                    
+                    // else, already at 0 index, will break from loop
+                } else {
+                    pair.push(null);
+                }
+
+                pairs.push(pair);
+            }
+
+            console.log(pairs);
+
+            for (let i = 0; i < pairs.length; i++) {
+                try {
+                    // 1. create donut - populate `Donut`
+                    console.log('Im creating a donut for ', pairs[i][0], ' and ', pairs[i][1])
+
+                    const donutID = uuidv4();
+                    const createdAt = sqlifyDate(new Date());
+
+                    console.log(`INSERT INTO Donut VALUES (${donutID}, ${createdAt})`)
+                    await connection.execute(
+                        `INSERT INTO Donut (donutID, createdAt) VALUES (:donutID, TO_DATE(:createdAt))`, {
+                            donutID,
+                            createdAt
+                        }, {
+                            autoCommit: true
+                        });
+
+                    // 2. assign the pair - populate `AssignedTo`
+                    console.log('Im assigning the two pairs together')
+                    for (let j = 0; j < 2; j++) {
+                        const profile =  pairs[i][j];
+                        if (profile != null) {
+                            // there exists this user (could be solo, for debugging purposes)
+                            console.log(`INSERT INTO AssignedTo VALUES (${donutID}, ${profile})`)
+                            await connection.execute(
+                                `INSERT INTO AssignedTo (donutID, profile) VALUES (:donutID2, :profile)`, {
+                                    donutID2: donutID,
+                                    profile: `${profile}`
+                                }, {
+                                    autoCommit: true
+                                })
+                        }
+                    }
+                    // 3. mark as assigned - populate `BeenPaired`
+                    if (pairs[i][0] != null && pairs[i][1] != null) {
+                        console.log('Im creating a BeenPaired record')
+                        await connection.execute(
+                            `INSERT INTO BeenPaired(profileA, profileB, pairedDate) VALUES (:profileA, :profileB, :pairedDate)`, {
+                                profileA: pairs[i][0],
+                                profileB: pairs[i][1],
+                                pairedDate: createdAt
+                            }
+                        )
+                    }
+                } catch (err) {
+                    console.log(err);
+                } 
+            }
+            
+
+            return 'Successfully all possible donut pairings';
+        } catch (err) {
+            console.log('error creating donut pairings', err)
         }
     }).catch((err) => {
         return err;
