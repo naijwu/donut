@@ -10,7 +10,7 @@ import {
 
 const router = express.Router();
 
-router.get('/:email', auth, async (req, res) => {
+router.get('/profile/:email', auth, async (req, res) => {
     try {
         const { email } = req.params;
 
@@ -63,7 +63,7 @@ router.post('/:donutID/message', auth, async (req, res) => {
         const { donutID } = req.params;
         /**
          * type message = {
-         *    messageID: string;
+         *    messageID: string; -> Not passsed/ID created in service file
          *    donutID: string;
          *    message: string;
          *    sentAt: date;
@@ -73,10 +73,10 @@ router.post('/:donutID/message', auth, async (req, res) => {
         const { message } = req.body;
 
         // Sends a message to the donut/groupchat
-        const newMessage = await sendDonutMessage(donutID, message);
+        await sendDonutMessage(donutID, message);
         
         res.status(200).json({
-            data: newMessage
+            message: 'Message successfully created'
         })
     } catch (err) {
         console.log(err);

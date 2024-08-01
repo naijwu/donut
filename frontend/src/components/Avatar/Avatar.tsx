@@ -3,7 +3,7 @@ import styles from './Avatar.module.css'
 
 type AvatarT = {
     name?: string,
-    pictureUrl?: string,
+    pictureURL?: string,
     size?: 'medium' | 'small' | 'xlarge'
 }
 
@@ -25,12 +25,12 @@ export function Avatars({
 
 export default function Avatar({
     name,
-    pictureUrl,
+    pictureURL,
     size = 'medium'
 }: AvatarT) {
     return (
         <div className={`${styles.avatar} ${styles[`s_${size}`]}`}>
-            {pictureUrl ? <Image src={pictureUrl} alt={name || "Avatar"} layout="fill" /> : (name ? name.substring(0, 1) : "")}
+            {pictureURL ? <Image src={pictureURL} alt={name || "Avatar"} layout="fill" /> : (name ? name.substring(0, 1) : "")}
         </div>
     )
 

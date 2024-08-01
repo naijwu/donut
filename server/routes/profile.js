@@ -5,7 +5,10 @@ import {
     findPartner,
     getProfile,
     updateProfile,
-    deleteProfile
+    deleteProfile,
+    getAllHobbies,
+    createHobbiesOfUser,
+    deleteHobbiesOfUser
 } from '../services/profileService.js'
 
 const router = express.Router();
@@ -26,9 +29,25 @@ router.get('/:email/findpartner', auth, async (req, res) => {
     }
 });
 
+// Find all hobbies
+router.get('/hobbies', auth, async (req, res) => {
+    try {
+        const data = await getAllHobbies();
+
+        res.status(200).json(data)
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: `Error getting all hobbies`
+        })
+    }
+});
+
 router.get('/:email', auth, async (req, res) => {
     try {
         const { email } = req.params;
+
+        console.log('email hit: ', email)
 
         // select Profile
         const data = await getProfile(email);
@@ -60,13 +79,14 @@ router.patch('/:email', auth, async (req, res) => {
          *    postalCode: string;
          * }
          */
-        const { profile } = req.body;
+        const { profile, hobbies } = req.body;
 
-        // TODO: Edit data
-        const editedProfile = await updateProfile(email, profile);
+        await updateProfile(email, profile);
+        await deleteHobbiesOfUser(email);
+        await createHobbiesOfUser(email, hobbies);
         
         res.status(200).json({
-            data: editedProfile
+            message: 'Successfully updated profile'
         })
     } catch (err) {
         console.log(err);

@@ -14,7 +14,7 @@ export default function Author({
 
     return (
         <div className={styles.author}>
-            <Avatar pictureUrl='https://lh3.googleusercontent.com/a/ACg8ocLg2Dv28OPh2nV0uWRhctqkHMTSpuEybGqCtFc-jxDmP8OhuaoqMA=s96-c' />
+            <Avatar pictureURL='https://lh3.googleusercontent.com/a/ACg8ocLg2Dv28OPh2nV0uWRhctqkHMTSpuEybGqCtFc-jxDmP8OhuaoqMA=s96-c' />
             <div className={styles.author_text}>
                 <P small bold>
                     {author}

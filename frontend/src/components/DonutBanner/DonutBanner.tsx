@@ -1,4 +1,4 @@
-import { Donut, User } from '@/lib/types'
+import { Donut, Profile } from '@/lib/types'
 import Avatar, { Avatars } from '../Avatar/Avatar'
 import { P } from '../Typography/Typography'
 import styles from './DonutBanner.module.css'
@@ -10,23 +10,32 @@ export default function DonutBanner({
     borderless?: boolean,
     partial: Donut
 }) {
+
+    const readableDate = (date: string) => {
+        const months = ['','Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct','Nov', 'Dec']
+        const year = date.substring(0, 4);
+        const month = parseInt(date.substring(5, 7));
+        const day = parseInt(date.substring(8, 10));
+        return `${months[month]} ${day}`
+    }
+
     return (
         <div className={`${styles.container} ${borderless ? styles.borderless : ''}`}>
             <div className={styles.top}>
                 <Avatars>
-                    {partial?.members?.map((u: User) => (
-                        <Avatar key={u.pictureUrl} name={u.fullName} pictureUrl={u.pictureUrl} />
+                    {partial?.members?.map((u: Profile) => (
+                        <Avatar key={u.pictureURL} name={u.fullName} pictureURL={u.pictureURL} />
                     ))}
                 </Avatars>
                 <div className={styles.donutAbout}>
                     <P bold small>
-                        {partial?.name}
+                        {partial?.groupName || 'New Donut'}
                     </P>
                     <P>
                         &middot;
                     </P>
                     <P small>
-                        {partial?.createdAt}
+                        {readableDate(partial?.createdAt)}
                     </P>
                 </div>
             </div>

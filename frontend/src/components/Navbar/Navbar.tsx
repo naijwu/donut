@@ -2,6 +2,7 @@ import BellIcon from '@/icons/BellIcon'
 import FoodIcon from '@/icons/FoodIcon'
 import HomeIcon from '@/icons/HomeIcon'
 import UserIcon from '@/icons/UserIcon'
+import { useAuthContext } from '@/utility/Auth'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import styles from './Navbar.module.css'
@@ -27,6 +28,7 @@ function TrayButton({
 export default function Navbar() {
 
     const pn = usePathname();
+    const { user } = useAuthContext();
 
     return (
         <div className={styles.container}>
@@ -40,7 +42,7 @@ export default function Navbar() {
                 <TrayButton link="/donuts" active={pn?.includes('/donuts')}>
                     <FoodIcon />
                 </TrayButton>
-                <TrayButton link="/profile" active={pn?.includes('/profile')}>
+                <TrayButton link={`/profile/${user.email}`} active={pn?.includes('/profile')}>
                     <UserIcon />
                 </TrayButton>
             </div>

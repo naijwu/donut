@@ -3,11 +3,12 @@ import express from 'express'
 import { auth } from '../middleware/auth.js';
 import {
     getAllPosts,
-    getPost,
+    getDonutPost,
     createPost,
     updatePost,
     createPostReaction,
-    deletePost
+    deletePost,
+    getProfileDonutPost
 } from '../services/postService.js';
 
 const router = express.Router();
@@ -27,18 +28,33 @@ router.get('/', auth, async (req, res) => {
     }
 });
 
-router.get('/:donutID/:postOrder', auth, async (req, res) => {
+router.get('/donut/:donutID/order/:postOrder', auth, async (req, res) => {
     try {
         const { donutID, postOrder } = req.params;
 
         // select from Post, Donut, PostReaction, Thread, ThreadsReaction - return post + comments
-        const data = await getPost(donutID, postOrder);
+        const data = await getDonutPost(donutID, postOrder);
 
         res.status(200).json(data)
     } catch (err) {
         console.log(err);
         res.status(500).json({
             message: `Error fetching post ${donutID}, ${postOrder} with comments`
+        })
+    }
+});
+
+router.get('/donut/:donutID/profile/:profile', auth, async (req, res) => {
+    try {
+        const { donutID, profile } = req.params;
+
+        const data = await getProfileDonutPost(donutID, profile);
+
+        res.status(200).json(data)
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: `Error fetching post ${donutID}, ${profile} with comments`
         })
     }
 });

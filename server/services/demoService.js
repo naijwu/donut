@@ -1,6 +1,6 @@
 // const oracledb = require('oracledb');
 import oracledb from 'oracledb'
-
+oracledb.autoCommit = true;
 
 // Database configuration setup. Ensure your .env file has the required database credentials.
 const dbConfig = {
@@ -47,6 +47,7 @@ process
 export async function withOracleDB(action) {
     let connection;
     try {
+        console.log('opening connection')
         connection = await oracledb.getConnection(); // Gets a connection from the default pool 
         return await action(connection);
     } catch (err) {
@@ -55,8 +56,11 @@ export async function withOracleDB(action) {
     } finally {
         if (connection) {
             try {
+                console.log('closing connection...')
                 await connection.close();
+                console.log('connection closed')
             } catch (err) {
+                console.log('finally error);')
                 console.error(err);
             }
         }

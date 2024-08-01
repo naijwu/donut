@@ -1,0 +1,91 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-bottom: 76px;
+}
+
+.container {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+}
+
+.about {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 1rem 0;
+}
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.formControl {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.formControl input[type="text"],
+.formControl input[type="number"] {
+  padding: 0.7rem;
+  background: white;
+  color: var(--color-ui-100);
+  border: 1px solid var(--color-ui-10);
+  border-radius: 12px;
+  width: 100%;
+  font-size: 1rem;
+}
+.formControl select {
+  padding: 0.7rem;
+  background: white;
+  color: var(--color-ui-100);
+  border: 1px solid var(--color-ui-10);
+  border-radius: 12px;
+  width: 100%;
+  font-size: 1rem;
+}
+.checkbox {
+  display: flex;
+  gap: 0.5rem;
+}
+.hobbies {
+  padding-top: 1rem;
+}
+.hobbiesList {
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.hobby {
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem;
+  border: 2px solid var(--color-ui-10);
+  border-radius: 14px;
+  gap: 0.2rem;
+  transition: all 0.13s ease;
+}
+.hobby.active {
+  border-color: #3676f5;
+  background: rgba(54, 118, 245, 0.05);
+}
+
+.floatie {
+  position: fixed;
+  left: 0;
+  width: 100%;
+  bottom: 76px;
+  padding: 0 1rem 1rem 1rem;
+}
+.floatieInner {
+  border: 1px solid var(--color-ui-10);
+  padding: 1rem;
+  border-radius: 15px;
+  display: flex;
+  gap: 1rem;
+  background: white;
+}

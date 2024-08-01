@@ -6,7 +6,7 @@ export const DEMO_THREADS = [
         createdAt: 'July 10',
         text: 'im a comment',
         author: 'David lim',
-        pictureUrl: '',
+        pictureURL: '',
         parentID: null,
     },
     {
@@ -14,7 +14,7 @@ export const DEMO_THREADS = [
         createdAt: 'July 11',
         text: 'im a reply 1',
         author: 'Donald Lee',
-        pictureUrl: '',
+        pictureURL: '',
         parentID: '1',
     },
     {
@@ -22,7 +22,7 @@ export const DEMO_THREADS = [
         createdAt: 'July 12',
         text: 'im another reply',
         author: 'Jae Wu Chun',
-        pictureUrl: 'https://lh3.googleusercontent.com/a/ACg8ocLg2Dv28OPh2nV0uWRhctqkHMTSpuEybGqCtFc-jxDmP8OhuaoqMA=s96-c',
+        pictureURL: 'https://lh3.googleusercontent.com/a/ACg8ocLg2Dv28OPh2nV0uWRhctqkHMTSpuEybGqCtFc-jxDmP8OhuaoqMA=s96-c',
         parentID: '1',
     },
     {
@@ -30,7 +30,7 @@ export const DEMO_THREADS = [
         createdAt: 'July 15',
         text: 'im yet another comment',
         author: 'Donald Lee',
-        pictureUrl: 'https://lh3.googleusercontent.com/a/ACg8ocLg2Dv28OPh2nV0uWRhctqkHMTSpuEybGqCtFc-jxDmP8OhuaoqMA=s96-c',
+        pictureURL: 'https://lh3.googleusercontent.com/a/ACg8ocLg2Dv28OPh2nV0uWRhctqkHMTSpuEybGqCtFc-jxDmP8OhuaoqMA=s96-c',
         parentID: null
     }
 ]
@@ -40,7 +40,7 @@ export const DEMO_FEED: Donut[] = [
         donutID: '',
         createdAt: 'July 17, 2024',
         isCompleted: true,
-        name: 'hiking!',
+        groupName: 'hiking!',
         posts: [{
             donutID: '0',
             title: 'Went on an amazing hike today',
@@ -57,17 +57,19 @@ export const DEMO_FEED: Donut[] = [
             createdAt: 'June 3rd 2024'
         }],
         members: [{
+            email: '',
             fullName: 'Jae Wu Chun',
-            pictureUrl: 'https://lh3.googleusercontent.com/a/ACg8ocLg2Dv28OPh2nV0uWRhctqkHMTSpuEybGqCtFc-jxDmP8OhuaoqMA=s96-c'
+            pictureURL: 'https://lh3.googleusercontent.com/a/ACg8ocLg2Dv28OPh2nV0uWRhctqkHMTSpuEybGqCtFc-jxDmP8OhuaoqMA=s96-c'
         },{
+            email: '',
             fullName: 'Jae Wu Chun',
-            pictureUrl: 'https://lh3.googleusercontent.com/a/ACg8ocLg2Dv28OPh2nV0uWRhctqkHMTSpuEybGqCtFc-jxDmP8OhuaoqMA=s96-c'
+            pictureURL: 'https://lh3.googleusercontent.com/a/ACg8ocLg2Dv28OPh2nV0uWRhctqkHMTSpuEybGqCtFc-jxDmP8OhuaoqMA=s96-c'
         }]
     },{
         donutID: '',
         createdAt: 'July 17, 2024',
         isCompleted: true,
-        name: 'hiking!',
+        groupName: 'hiking!',
         posts: [{
             donutID: '0',
             title: 'Went on an amazing hike today',
@@ -84,11 +86,13 @@ export const DEMO_FEED: Donut[] = [
             createdAt: 'June 3rd 2024'
         }],
         members: [{
+            email: '',
             fullName: 'Jae Wu Chun',
-            pictureUrl: 'https://lh3.googleusercontent.com/a/ACg8ocLg2Dv28OPh2nV0uWRhctqkHMTSpuEybGqCtFc-jxDmP8OhuaoqMA=s96-c'
+            pictureURL: 'https://lh3.googleusercontent.com/a/ACg8ocLg2Dv28OPh2nV0uWRhctqkHMTSpuEybGqCtFc-jxDmP8OhuaoqMA=s96-c'
         },{
+            email: '',
             fullName: 'Jae Wu Chun',
-            pictureUrl: 'https://lh3.googleusercontent.com/a/ACg8ocLg2Dv28OPh2nV0uWRhctqkHMTSpuEybGqCtFc-jxDmP8OhuaoqMA=s96-c'
+            pictureURL: 'https://lh3.googleusercontent.com/a/ACg8ocLg2Dv28OPh2nV0uWRhctqkHMTSpuEybGqCtFc-jxDmP8OhuaoqMA=s96-c'
         }]
     }
 ]
@@ -96,14 +100,14 @@ export const DEMO_FEED: Donut[] = [
 export const DEMO_NOTIF: Notification[] = [
     {
         causer: 'Jae Wu Chun',
-        pictureUrl: 'https://lh3.googleusercontent.com/a/ACg8ocLg2Dv28OPh2nV0uWRhctqkHMTSpuEybGqCtFc-jxDmP8OhuaoqMA=s96-c',
+        pictureURL: 'https://lh3.googleusercontent.com/a/ACg8ocLg2Dv28OPh2nV0uWRhctqkHMTSpuEybGqCtFc-jxDmP8OhuaoqMA=s96-c',
         notificationID: '1',
         message: 'Your post received a new comment',
         time: 'July 29, 2024 11:23 AM'
     },
     {
         causer: 'Donald Lee',
-        pictureUrl: '',
+        pictureURL: '',
         notificationID: '2',
         message: 'Your post was liked',
         time: 'July 29, 2024 11:24 AM'
@@ -115,15 +119,17 @@ export const DEMO_DONUTS: Donut[] = [
         donutID: '1',
         createdAt: 'June 10, 2024',
         isCompleted: true,
-        name: 'hiking donut!',
+        groupName: 'hiking donut!',
         members: [
             {
+                email: '',
                 fullName: 'David Lim',
-                pictureUrl: '',
+                pictureURL: '',
             },
             {
+                email: '',
                 fullName: 'Jae Wu Chun',
-                pictureUrl: 'https://lh3.googleusercontent.com/a/ACg8ocLg2Dv28OPh2nV0uWRhctqkHMTSpuEybGqCtFc-jxDmP8OhuaoqMA=s96-c',
+                pictureURL: 'https://lh3.googleusercontent.com/a/ACg8ocLg2Dv28OPh2nV0uWRhctqkHMTSpuEybGqCtFc-jxDmP8OhuaoqMA=s96-c',
             }
         ]
     },
@@ -131,15 +137,17 @@ export const DEMO_DONUTS: Donut[] = [
         donutID: '2',
         createdAt: 'May 24, 2024',
         isCompleted: true,
-        name: 'lets play pool',
+        groupName: 'lets play pool',
         members: [
             {
+                email: '',
                 fullName: 'David Lim',
-                pictureUrl: '',
+                pictureURL: '',
             },
             {
+                email: '',
                 fullName: 'Jae Wu Chun',
-                pictureUrl: 'https://lh3.googleusercontent.com/a/ACg8ocLg2Dv28OPh2nV0uWRhctqkHMTSpuEybGqCtFc-jxDmP8OhuaoqMA=s96-c',
+                pictureURL: 'https://lh3.googleusercontent.com/a/ACg8ocLg2Dv28OPh2nV0uWRhctqkHMTSpuEybGqCtFc-jxDmP8OhuaoqMA=s96-c',
             }
         ]
     },
@@ -147,15 +155,17 @@ export const DEMO_DONUTS: Donut[] = [
         donutID: '3',
         createdAt: 'February 10, 2023',
         isCompleted: true,
-        name: 'unnamed donut',
+        groupName: 'unnamed donut',
         members: [
             {
+                email: '',
                 fullName: 'David Lim',
-                pictureUrl: '',
+                pictureURL: '',
             },
             {
+                email: '',
                 fullName: 'Bonald Lee',
-                pictureUrl: '',
+                pictureURL: '',
             }
         ]
     },
@@ -164,7 +174,7 @@ export const DEMO_DONUTS: Donut[] = [
 export const DEMO_DONUT: Donut = {
     donutID: '',
     createdAt: 'July 17, 2024',
-    name: 'hiking donut!',
+    groupName: 'hiking donut!',
     isCompleted: true,
     posts: [{
         donutID: '0',
@@ -182,10 +192,12 @@ export const DEMO_DONUT: Donut = {
         createdAt: 'June 3rd 2024'
     }],
     members: [{
+        email: '',
         fullName: 'Jae Wu Chun',
-        pictureUrl: 'https://lh3.googleusercontent.com/a/ACg8ocLg2Dv28OPh2nV0uWRhctqkHMTSpuEybGqCtFc-jxDmP8OhuaoqMA=s96-c'
+        pictureURL: 'https://lh3.googleusercontent.com/a/ACg8ocLg2Dv28OPh2nV0uWRhctqkHMTSpuEybGqCtFc-jxDmP8OhuaoqMA=s96-c'
     },{
+        email: '',
         fullName: 'Jae Wu Chun',
-        pictureUrl: 'https://lh3.googleusercontent.com/a/ACg8ocLg2Dv28OPh2nV0uWRhctqkHMTSpuEybGqCtFc-jxDmP8OhuaoqMA=s96-c'
+        pictureURL: 'https://lh3.googleusercontent.com/a/ACg8ocLg2Dv28OPh2nV0uWRhctqkHMTSpuEybGqCtFc-jxDmP8OhuaoqMA=s96-c'
     }]
 }
