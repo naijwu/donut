@@ -81,10 +81,11 @@ router.post('/:donutID', auth, multerMid.array("files"), async (req, res) => {
         const { title, author, description } = req.body;
 
         // Create a post
-        const newPost = await createPost(donutID, { title, author, description }, req.files);
+        console.log(title, author, description, req.files, donutID)
+        await createPost(donutID, { title, author, description }, req.files);
         
         res.status(200).json({
-            data: newPost
+            data: 'Successfully created new post'
         })
     } catch (err) {
         console.log(err);

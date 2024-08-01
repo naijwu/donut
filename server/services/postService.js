@@ -1,4 +1,5 @@
 import { withOracleDB } from "../dbConfig.js";
+import { uploadFile } from "../utils/storage.js";
 import { sqlifyDate } from "./queryService.js";
 
 const uploadFiles = async (files, path) => {
@@ -99,29 +100,11 @@ export async function createPost(donutID, postData, files) {
             const existing = await connection.execute(`SELECT COUNT(*) FROM Post WHERE donutID=:donutID`, { donutID })
             if(existing.rows[0][0] > 0) postOrder = 2; // because there exists a post
 
-            // upload the images and get the URLs of the upload images
-            let pictureURLs = await uploadFiles(files, `${donutID}_${postOrder}`);
-
-            // save the images PostImage
-            for (let i = 0; i < pictureURLs.length; i++) {
-                try {
-                     await connection.execute(
-                        `INSERT INTO Picture VALUES(:pictureURL, :donutID, :postOrder, :alt)`, {
-                            pictureURL: `${pictureURLs[i]}`,
-                            donutID,
-                            postOrder,
-                            alt: `Picture ${i}`
-                        })
-                } catch (err) {
-                    console.err('Error while saving image URLs')
-                }
-            }
-
             // save the post
             const { title, author, description } = postData;
             const createdAt = sqlifyDate(new Date());
 
-            const result = await connection.execute(
+            await connection.execute(
                 `INSERT INTO Post VALUES (:donutID, :title, :postOrder, :createdAt, :author, :description)`, {
                     donutID,
                     title: title,
@@ -133,7 +116,31 @@ export async function createPost(donutID, postData, files) {
                     autoCommit: true
                 }
             );
-            return result.rows;
+
+            // upload the images and get the URLs of the upload images
+            let pictureURLs = await uploadFiles(files, `${donutID}_${postOrder}`);
+
+            // save the images PostImage
+            for (let i = 0; i < pictureURLs.length; i++) {
+                if (pictureURLs[i]) {
+                    try {
+                        console.log(pictureURLs[i], donutID, postOrder)
+                         await connection.execute(
+                            `INSERT INTO Picture VALUES(:picture, :donutID, :postOrder, :alt)`, {
+                                picture: `${pictureURLs[i]}`,
+                                donutID,
+                                postOrder,
+                                alt: `Picture ${i}`
+                            }, {
+                                autoCommit: true
+                            })
+                    } catch (err) {
+                        console.log('Error while saving image URLs', err)
+                    }
+                }
+            }
+            
+            return 'Successfully created a post';
         } catch(err) {
             console.log('err: ', err);
         }

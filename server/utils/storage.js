@@ -1,6 +1,7 @@
 import { Storage } from '@google-cloud/storage'
 import * as path from 'path'
 import { fileURLToPath } from 'url';
+import { v4 as uuidv4 } from 'uuid'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -33,7 +34,8 @@ export const uploadFile = (file, path, index) => new Promise ((res, rej) => {
 
     if (!mtmap[mimetype]) return
 
-    const fileName = `${index}${mtmap[mimetype]}`
+    const uname = uuidv4();
+    const fileName = `${uname}${mtmap[mimetype]}`
     const blob = bucket.file(path + '/' + fileName);
 
     const blobStream = blob.createWriteStream({

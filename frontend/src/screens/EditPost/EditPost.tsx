@@ -75,10 +75,10 @@ export default function EditPost({
     const router = useRouter();
 
     const { user } = useAuthContext();
-
-    const [title, setTitle] = useState<string>();
-    const [description, setDescription] = useState<string>();
-    const [images, setImages] = useState<any>();
+    
+    const [title, setTitle] = useState<string>(post ? post[1] : '');
+    const [description, setDescription] = useState<string>(post ? post[5] : '');
+    const [images, setImages] = useState<any>([]);
     const [activeIndex, setActiveIndex] = useState<number>(0);
 
     const [loading, setLoading] = useState<boolean>(false)
@@ -151,7 +151,7 @@ export default function EditPost({
                 });
             
             setLoading(false);
-            router.push(`/${donut[0]}`)
+            router.push(`/donuts/${donut[0]}`)
         } catch (err) {
             console.error(err)
             setLoading(false);
