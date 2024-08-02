@@ -49,8 +49,7 @@ const CREATE_QUERIES = [
         address VARCHAR2(255 CHAR),
         postalCode CHAR(6),
         PRIMARY KEY (email),
-        FOREIGN KEY (postalCode) REFERENCES PostalLocation(postalCode)
-        ON DELETE SET NULL)`,
+        FOREIGN KEY (postalCode) REFERENCES PostalLocation(postalCode) ON DELETE SET NULL)`,
     `CREATE TABLE BeenPaired(
         profileA VARCHAR2(255 CHAR),
         profileB VARCHAR2(255 CHAR),
@@ -86,7 +85,7 @@ const CREATE_QUERIES = [
         author VARCHAR2(255 CHAR) NOT NULL,
         description VARCHAR2(1000 CHAR) NOT NULL,
         PRIMARY KEY (donutID, postOrder),
-        FOREIGN KEY (author) REFERENCES Profile(email) ON DELETE CASCADE,
+        FOREIGN KEY (author) REFERENCES Profile(email),
         FOREIGN KEY (donutID) REFERENCES Donut(donutID) ON DELETE CASCADE)`,
     `CREATE TABLE Picture(
         pictureURL VARCHAR2(1000 CHAR),

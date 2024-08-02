@@ -1,19 +1,37 @@
 -- other changes
--- CREATE TABLE Post (Donut ON DELETE CASCADE)
+-- CREATE TABLE Post - cahnged Donut to ON DELETE CASCADE
+-- CREATE TABLE Post - removed Profile ON DELETE CASCADE 
+
+------------------------------------------------------------------------------------------------
 
 -- INSERT - add posts, accounts, comments, messages, etc.
 
 -- (DONE IN SERVICES)
 
+------------------------------------------------------------------------------------------------
+
 -- DELETE - cascade-on-delete 
 
--- Profile(email) cascade, Donut(donutID) SET NULL
 -- deletePost(donutID, postOrder)
 
 DELETE FROM Post
 WHERE donutID=donutID and postOrder=postOrder
 
--- POST DELETED -> Thread DELETED -> Thread (children) DELETED, Thread (parent) SET NULL
--- POST DELETED -> Thread DELETED -> ThreadReaction DELETED
+-- Post DELETED -> Thread DELETED -> Thread (children) DELETED, Thread (parent) SET NULL
+-- Post DELETED -> Thread DELETED -> ThreadReaction DELETED
 
--- Profile
+-- deleteProfile(email)
+
+DELETE FROM Profile
+WHERE email=email
+
+-- Profile DELETED -> BeenPaired Relation DELETED
+-- Profile DELETED -> Blacklist Relation DELETED
+-- Profile DELETED -> AssignedTo Relation DELETED
+-- Profile DELETED -> Donut DELETED -> Post Deleted -> Thread Deleted ....
+
+------------------------------------------------------------------------------------------------
+
+-- UPDATE (a relation) - 2 non-primary key attributes 
+
+UPDATE 
