@@ -20,14 +20,19 @@ const DROP_QUERIES = [
 ]
 
 const INSERT_HOBBIES = [
-    `INSERT INTO Hobby VALUES ('Hiking', 'Exploring nature by walking.')`,
-    `INSERT INTO Hobby VALUES ('Anime', 'Discussing Japanese animation and manga.')`,
-    `INSERT INTO Hobby VALUES ('Driving', 'Racing or commuting by vehicle.')`,
-    `INSERT INTO Hobby VALUES ('Investing', 'Buying equities.')`,
-    `INSERT INTO Hobby VALUES ('Running', 'Walking fast for fitness and enjoyment.')`,
-    `INSERT INTO Hobby VALUES ('Singing', 'Enjoying vocal music.')`,
-    `INSERT INTO Hobby VALUES ('Building', 'Creating various projects.')`,
-    `INSERT INTO Hobby VALUES ('Weightlifting', 'Lifting weights.')`
+    `INSERT INTO Hobby VALUES ('Hiking', 'Exploring nature by walking.', 'Sports')`,
+    `INSERT INTO Hobby VALUES ('Anime', 'Discussing Japanese animation and manga.', 'Anime')`,
+    `INSERT INTO Hobby VALUES ('Driving', 'Racing or commuting by vehicle.', 'Other')`,
+    `INSERT INTO Hobby VALUES ('Investing', 'Buying equities.', 'Other')`,
+    `INSERT INTO Hobby VALUES ('Running', 'Walking fast for fitness and enjoyment.', 'Sports')`,
+    `INSERT INTO Hobby VALUES ('Singing', 'Enjoying vocal music.', 'Music')`,
+    `INSERT INTO Hobby VALUES ('Building', 'Creating various projects.', 'Other')`,
+    `INSERT INTO Hobby VALUES ('Weightlifting', 'Lifting weights.', 'Sports')`,
+    `INSERT INTO Hobby VALUES ('Drawing', 'Drawing some pictures.', 'Art')`,
+    `INSERT INTO Hobby VALUES ('Painting', 'Painting some paintings.', 'Art')`,
+    `INSERT INTO Hobby VALUES ('League Of Legends', 'I hate my life.', 'Gaming')`,
+    `INSERT INTO Hobby VALUES ('CSGO', 'Pew pew.', 'Gaming')`,
+    `INSERT INTO Hobby VALUES ('Harry Potter', 'Expelliarmus!', 'Media')`,
 ]
 
 const CREATE_QUERIES = [
@@ -106,6 +111,7 @@ const CREATE_QUERIES = [
     `CREATE TABLE Hobby(
         name VARCHAR2(255 CHAR),
         description VARCHAR2(255 CHAR) NOT NULL,
+        category VARCHAR2(255 CHAR) NOT NULL,
         PRIMARY KEY (name))`,
     `CREATE TABLE ProfileHobby(
         profile VARCHAR2(255 CHAR),
