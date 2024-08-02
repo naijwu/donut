@@ -38,8 +38,14 @@ export interface DonutPost {
     title: string,
     postOrder: number,
     description: string,
-    author: string,
-    createdAt: string
+    author: string;
+    profile: {
+        email: string;
+        pictureURL: string;
+        fullName: string;
+    };
+    createdAt: string;
+    reactions: any; // a map
 }
 
 // Threads

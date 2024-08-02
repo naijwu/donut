@@ -64,21 +64,34 @@ const EditableTitle = ({
     )
 }
 
+const objectifyPictureRow = (pictures: any[][]) => {
+    const ret = []
+    for (let i = 0; i < pictures.length; i++) {
+        ret.push({
+            name: pictures[i][3],
+            url: pictures[i][0]
+        })
+    }
+    return ret
+}
+
 export default function EditPost({
     donut,
-    post
+    post,
+    pictures
 }: {
     donut: any[],
-    post: any[]
+    post: any[],
+    pictures: any[]
 }) {
-
     const router = useRouter();
-
+    
     const { user } = useAuthContext();
     
     const [title, setTitle] = useState<string>(post ? post[1] : '');
     const [description, setDescription] = useState<string>(post ? post[5] : '');
-    const [images, setImages] = useState<any>([]);
+    const [images, setImages] = useState<any>(pictures?.length > 0 ? objectifyPictureRow(pictures) : []);
+    const [imgsToDel, setImgsToDel] = useState<any>([]);
     const [activeIndex, setActiveIndex] = useState<number>(0);
 
     const [loading, setLoading] = useState<boolean>(false)
@@ -116,10 +129,17 @@ export default function EditPost({
     }
     async function handleRemoveImage(index: number) {
         const updatedImages = JSON.parse(JSON.stringify(images));
+        if (updatedImages[index].url.includes('storage.googleapis.com')) {
+            // user clicks "remove" on an image that's already been uploaded; stage to delete
+            const updatedImgsToDel = JSON.parse(JSON.stringify(imgsToDel));
+            updatedImgsToDel.push(updatedImages[index].url);
+            setImgsToDel(updatedImgsToDel);
+        }
         updatedImages.splice(index, 1)
         setImages(updatedImages);
         if (activeIndex > (updatedImages.length - 1)) {
-            setActiveIndex(activeIndex - 1);
+            const newActiveIndex = activeIndex - 1;
+            setActiveIndex(newActiveIndex);
         }
     }
 
@@ -130,7 +150,7 @@ export default function EditPost({
 
         let formData = new FormData();
         for (let i = 0; i < images.length; i++) {
-            if (images[i].url !== '') {
+            if (images[i].url !== '' && !images[i].url.includes('storage.googleapis.com')) {
                 let blob = await fetch(images[i].url).then(r => r.blob())
                 formData.append(`files`, blob);
             }
@@ -140,21 +160,46 @@ export default function EditPost({
         formData.append('description', description);
         formData.append('author', user.email)
 
-        try {
-            await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/post/${donut[0]}`, 
-                formData,
-                {
-                    withCredentials: true,
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                });
-            
-            setLoading(false);
-            router.push(`/donuts/${donut[0]}`)
-        } catch (err) {
-            console.error(err)
-            setLoading(false);
+        if (post[2] != null) {
+            // there exists a postOrder, previously created -> update
+
+            // there may be previously uploaded images that they want deleted
+            formData.append('_imagesToDelete', JSON.stringify(imgsToDel))
+
+            try {
+                await axios.patch(`${process.env.NEXT_PUBLIC_SERVER_URL}/post/${donut[0]}/${post[2]}`, 
+                    formData,
+                    {
+                        withCredentials: true,
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    });
+                
+                setLoading(false);
+                router.push(`/donuts/${donut[0]}`)
+            } catch (err) {
+                console.error(err)
+                setLoading(false);
+            }
+        } else {
+            // doesn't exist a postOrder -> create
+            try {
+                await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/post/${donut[0]}`, 
+                    formData,
+                    {
+                        withCredentials: true,
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    });
+                
+                setLoading(false);
+                router.push(`/donuts/${donut[0]}`)
+            } catch (err) {
+                console.error(err)
+                setLoading(false);
+            }
         }
 
         setLoading(false);

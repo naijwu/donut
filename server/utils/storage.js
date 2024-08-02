@@ -70,3 +70,14 @@ export async function deleteFolder(folderName) {
 
     console.log(`Deleted all files in /${folderName}`)
 }
+
+export async function deleteFilesInFolder(folder, files) {
+    
+    for (let i = 0; i < files.length; i++) {
+        try {
+            await bucket.file(`${folder}/${files[i]}`).delete();
+        } catch (err) {
+            console.error(err);
+        }
+    }
+}

@@ -1,5 +1,5 @@
 import { withOracleDB } from "../dbConfig.js";
-import { uploadFile } from "../utils/storage.js";
+import { deleteFilesInFolder, uploadFile } from "../utils/storage.js";
 import { sqlifyDate } from "./queryService.js";
 
 const uploadFiles = async (files, path) => {
@@ -19,6 +19,12 @@ const uploadFiles = async (files, path) => {
       throw error;
     }
 };
+
+const deleteFiles = async (path, names) => {
+    if (!path || !names) return;
+
+    await deleteFilesInFolder(path, names);
+}
   
 /**
  * Returns all posts
@@ -26,12 +32,140 @@ const uploadFiles = async (files, path) => {
 export async function getAllPosts() {
     return await withOracleDB(async (connection) => {
         try {
+            // should've parsed from array to objects at the service level earlier :(
+            const parsed = {}
             const result = await connection.execute(
-                `SELECT * FROM Post p, Donut d WHERE p.donutID = d.donutID`, {
-                    profile: email
-                }
+                `SELECT 
+                    p.donutID,
+                    p.title,
+                    p.postOrder,
+                    p.createdAt,
+                    p.author,
+                    p.description,
+                    d.donutID,
+                    d.createdAt,
+                    d.isCompleted,
+                    d.course,
+                    d.suggestedActivity,
+                    d.groupName,
+                    p1.email,
+                    p1.pictureURL,
+                    p1.fullName,
+                    p2.email,
+                    p2.pictureURL,
+                    p2.fullName,
+                    p3.email,
+                    p3.pictureURL,
+                    p3.fullName
+                FROM 
+                    Post p, 
+                    Donut d,
+                    AssignedTo a1,
+                    AssignedTo a2,
+                    Profile p1,
+                    Profile p2,
+                    Profile p3
+                WHERE 
+                    p.donutID = d.donutID AND
+                    d.donutID = a1.donutID AND 
+                    a1.profile=p1.email AND 
+                    d.donutID = a2.donutID AND
+                    a2.profile=p2.email AND
+                    p1.email <> p2.email AND
+                    p3.email = p.author`
             );
-            return result.rows;
+            const keysAreIDandOrder = {} // alternatively, `new Set()`...
+            const allDonuts = {} // ... and this too 
+            for (let i = 0; i < result.rows.length; i++) {
+                const row = result.rows[i];
+                allDonuts[row[0]] = {
+                    donutID: row[6],
+                    createdAt: row[7],
+                    isCompleted: row[8],
+                    course: row[9],
+                    suggestedActivity: row[10],
+                    groupName: row[11],
+                    posts: [],
+                    members: [
+                        {
+                            email:row[12],
+                            pictureURL: row[13],
+                            fullName:row[14],
+                        },
+                        {
+                            email:row[15],
+                            pictureURL: row[16],
+                            fullName:row[17],
+                        }
+                    ]
+                }
+
+                const tempIdentifier = `${row[0]}_${row[2]}`;
+                keysAreIDandOrder[tempIdentifier] = ''
+                parsed[tempIdentifier] = {
+                    donutID: row[0],
+                    title: row[1],
+                    postOrder: row[2],
+                    createdAt: row[3],
+                    author: row[4],
+                    description: row[5],
+                    profile: {
+                        email: row[18],
+                        pictureURL: row[19],
+                        fullName: row[20]
+                    }
+                }
+            }
+            const queryForReactions = Object.keys(keysAreIDandOrder);
+            for (let i = 0; i < queryForReactions.length; i++) {
+                const donutID = queryForReactions[i].split('_')[0]
+                const postOrder = queryForReactions[i].split('_')[1]
+
+                const reactions = {}
+                const reac = await connection.execute(
+                    `SELECT * FROM PostReaction WHERE donutID=:donutID AND postOrder=:postOrder`, {
+                        donutID,
+                        postOrder
+                    }
+                );
+
+                // freq table of all emojis (rows[j][3])
+                for (let j = 0; j < reac.rows.length; j++) {
+                    if (reactions[reac.rows[j][3]] && reactions[reac.rows[j][3]] > 0) {
+                        reactions[reac.rows[j][3]] += 1;
+                    }
+                }
+
+                // inject reactions to main return data
+                const justToBeSafe = JSON.parse(JSON.stringify(parsed[queryForReactions[i]]))
+                parsed[queryForReactions[i]] = {
+                    ...justToBeSafe,
+                    reactions
+                }
+            }
+
+            // turn object into array
+            const parsedArr = [];
+            for (let i = 0; i < queryForReactions.length; i++) {
+                parsedArr.push(parsed[queryForReactions[i]])
+            }
+
+            const donuts = Object.keys(allDonuts);
+            for (let i = 0; i < donuts.length; i++) {
+                for (let j = 0; j < parsedArr.length; j++) {
+                    const cpy = JSON.parse(JSON.stringify(allDonuts[parsedArr[j].donutID].posts));
+                    cpy.push(parsedArr[j]);
+                    allDonuts[parsedArr[j].donutID].posts = cpy
+                }
+            }
+
+            const arrayified = []
+            for (let i = 0; i < donuts.length; i++) {
+                arrayified.push(allDonuts[donuts[i]])
+            }
+
+            // result of a leetcode extraeasy question
+            return arrayified;
         } catch(err) {
             console.log('err: ', err);
         }
@@ -61,6 +195,30 @@ export async function getProfileDonutPost(donutID, email) {
     }).catch((err) => {
         return err;
     });
+}
+
+/**
+ * 
+ * @param {*} donutID the donut to which the post belongs to
+ * @param {*} postOrder the specific post of the donut
+ * @returns the pictures of a post
+ */
+export async function getImagesOfPost(donutID, postOrder) {
+    return await withOracleDB(async (connection) => {
+        try {
+            const result = await connection.execute(
+                `SELECT * FROM Picture WHERE donutID=:donutID AND postOrder=:postOrder`, {
+                    donutID,
+                    postOrder
+                }
+            )
+            return result.rows;
+        } catch (err) {
+            console.log('err: ', err);
+        }
+    }).catch((err) => {
+        return err;
+    })
 }
 
 /**
@@ -156,8 +314,85 @@ export async function createPost(donutID, postData, files) {
  * @param {*} postData the data to update the Post entity with
  * @returns the post that is edited
  */
-export async function updatePost(donutID, postOrder, postData) {
+export async function updatePost(donutID, postOrder, postData, files) {
+    return await withOracleDB(async (connection) => {
+        try {
+            
+            // save the post
+            const { title, description, _imagesToDelete } = postData;
 
+            await connection.execute(
+                `UPDATE Post 
+                SET 
+                title=:title,
+                description=:description
+                WHERE donutID=:donutID AND postOrder=:postOrder`, {
+                    donutID,
+                    title,
+                    postOrder,
+                    description
+                }, {
+                    autoCommit: true
+                }
+            );
+
+            // upload the images and get the URLs of the upload images
+            let pictureURLs = await uploadFiles(files, `${donutID}_${postOrder}`);
+
+            // save the images PostImage
+            for (let i = 0; i < pictureURLs.length; i++) {
+                if (pictureURLs[i]) {
+                    try {
+                        console.log(pictureURLs[i], donutID, postOrder)
+                         await connection.execute(
+                            `INSERT INTO Picture VALUES(:picture, :donutID, :postOrder, :alt)`, {
+                                picture: `${pictureURLs[i]}`,
+                                donutID,
+                                postOrder,
+                                alt: `Picture ${i}`
+                            }, {
+                                autoCommit: true
+                            })
+                    } catch (err) {
+                        console.log('Error while saving image URLs', err)
+                    }
+                }
+            }
+
+            // delete any images that are staged to delete
+            const imgsInStorageToDelete = []
+            const bucketName = `${donutID}_${postOrder}`;
+            for (let i = 0; i < _imagesToDelete.length; i++) {
+                const imgNameSplit = _imagesToDelete[i].split('/'); // 'ubc_donuts_alpha/III_I/I.I'
+                const imgName = imgNameSplit[imgNameSplit.length - 1];
+                imgsInStorageToDelete.push(imgName);
+            }
+
+            if (imgsInStorageToDelete.length > 0) {
+                await deleteFiles(bucketName, imgsInStorageToDelete);
+            }
+
+            // delete images from the Picture table
+            for (let i = 0; i < _imagesToDelete.length; i++) {
+                try {
+                     await connection.execute(
+                        `DELETE FROM Picture WHERE pictureURL=:picture`, {
+                            picture: `${_imagesToDelete[i]}`,
+                        }, {
+                            autoCommit: true
+                        })
+                } catch (err) {
+                    console.log('Error while deleting pictures', err)
+                }
+            }
+            
+            return 'Successfully updated a post';
+        } catch(err) {
+            console.log('err: ', err);
+        }
+    }).catch((err) => {
+        return err;
+    });
 }
 
 /**

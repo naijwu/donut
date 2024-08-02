@@ -17,11 +17,12 @@ export function Post({
 }: {
     data: DonutPost,
 }) {
+    const reactions = Object.keys(data?.reactions || {})
     
     return (
         <div className={styles.postContainer}>
             <div className={styles.tag}>
-                <Tag type="social" />
+                {/* <Tag type="social" /> */}
             </div>
             <Link href={`/post/${data.donutID}/${data.postOrder}`}>
                 <div className={styles.content}>
@@ -36,15 +37,13 @@ export function Post({
             <div className={styles.pictures}>
                 <div style={{height: 200,width:'100%',backgroundColor:'var(--color-ui-10)',borderRadius:10}}></div>
             </div>
-            <Author author={data.author} createdAt={data.createdAt} />
+            <Author author={data.profile} createdAt={data.createdAt} />
             <div className={styles.reactions}>
-                {/* TODO: reactions from array */}
-                <Button active onClick={()=>console.log('reaction')} variant="ghost" size="small">
-                    😍 23
-                </Button>
-                <Button onClick={()=>console.log('reaction')} variant="ghost" size="small">
-                    😂 18
-                </Button>
+                {reactions?.map((emoji) => (
+                    <Button key={emoji} active onClick={()=>console.log(`add ${emoji} reaction`)} variant="ghost" size="small">
+                        {emoji} {data.reactions[emoji]}
+                    </Button>
+                ))}
             </div>
         </div>
     )
@@ -69,7 +68,6 @@ export default function DonutCard({
         if (activeIndex == 0) return
         setActiveIndex(activeIndex - 1);
     }
-    console.log(activeIndex);
     
     return (
         <div className={styles.card}>
