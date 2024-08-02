@@ -6,7 +6,7 @@ import {
     getDonutPost,
     createPost,
     updatePost,
-    createPostReaction,
+    handlePostReaction,
     deletePost,
     getProfileDonutPost,
     getImagesOfPost
@@ -149,17 +149,15 @@ router.post('/:donutID/:postOrder/reaction', auth, async (req, res) => {
         /**
          * type PostReaction = {
          *    profile: string;
-         *    donutID: string;
-         *    postOrder: number; 
          *    emoji: string;
          * }
          */
         const { reaction } = req.body;
 
         // create a reaction
-        const data = createPostReaction(donutID, postOrder, reaction);
+        await handlePostReaction(donutID, postOrder, reaction);
 
-        res.status(200).json(data)
+        res.status(200).json('Created post reaction')
     } catch (err) {
         console.log(err);
         res.status(500).json({

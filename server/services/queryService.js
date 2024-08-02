@@ -125,7 +125,7 @@ const CREATE_QUERIES = [
         donutID CHAR(36),
         postOrder INT,
         emoji VARCHAR2(16 CHAR) NOT NULL,
-        PRIMARY KEY (profile, donutID, postOrder),
+        PRIMARY KEY (profile, donutID, postOrder, emoji),
         FOREIGN KEY (profile) REFERENCES Profile(email) ON DELETE CASCADE,
         FOREIGN KEY (donutID, postOrder) REFERENCES Post(donutID, postOrder) ON DELETE CASCADE)`,
     `CREATE TABLE Thread(
@@ -144,7 +144,7 @@ const CREATE_QUERIES = [
         profile VARCHAR2(255 CHAR),
         threadID CHAR(36),
         emoji VARCHAR2(16 CHAR) NOT NULL,
-        PRIMARY KEY (profile, threadID),
+        PRIMARY KEY (profile, threadID, emoji),
         FOREIGN KEY (profile) REFERENCES Profile(email) ON DELETE CASCADE,
         FOREIGN KEY (threadID) REFERENCES Thread(threadID) ON DELETE CASCADE)`
 ]

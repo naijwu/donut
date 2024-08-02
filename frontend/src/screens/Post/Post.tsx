@@ -3,6 +3,7 @@
 import Author from '@/components/Author/Author'
 import Button from '@/components/Button/Button'
 import DonutBanner from '@/components/DonutBanner/DonutBanner'
+import Reaction from '@/components/Reaction/Reaction'
 import Tag from '@/components/Tag/Tag'
 import Threads from '@/components/Threads/Threads'
 import { Header1, P } from '@/components/Typography/Typography'
@@ -57,7 +58,8 @@ type PostT = {
 export default function Post({
     data
 }: PostT) {
-    const reactions = Object.keys(data.reactions || {});
+    const [reactions, setReactions] = useState<string[]>(Object.keys(data.reactions || {}))
+    const [reactionsData, setReactionsData] = useState<any>(data.reactions);
 
     const { user } = useAuthContext();
 
@@ -95,7 +97,7 @@ export default function Post({
             }
         }
 
-        console.log(roots)
+        // console.log(roots)
         setThreadNodes(roots);
     }
 
@@ -146,6 +148,68 @@ export default function Post({
         setReplyTo([profile, threadID]);
     }
 
+    function updateLocalReactions(e: string, profile: string) {
+        const updatedReactions = JSON.parse(JSON.stringify(reactions));
+        const updatedReactionsData = JSON.parse(JSON.stringify(reactionsData));
+        if (updatedReactions.includes(e)) {
+            // either + or - an existing e
+            if (updatedReactionsData[e].profiles.includes(profile)) {
+                // -
+                if (updatedReactionsData[e].count == 1) {
+                    // go to 0
+                    delete updatedReactionsData[e];
+                    updatedReactions.splice(reactions.indexOf(e));
+                } else {
+                    // decrement
+                    updatedReactionsData[e].count -= 1;
+                    // remove user from array
+                    updatedReactionsData[e].profiles.splice(updatedReactionsData[e].profiles.indexOf(profile), 1);
+                }
+            } else {
+                // +
+                // increment
+                updatedReactionsData[e].count += 1;
+                // add user to array
+                updatedReactionsData[e].profiles.push(profile);
+            }
+        } else {
+            // new e
+            updatedReactions.push(e)
+            updatedReactionsData[e] = {
+                count: 1,
+                profiles: [profile]
+            }
+        }
+        setReactions(updatedReactions);
+        setReactionsData(updatedReactionsData);
+    }
+
+    // post reaction
+    async function handleReaction(e: string) {
+        if (loading || !user) return;
+        setLoading(true);
+
+        // responsive ux good -> mock server changes using local/client state variables
+        updateLocalReactions(e, user.email);
+
+        // do the actual thing
+        try {
+            await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/post/${data.donutID}/${data.postOrder}/reaction`, 
+            {
+                reaction: {
+                    profile: user.email,
+                    emoji: e
+                }
+            }, {
+                withCredentials: true
+            })
+            setLoading(false);
+        } catch (error) {
+            console.error(error);
+            setLoading(false);
+        }
+    }
+
     return (
         <div className={styles.wrapper}>
             <DonutBanner partial={data.donut} />
@@ -181,10 +245,11 @@ export default function Post({
                 <Author author={data.profile} createdAt={data.createdAt} />
                 <div className={styles.reactions}>
                     {reactions?.map((emoji) => (
-                        <Button key={emoji} active onClick={()=>console.log(`add ${emoji} reaction`)} variant="ghost" size="small">
-                            {emoji} {data.reactions[emoji]}
+                        <Button key={emoji} active={reactionsData[emoji].profiles.includes(user.email)} onClick={()=>handleReaction(emoji)} variant="ghost" size="small">
+                            {emoji} {reactionsData[emoji].count}
                         </Button>
                     ))}
+                    <Reaction onClick={(e)=>handleReaction(e)} />
                 </div>
             </div>
             {threadNodes && threadNodes?.length > 0 && (

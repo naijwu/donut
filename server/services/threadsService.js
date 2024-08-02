@@ -42,8 +42,16 @@ export async function getThreads(donutID, postOrder) {
 
                 // freq table of all emojis (rows[j][3])
                 for (let j = 0; j < treac.rows.length; j++) {
-                    if (treactions[treac.rows[j][3]] && treactions[treac.rows[j][3]] > 0) {
-                        treactions[treac.rows[j][3]] += 1;
+                    if (treactions[treac.rows[j][2]] && treactions[treac.rows[j][2]].count > 0) {
+                        const cpy = JSON.parse(JSON.stringify(treactions[treac.rows[j][2]]))
+                        cpy.profiles.push(treac.rows[j][0])
+                        cpy.count += 1;
+                        treactions[treac.rows[j][2]] = cpy
+                    } else {
+                        treactions[treac.rows[j][2]] = {
+                            count: 1,
+                            profiles: [treac.rows[j][0]]
+                        };
                     }
                 }
 
@@ -122,6 +130,58 @@ export async function updateThread(threadID, threadData) {
  * @param {*} threadID the thread that is being reacted on
  * @param {*} reactionData the data of the ThreadReaction entity
  */
-export async function createThreadReaction(threadID, reactionData) {
-    
+export async function handleThreadReaction(threadID, reactionData) {
+    const { profile, emoji } = reactionData;
+    return await withOracleDB(async (connection) => {
+        try {
+
+            const { rows } = await connection.execute(
+                `SELECT 
+                    COUNT(*) 
+                FROM 
+                    ThreadReaction 
+                WHERE 
+                    profile=:profile AND 
+                    threadID=:threadID AND
+                    emoji=:emoji`, 
+                {
+                    profile,
+                    threadID,
+                    emoji
+                });
+            
+            if (rows[0] > 0) {
+                // delete
+                await connection.execute(
+                `DELETE FROM
+                    ThreadReaction 
+                WHERE 
+                    profile=:profile AND 
+                    threadID=:threadID AND
+                    emoji=:emoji`, 
+                {
+                    profile,
+                    threadID,
+                    emoji
+                });
+            } else {
+                // create
+                await connection.execute(
+                    `INSERT INTO ThreadReaction VALUES (:profile, :threadID, :emoji)`, 
+                    {
+                        profile,
+                        threadID,
+                        emoji
+                    }, {
+                        autoCommit: true
+                    }
+                );
+            }
+            return true;
+        } catch(err) {
+            console.log('err: ', err);
+        }
+    }).catch((err) => {
+        return err;
+    });
 }

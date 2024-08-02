@@ -326,8 +326,16 @@ export async function getDonutPost(donutID, postOrder) {
 
             // freq table of all emojis (rows[j][3])
             for (let j = 0; j < reac.rows.length; j++) {
-                if (reactions[reac.rows[j][3]] && reactions[reac.rows[j][3]] > 0) {
-                    reactions[reac.rows[j][3]] += 1;
+                if (reactions[reac.rows[j][3]] && reactions[reac.rows[j][3]].count > 0) {
+                    const cpy = JSON.parse(JSON.stringify(reactions[reac.rows[j][3]]))
+                    cpy.profiles.push(reac.rows[j][0])
+                    cpy.count += 1;
+                    reactions[reac.rows[j][3]] = cpy
+                } else {
+                    reactions[reac.rows[j][3]] = {
+                        count: 1,
+                        profiles: [reac.rows[j][0]]
+                    };
                 }
             }
             
@@ -534,8 +542,69 @@ export async function updatePost(donutID, postOrder, postData, files) {
  * @param {*} reactionData the data to populate the Reaction entity
  * @returns the reaction that is created
  */
-export async function createPostReaction(donutID, postOrder, reactionData) {
+export async function handlePostReaction(donutID, postOrder, reactionData) {
+    const { profile, emoji } = reactionData;
 
+    return await withOracleDB(async (connection) => {
+        try {
+
+            const { rows } = await connection.execute(
+                `SELECT 
+                    COUNT(*) 
+                FROM 
+                    PostReaction 
+                WHERE 
+                    profile=:profile AND 
+                    donutID=:donutID AND 
+                    postOrder=:postOrder AND 
+                    emoji=:emoji`, 
+                {
+                    profile,
+                    donutID,
+                    postOrder,
+                    emoji
+                });
+
+            if (rows[0] > 0) {
+                // delete
+                await connection.execute(
+                    `DELETE FROM 
+                        PostReaction 
+                    WHERE 
+                        profile=:profile AND 
+                        donutID=:donutID AND 
+                        postOrder=:postOrder AND 
+                        emoji=:emoji`, 
+                    {
+                        profile,
+                        donutID,
+                        postOrder,
+                        emoji
+                    }, {
+                        autoCommit: true
+                    }
+                );
+            } else {
+                // create
+                await connection.execute(
+                    `INSERT INTO PostReaction VALUES (:profile, :donutID, :postOrder, :emoji)`, 
+                    {
+                        profile,
+                        donutID,
+                        postOrder,
+                        emoji
+                    }, {
+                        autoCommit: true
+                    }
+                );
+            }
+            return true;
+        } catch(err) {
+            console.log('err: ', err);
+        }
+    }).catch((err) => {
+        return err;
+    });
 }
 
 /**
