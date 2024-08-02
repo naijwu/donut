@@ -3,3 +3,29 @@
   gap: 0.5rem;
   padding: 0.5rem 0;
 }
+
+.commentField {
+  display: flex;
+  padding: 1.5rem;
+  position: fixed;
+  bottom: 76px;
+  background: white;
+  border-style: solid none none none;
+  border-width: 1px;
+  border-color: var(--color-ui-10);
+  width: 100vw;
+  left: 0;
+}
+.commentField input[type="text"] {
+  font-size: 1.1rem;
+  padding: 0;
+  background: none;
+  border: none;
+  outline: none;
+  width: 100%;
+  flex-grow: 2;
+  color: var(--color-ui-100);
+}
+.commentField input[type="text"]::placeholder {
+  color: var(--color-ui-60);
+}

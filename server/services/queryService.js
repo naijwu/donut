@@ -98,7 +98,7 @@ const CREATE_QUERIES = [
         messageID CHAR(36),
         donutID CHAR(36),
         message VARCHAR2(1000 CHAR) NOT NULL,
-        sentAt DATE NOT NULL,
+        sentAt TIMESTAMP NOT NULL,
         sender VARCHAR2(255 CHAR) NOT NULL,
         PRIMARY KEY (messageID),
         FOREIGN KEY (donutID) REFERENCES Donut(donutID) ON DELETE CASCADE,

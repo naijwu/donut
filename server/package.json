@@ -21,6 +21,7 @@
     "multer": "^1.4.5-lts.1",
     "oracledb": "https://github.com/oracle/node-oracledb/releases/download/v5.2.0/oracledb-src-5.2.0.tgz",
     "query-string": "^9.1.0",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "ws": "^8.18.0"
   }
 }
