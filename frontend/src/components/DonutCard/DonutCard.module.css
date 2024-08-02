@@ -12,6 +12,7 @@
 .postWrapper {
   padding: 1rem;
   box-sizing: border-box;
+  overflow: hidden;
 }
 .indicator {
   display: flex;
@@ -50,4 +51,12 @@
   display: flex;
   align-items: center;
   gap: 0.3rem;
+}
+.postPicture {
+  width: 100%;
+  position: relative;
+  max-height: 200px;
+  border-radius: 10px;
+  object-fit: cover;
+  object-position: 50% 0%;
 }

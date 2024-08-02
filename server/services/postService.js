@@ -136,11 +136,29 @@ export async function getAllPosts() {
                     }
                 }
 
+                const images = []
+                const imgs = await connection.execute(
+                    `SELECT * FROM Picture WHERE donutID=:donutID AND postOrder=:postOrder`, {
+                        donutID,
+                        postOrder
+                    }
+                );
+
+                // add images to an array
+                for (let j = 0; j < imgs.rows.length; j++) {
+                    const imgRow = imgs.rows[j]
+                    images.push({
+                        pictureURL: imgRow[0],
+                        alt: imgRow[3]
+                    })
+                }
+
                 // inject reactions to main return data
                 const justToBeSafe = JSON.parse(JSON.stringify(parsed[queryForReactions[i]]))
                 parsed[queryForReactions[i]] = {
                     ...justToBeSafe,
-                    reactions
+                    reactions,
+                    images
                 }
             }
 
@@ -183,7 +201,15 @@ export async function getProfileDonutPost(donutID, email) {
     return await withOracleDB(async (connection) => {
         try {
             const result = await connection.execute(
-                `SELECT * FROM Post p, Donut d WHERE p.donutID=:donutID AND p.donutID = d.donutID AND p.author=:profile`, {
+                `SELECT * 
+                FROM 
+                    Post p, 
+                    Donut d 
+                WHERE 
+                    p.donutID=:donutID AND 
+                    p.donutID = d.donutID AND 
+                    p.author=:profile`, 
+                {
                     donutID,
                     profile: email
                 }
@@ -229,13 +255,119 @@ export async function getImagesOfPost(donutID, postOrder) {
 export async function getDonutPost(donutID, postOrder) {
     return await withOracleDB(async (connection) => {
         try {
-            const result = await connection.execute(
-                `SELECT * FROM Post p, Donut d WHERE p.donutID=:donutID AND p.donutID = d.donutID AND postOrder=:postOrder`, {
+            const { rows } = await connection.execute(
+                `SELECT 
+                    p.donutID,
+                    p.postOrder,
+                    p.title,
+                    p.createdAt,
+                    p.description,
+                    u.email,
+                    u.pictureURL,
+                    u.fullName,
+                    d.createdAt,
+                    d.isCompleted,
+                    d.course,
+                    d.suggestedActivity,
+                    d.groupName,
+                    p1.email,
+                    p1.pictureURL,
+                    p1.fullName,
+                    p2.email,
+                    p2.pictureURL,
+                    p2.fullName
+                FROM 
+                    Post p, 
+                    Donut d,
+                    Profile u,
+                    AssignedTo a1,
+                    AssignedTo a2,
+                    Profile p1,
+                    Profile p2
+                WHERE 
+                    p.donutID=:donutID AND 
+                    p.donutID = d.donutID AND 
+                    p.postOrder=:postOrder AND
+                    p.author=u.email AND
+                    d.donutID = a1.donutID AND 
+                    a1.profile=p1.email AND 
+                    d.donutID = a2.donutID AND
+                    a2.profile=p2.email AND
+                    p1.email <> p2.email`, 
+                {
                     donutID,
                     postOrder
                 }
             );
-            return result.rows;
+            const row = rows[0]
+
+            const images = []
+            const postImgs = await connection.execute(
+                `SELECT * FROM Picture WHERE donutID=:donutID AND postOrder=:postOrder`, {
+                    donutID,
+                    postOrder
+                }
+            )
+            for (let i = 0; i < postImgs.rows.length; i++) {
+                const imgRow = postImgs.rows[i];
+                images.push({
+                    pictureURL: imgRow[0],
+                    alt: imgRow[3]
+                })
+            }
+
+            const reactions = {}
+            const reac = await connection.execute(
+                `SELECT * FROM PostReaction WHERE donutID=:donutID AND postOrder=:postOrder`, {
+                    donutID,
+                    postOrder
+                }
+            );
+
+            // freq table of all emojis (rows[j][3])
+            for (let j = 0; j < reac.rows.length; j++) {
+                if (reactions[reac.rows[j][3]] && reactions[reac.rows[j][3]] > 0) {
+                    reactions[reac.rows[j][3]] += 1;
+                }
+            }
+            
+            const retData = {
+                donutID: row[0],
+                postOrder: row[1],
+                title: row[2],
+                createdAt: row[3],
+                description: row[4],
+                author: row[5],
+                profile: {
+                    email: row[5],
+                    pictureURL: row[6],
+                    fullName: row[7]
+                },
+                donut: {
+                    donutID: row[0],
+                    createdAt: row[8],
+                    isCompleted: row[9],
+                    course: row[10],
+                    suggestedActivity: row[11],
+                    groupName: row[12],
+                    members: [
+                        {
+                            email: row[13],
+                            pictureURL: row[14],
+                            fullName: row[15]
+                        }, 
+                        {
+                            email: row[16],
+                            pictureURL: row[17],
+                            fullName: row[18]
+                        }
+                    ]
+                },
+                images,
+                reactions
+            }
+
+            return retData;
         } catch(err) {
             console.log('err: ', err);
         }

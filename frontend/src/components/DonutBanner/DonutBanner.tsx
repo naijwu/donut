@@ -3,6 +3,14 @@ import Avatar, { Avatars } from '../Avatar/Avatar'
 import { P } from '../Typography/Typography'
 import styles from './DonutBanner.module.css'
 
+export const readableDate = (date: string) => {
+    const months = ['','Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct','Nov', 'Dec']
+    const year = date.substring(0, 4);
+    const month = parseInt(date.substring(5, 7));
+    const day = parseInt(date.substring(8, 10));
+    return `${months[month]} ${day}`
+}
+
 export default function DonutBanner({
     borderless = false,
     partial
@@ -10,14 +18,6 @@ export default function DonutBanner({
     borderless?: boolean,
     partial: Donut
 }) {
-
-    const readableDate = (date: string) => {
-        const months = ['','Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct','Nov', 'Dec']
-        const year = date.substring(0, 4);
-        const month = parseInt(date.substring(5, 7));
-        const day = parseInt(date.substring(8, 10));
-        return `${months[month]} ${day}`
-    }
 
     return (
         <div className={`${styles.container} ${borderless ? styles.borderless : ''}`}>

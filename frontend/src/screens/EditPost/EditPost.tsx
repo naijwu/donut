@@ -160,7 +160,7 @@ export default function EditPost({
         formData.append('description', description);
         formData.append('author', user.email)
 
-        if (post[2] != null) {
+        if (post && post[2] != null) {
             // there exists a postOrder, previously created -> update
 
             // there may be previously uploaded images that they want deleted

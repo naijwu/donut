@@ -1,6 +1,5 @@
 "use client"
 
-import { DEMO_DONUTS } from "@/lib/demo"
 import DonutsScreen from "@/screens/Donuts/DonutsScreen"
 import { useAuthContext } from "@/utility/Auth";
 import axios from "axios";

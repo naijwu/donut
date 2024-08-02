@@ -1,6 +1,5 @@
 "use client"
 
-import { DEMO_FEED } from "@/lib/demo";
 import FeedScreen from "@/screens/Feed/FeedScreen";
 import axios from "axios";
 import { useEffect, useState } from "react";

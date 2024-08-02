@@ -4,27 +4,42 @@ import { auth } from '../middleware/auth.js';
 import {
     createThread,
     updateThread,
-    createThreadReaction
+    createThreadReaction,
+    getThreads
 } from '../services/threadsService.js';
 
 const router = express.Router();
+
+router.get('/:donutID/:postOrder', auth, async (req, res) => {
+    const { donutID, postOrder } = req.params;
+    try {
+        const data = await getThreads(donutID, postOrder);
+        
+        res.status(200).json({ data })
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: `Error getting thread for ${donutID}, ${postOrder}`
+        })
+    }
+});
 
 router.post('/:donutID/:postOrder', auth, async (req, res) => {
     try {
         const { donutID, postOrder } = req.params;
         /**
          * type thread = {
-         *    profile: string;
-         *    threadID: string;
-         *    emoji: string;
+         *    text: string;
          * }
          */
         const { thread } = req.body;
 
         // create thread
-        const data  = await createThread(donutID, postOrder, thread);
+        await createThread(donutID, postOrder, thread);
         
-        res.status(200).json({ data })
+        res.status(200).json({ 
+            message: 'Successfully created comment'
+         })
     } catch (err) {
         console.log(err);
         res.status(500).json({

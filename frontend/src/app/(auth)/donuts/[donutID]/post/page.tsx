@@ -15,7 +15,7 @@ export default function EditDonutPost() {
   const [donutData, setDonutData] = useState<any>();
   const [imagesData, setImagesData] = useState<any>();
 
-  async function fetchDonut() {
+  async function fetchData() {
     try {
       const donutRes = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/donut/${donutID}`, {
         withCredentials: true
@@ -42,7 +42,7 @@ export default function EditDonutPost() {
 
   useEffect(() => {
     if (user) {
-        fetchDonut();
+        fetchData();
     }
   }, [user])
     

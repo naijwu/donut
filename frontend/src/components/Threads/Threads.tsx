@@ -5,21 +5,24 @@
  */
 
 import styles from './Threads.module.css'
-import { ThreadNode, ThreadData } from "@/lib/types"
+import { ThreadData } from "@/lib/types"
 import Avatar from "../Avatar/Avatar"
 import { P } from '../Typography/Typography'
 import Button from '../Button/Button'
+import { readableDate } from '../DonutBanner/DonutBanner'
 
 export default function Threads({
-    threadNodes
+    threadNodes,
+    onReply
 }: {
-    threadNodes?: ThreadNode[]
+    threadNodes?: any;
+    onReply?: any
 }) {
 
     return (
         <div className={styles.wrapper}>
-            {threadNodes?.map((n, ind) => (
-                <ThreadNode node={n} />
+            {threadNodes?.map((n: any) => (
+                <ThreadNode key={n.threadID} node={n} onReply={onReply} />
             ))}
         </div>
     )
@@ -27,15 +30,17 @@ export default function Threads({
 
 function ThreadNode({
     node,
+    onReply
 }: {
-    node: any
+    node: any;
+    onReply?: any;
 }) {
     return (
-        <Thread data={node}>
+        <Thread data={node} onReply={onReply} >
             {node.children?.length > 0 && (
                 <div className={styles.replies}>
                     {node.children?.map((reply: any, ind: number) => (
-                        <Thread data={reply} />
+                        <ThreadNode key={reply.threadID} node={reply} onReply={onReply} />
                     ))}
                 </div>
             )}
@@ -45,26 +50,29 @@ function ThreadNode({
 
 function Thread({
     data,
-    children
+    children,
+    onReply
 }: {
-    data: ThreadData,
-    children?: any
+    data: ThreadData;
+    children?: any;
+    onReply?: any;
 }) {
+    const reactions = Object.keys(data.reactions || {})
 
     return (
         <div className={styles.thread}>
             <div className={styles.threadInner}>
-                <Avatar size="small" name={data.author} pictureURL={data.pictureURL} />
+                <Avatar size="small" name={data.profile.fullName} pictureURL={data.profile.pictureURL} />
                 <div className={styles.content}>
                     <div className={styles.poster}>
                         <P small dark bold>
-                            {data.author}
+                            {data.author.split('@')[0]}
                         </P>
                         <P small>
                             &middot;
                         </P>
                         <P small>
-                            {data.createdAt}
+                            {readableDate(data.createdAt)}
                         </P>
                     </div>
                     <div className={styles.comment}>
@@ -73,8 +81,13 @@ function Thread({
                         </P>
                     </div>
                     <div className={styles.reactions}>
-                        <Button active onClick={()=>console.log('reaction')} variant="ghost" size="small">
-                            😍 3
+                        {reactions?.map((emoji) => (
+                            <Button key={emoji} active onClick={()=>console.log(`add ${emoji} reaction`)} variant="ghost" size="small">
+                                {emoji} {data.reactions[emoji]}
+                            </Button>
+                        ))}
+                        <Button onClick={()=>onReply(data.profile.fullName, data.threadID)} variant="ghost" size="small">
+                            Reply
                         </Button>
                     </div>
                 </div>

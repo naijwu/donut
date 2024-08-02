@@ -10,6 +10,14 @@
   flex-direction: column;
   gap: 0.8rem;
 }
+.postPicture {
+  width: 100%;
+  position: relative;
+  max-height: 200px;
+  border-radius: 10px;
+  object-fit: cover;
+  object-position: 50% 0%;
+}
 .reactions {
   display: flex;
   align-items: center;
@@ -34,6 +42,8 @@
   background: none;
   border: none;
   outline: none;
+  width: 100%;
+  flex-grow: 2;
   color: var(--color-ui-100);
 }
 .commentField input[type="text"]::placeholder {
