@@ -133,5 +133,16 @@ export async function createHobbiesOfUser(email, hobbies) {
  * @param {*} email the email of the profile to delete
  */
 export async function deleteProfile(email) {
-
+    return await withOracleDB(async (connection) => {
+        console.log('deleting profile')
+        try {
+            const result = await connection.execute(
+                'DELETE FROM Profile WHERE email = :email',
+                { email }
+            )
+            return true;
+        } catch (err) {
+            console.log('err: ', err);
+        }
+    })
 }

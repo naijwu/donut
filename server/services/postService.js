@@ -613,5 +613,16 @@ export async function handlePostReaction(donutID, postOrder, reactionData) {
  * @param {*} postOrder to identify the post
  */
 export async function deletePost(donutID, postOrder) {
-    
+    return await withOracleDB(async (connection) => {
+        console.log('deleting post for donut ' + donutID)
+        try {
+            const result = await connection.execute(
+                'DELETE FROM Post WHERE WHERE donutID = :donutID and postOrder = :postOrder',
+                { donutID, postOrder }
+            )
+            return true;
+        } catch (err) {
+            console.log('err: ', err);
+        }
+    })
 }

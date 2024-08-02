@@ -15,7 +15,7 @@
 -- deletePost(donutID, postOrder)
 
 DELETE FROM Post
-WHERE donutID=donutID and postOrder=postOrder
+WHERE donutID=donutID and postOrder = :postOrder
 
 -- Post DELETED -> Thread DELETED -> Thread (children) DELETED, Thread (parent) SET NULL
 -- Post DELETED -> Thread DELETED -> ThreadReaction DELETED
@@ -23,7 +23,7 @@ WHERE donutID=donutID and postOrder=postOrder
 -- deleteProfile(email)
 
 DELETE FROM Profile
-WHERE email=email
+WHERE email = :email
 
 -- Profile DELETED -> BeenPaired Relation DELETED
 -- Profile DELETED -> Blacklist Relation DELETED
@@ -35,3 +35,17 @@ WHERE email=email
 -- UPDATE (a relation) - 2 non-primary key attributes 
 
 UPDATE 
+
+------------------------------------------------------------------------------------------------
+
+-- Selection (dyanmic WHERE)
+
+-- findHobby(hobby)
+-- TODO: create search function findHobby; user defines hobby (e.g, WHERE clause)
+-- TODO (maybe): if AND/OR clause required, can add hobby categories as dropdown 
+--               and filter with AND clause
+
+SELECT * FROM users WHERE hobby = :hobby
+
+------------------------------------------------------------------------------------------------
+
