@@ -56,6 +56,13 @@ WHERE email = :email
 
 -- findHobby(startsWith, category)
 -- TODO: create search function findHobby; searchbar for startsWith; category selected by dropdown
+-- CATEGORIES:
+--   SPORTS: "Sports",
+--   MUSIC: "Music",
+--   ART: "Art",
+--   MEDIA: "Media",
+--   GAMING: "Gaming",
+--   OTHER: "Other",
 
 SELECT * FROM hobbies
 WHERE hobby LIKE 'startsWith%'
@@ -70,7 +77,25 @@ AND category = :category
 
 -- JOIN
 
--- numberOfDonuts(email)
+-- engagementCount(donutID, postOrder)
+-- TODO: display engagement count for every post (can probably add as attribute but more work :/ )
+
+SELECT ( 
+    (SELECT COUNT(*) 
+     FROM Thread
+     INNER JOIN ThreadReaction ON Thread.threadID = ThreadReaction.threadID
+     WHERE Thread.donutID = :donutID AND Thread.postOrder = :postOrder) 
+    + 
+    (SELECT COUNT(*) 
+     FROM PostReaction
+     WHERE donutID = :donutID AND postOrder = :postOrder)
+) AS total_reaction_count;
+
+------------------------------------------------------------------------------------------------
+
+-- GROUP BY (Aggregation)
+
+-- donutCount(email)
 -- TODO: requires a dropdown for month selection
 
 SELECT TO_CHAR(Donut.createdAt, 'YYYY-MM') AS donut_created_month, COUNT(*) AS donut_count
@@ -83,14 +108,9 @@ ORDER BY donut_created_month;
 
 ------------------------------------------------------------------------------------------------
 
--- GROUP BY (Aggregation)
-
-
-
-------------------------------------------------------------------------------------------------
-
 -- HAVING (Aggregation)
 
+-- filterLessReactions()
 -- TODO: include filter button for < 3 reactions + setup re-population of posts 
 
 SELECT donutID, postOrder, COUNT(*) AS reaction_count
@@ -102,12 +122,50 @@ ORDER BY reaction_count ASC
 ---------------------------------------------------------------------------------------------
 
 -- GROUP BY (Nested Aggregation)
-SELECT S.rating
-FROM Sailors S
-WHERE AVG(S.age) <= ALL ( SELECT AVG(s2.age)
-FROM Sailors s2
-GROUP BY rating );
+
+-- emojiAnalytics()
+-- TODO: include "in-post" analytics for most popular emoji's
+
+SELECT reaction_type, AVG(reaction_count) AS avg_reaction_count
+FROM (
+    SELECT emoji AS reaction_type, COUNT(*) as reaction_count
+    FROM ThreadReaction
+    GROUP BY emoji
+
+    UNION ALL
+
+    SELECT emoji AS reaction_type, COUNT(*) AS reaction_count
+    FROM PostReaction
+    GROUP BY emoji
+) AS reactions
+GROUP BY reaction_type
 
 ---------------------------------------------------------------------------------------------
 
 -- Division
+
+-- matchingProfiles(email)
+-- TODO: create a feature that finds and matches you with the first profile queried that has all the same hobbies as profile with :email
+
+SELECT P.email
+FROM Profile P
+WHERE NOT EXISTS (
+    SELECT PH.hobby
+    FROM ProfileHobby PH
+    WHERE PH.profile = :email
+    EXCEPT
+    SELECT PH2.hobby
+    FROM ProfileHobby PH2
+    WHERE PH2.profile = P.email
+)
+AND NOT EXISTS (
+    SELECT PH2.hobby
+    FROM ProfileHobby PH2
+    WHERE PH2.profile = P.email
+    EXCEPT
+    SELECT PH.hobby
+    FROM ProfileHobby PH
+    WHERE PH.profile = :email
+)
+AND P.email <> :email
+LIMIT 1;
