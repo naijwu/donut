@@ -1,7 +1,7 @@
 
 import express from 'express'
 import { auth } from '../middleware/auth.js';
-import { getUserNotifications } from '../services/notificationsService.js';
+import { getUserNotifications, insertNotification } from '../services/notificationsService.js';
 
 const router = express.Router();
 
@@ -20,6 +20,23 @@ router.get('/:email', auth, async (req, res) => {
         })
     }
 });
+
+router.post('/:email/:message', auth, async (req, res) => {
+    console.log("inserting a notif")
+    try {
+        const { email, message } = req.params;
+
+        // return all Notification of a user
+        const data = await insertNotification(email, message);
+
+        res.status(200).json(data)
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: `Error inserting notification for ${email}`
+        })
+    }
+})
 
 router.delete('/:notificationID', auth, async (req, res) => {
     try {
