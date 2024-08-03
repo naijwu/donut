@@ -2,6 +2,7 @@
   border: 1px solid var(--color-ui-10);
   border-radius: 20px;
   padding: 1rem;
+  background: white;
 }
 .container.borderless {
   padding: 0;

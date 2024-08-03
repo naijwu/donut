@@ -1,3 +1,82 @@
+import { withOracleDB } from "../dbConfig.js";
+import { v4 as uuidv4 } from 'uuid'
+import { sqlifyDatetime } from "../utils/helpers.js";
+
+export async function getThreads(donutID, postOrder) {
+    return await withOracleDB(async (connection) => {
+        try {
+            const threads = []
+            const threadsRes = await connection.execute(
+                `SELECT 
+                    t.threadID,
+                    t.author,
+                    t.donutID,
+                    t.postOrder,
+                    t.parent,
+                    t.text,
+                    t.createdAt,
+                    p.email,
+                    p.pictureURL,
+                    p.fullName
+                FROM 
+                    Thread t,
+                    Profile p
+                WHERE 
+                    t.donutID=:donutID AND 
+                    t.postOrder=:postOrder AND
+                    t.author=p.email`, 
+                {
+                    donutID,
+                    postOrder
+                }
+            )
+            for (let i = 0; i < threadsRes.rows.length; i++) {
+                const trow = threadsRes.rows[i];
+
+                const treactions = {}
+                const treac = await connection.execute(
+                    `SELECT * FROM ThreadReaction WHERE threadID=:threadID`, {
+                        threadID: `${trow[0]}`
+                    }
+                );
+
+                // freq table of all emojis (rows[j][3])
+                for (let j = 0; j < treac.rows.length; j++) {
+                    if (treactions[treac.rows[j][2]] && treactions[treac.rows[j][2]].count > 0) {
+                        const cpy = JSON.parse(JSON.stringify(treactions[treac.rows[j][2]]))
+                        cpy.profiles.push(treac.rows[j][0])
+                        cpy.count += 1;
+                        treactions[treac.rows[j][2]] = cpy
+                    } else {
+                        treactions[treac.rows[j][2]] = {
+                            count: 1,
+                            profiles: [treac.rows[j][0]]
+                        };
+                    }
+                }
+
+                threads.push({
+                    threadID: trow[0],
+                    author: trow[1],
+                    parent: trow[4],
+                    text: trow[5],
+                    createdAt: trow[6],
+                    profile: {
+                        email: trow[7],
+                        pictureURL: trow[8],
+                        fullName: trow[9]
+                    },
+                    reactions: treactions
+                })
+            }
+            return threads;
+        } catch(err) {
+            console.log('err: ', err);
+        }
+    }).catch((err) => {
+        return err;
+    });
+}
 
 /**
  * 
@@ -7,7 +86,34 @@
  * @returns the thread that is created
  */
 export async function createThread(donutID, postOrder, threadData) {
+    const { text, author, parent } = threadData;
 
+    return await withOracleDB(async (connection) => {
+        try {
+            const createdAt = sqlifyDatetime(new Date());
+            const threadID = uuidv4();
+
+            await connection.execute(
+                `INSERT INTO Thread VALUES (:threadID, :author, :donutID, :postOrder, :parent, :text, :createdAt)`, 
+                {
+                    threadID,
+                    author,
+                    donutID,
+                    postOrder,
+                    parent,
+                    createdAt,
+                    text
+                }, {
+                    autoCommit: true
+                }
+            );
+            return true;
+        } catch(err) {
+            console.log('err: ', err);
+        }
+    }).catch((err) => {
+        return err;
+    });
 }
 
 /**
@@ -24,6 +130,58 @@ export async function updateThread(threadID, threadData) {
  * @param {*} threadID the thread that is being reacted on
  * @param {*} reactionData the data of the ThreadReaction entity
  */
-export async function createThreadReaction(threadID, reactionData) {
-    
+export async function handleThreadReaction(threadID, reactionData) {
+    const { profile, emoji } = reactionData;
+    return await withOracleDB(async (connection) => {
+        try {
+
+            const { rows } = await connection.execute(
+                `SELECT 
+                    COUNT(*) 
+                FROM 
+                    ThreadReaction 
+                WHERE 
+                    profile=:profile AND 
+                    threadID=:threadID AND
+                    emoji=:emoji`, 
+                {
+                    profile,
+                    threadID,
+                    emoji
+                });
+            
+            if (rows[0] > 0) {
+                // delete
+                await connection.execute(
+                `DELETE FROM
+                    ThreadReaction 
+                WHERE 
+                    profile=:profile AND 
+                    threadID=:threadID AND
+                    emoji=:emoji`, 
+                {
+                    profile,
+                    threadID,
+                    emoji
+                });
+            } else {
+                // create
+                await connection.execute(
+                    `INSERT INTO ThreadReaction VALUES (:profile, :threadID, :emoji)`, 
+                    {
+                        profile,
+                        threadID,
+                        emoji
+                    }, {
+                        autoCommit: true
+                    }
+                );
+            }
+            return true;
+        } catch(err) {
+            console.log('err: ', err);
+        }
+    }).catch((err) => {
+        return err;
+    });
 }

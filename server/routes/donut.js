@@ -63,7 +63,7 @@ router.post('/:donutID/message', auth, async (req, res) => {
         const { donutID } = req.params;
         /**
          * type message = {
-         *    messageID: string; -> Not passsed/ID created in service file
+         *    messageID: string;
          *    donutID: string;
          *    message: string;
          *    sentAt: date;

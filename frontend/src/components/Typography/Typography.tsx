@@ -14,8 +14,8 @@ const Header1 = ({children}:{children?: any}) => (
     </h3>
 )
 
-const P = ({children, bold, small, dark}:{children?:any, bold?: boolean, small?: boolean, dark?: boolean}) => (
-    <p className={`${styles.p} ${bold ? styles.bold : ''} ${small ? styles.small : ''} ${dark ? styles.dark : ''}`}>
+const P = ({children, bold, small, dark, style}:{children?:any, bold?: boolean, small?: boolean, dark?: boolean, style?: any}) => (
+    <p className={`${styles.p} ${bold ? styles.bold : ''} ${small ? styles.small : ''} ${dark ? styles.dark : ''}`} style={style}>
         {children}
     </p>
 )

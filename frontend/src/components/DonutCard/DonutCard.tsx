@@ -13,38 +13,72 @@ import { P } from '../Typography/Typography'
 import styles from './DonutCard.module.css'
 
 export function Post({
+    onSwipeLeft,
+    onSwipeRight,
     data,
 }: {
+    onSwipeLeft: any;
+    onSwipeRight: any;
     data: DonutPost,
 }) {
+    const reactions = Object.keys(data?.reactions || {})
     
+    const [activeIndex, setActiveIndex] = useState<number>(0);
+    const maxIndex = (data?.images?.length || 1) - 1;
+    const swipeLeft = () => {
+        if (activeIndex == maxIndex) return
+        setActiveIndex(activeIndex + 1);
+    }
+    const swipeRight = () => {
+        if (activeIndex == 0) return
+        setActiveIndex(activeIndex - 1);
+    }
+
     return (
         <div className={styles.postContainer}>
             <div className={styles.tag}>
-                <Tag type="social" />
+                {/* <Tag type="social" /> */}
             </div>
-            <Link href={`/post/${data.donutID}/${data.postOrder}`}>
-                <div className={styles.content}>
-                    <P bold>
-                        {data?.title}
-                    </P>
-                    <P>
-                        {data?.description}
-                    </P>
+            <SwipeAlerter
+              onSwipeLeft={onSwipeLeft}
+              onSwipeRight={onSwipeRight}>
+                <Link href={`/post/${data.donutID}/${data.postOrder}`}>
+                    <div className={styles.content}>
+                        <P bold>
+                            {data?.title}
+                        </P>
+                        <P>
+                            {data?.description}
+                        </P>
+                    </div>
+                </Link>
+            </SwipeAlerter>
+            <SwipeAlerter
+              onSwipeLeft={swipeLeft}
+              onSwipeRight={swipeRight}>
+                <div className={styles.pictures}>
+                    <div style={{
+                        transition: 'all 0.2s cubic-bezier(.62,.13,.15,.97)',
+                        transform: `translateX(calc(-100% * ${activeIndex}))`}}>
+                        <div style={{
+                            width: `calc(100% * ${data.images?.length})`,
+                            display: 'grid',
+                            gridTemplateColumns: `repeat(${data.images?.length}, 1fr)`,
+                        }}>
+                            {data?.images?.map((img) => (
+                                <img className={styles.postPicture} src={img.pictureURL} alt={img.alt} />
+                            ))}
+                        </div>
+                    </div>
                 </div>
-            </Link>
-            <div className={styles.pictures}>
-                <div style={{height: 200,width:'100%',backgroundColor:'var(--color-ui-10)',borderRadius:10}}></div>
-            </div>
-            <Author author={data.author} createdAt={data.createdAt} />
+            </SwipeAlerter>
+            <Author author={data.profile} createdAt={data.createdAt} />
             <div className={styles.reactions}>
-                {/* TODO: reactions from array */}
-                <Button active onClick={()=>console.log('reaction')} variant="ghost" size="small">
-                    😍 23
-                </Button>
-                <Button onClick={()=>console.log('reaction')} variant="ghost" size="small">
-                    😂 18
-                </Button>
+                {reactions?.map((emoji) => (
+                    <Button key={emoji} active onClick={()=>console.log(`add ${emoji} reaction`)} variant="ghost" size="small">
+                        {emoji} {data.reactions[emoji]}
+                    </Button>
+                ))}
             </div>
         </div>
     )
@@ -69,7 +103,6 @@ export default function DonutCard({
         if (activeIndex == 0) return
         setActiveIndex(activeIndex - 1);
     }
-    console.log(activeIndex);
     
     return (
         <div className={styles.card}>
@@ -79,27 +112,28 @@ export default function DonutCard({
             <div className={styles.cardInner} style={{
                 transition: 'all 0.2s cubic-bezier(.62,.13,.15,.97)',
                 transform: `translateX(calc(-100% * ${activeIndex}))`}}>
-                <SwipeAlerter
-                  onSwipeLeft={swipeLeft}
-                  onSwipeRight={swipeRight}>
                     <div className={styles.horizontalScroll} style={{
                         width: `calc(100% * ${data.posts?.length})`,
                         display: 'grid',
                         gridTemplateColumns: `repeat(${data.posts?.length}, 1fr)`,
                     }}>
                         {data?.posts?.map((postData, index) => (
-                            <div className={styles.postWrapper}>
-                                <Post key={index} data={postData} />
+                            <div key={index} className={styles.postWrapper}>
+                                <Post 
+                                    onSwipeLeft={swipeLeft}
+                                    onSwipeRight={swipeRight}
+                                    data={postData} />
                             </div>
                         ))}
                     </div>
-                </SwipeAlerter>
             </div>
-            <div className={styles.indicator}>
-                {indicators.map((i,ind) => (
-                    <div key={ind} className={`${styles.dot} ${ind == activeIndex ? styles.active : ''}`}></div>
-                ))}
-            </div>
+            {indicators?.length > 1 && (
+                <div className={styles.indicator}>
+                    {indicators.map((i,ind) => (
+                        <div key={ind} className={`${styles.dot} ${ind == activeIndex ? styles.active : ''}`}></div>
+                    ))}
+                </div>
+            )}
         </div>
     )
 }

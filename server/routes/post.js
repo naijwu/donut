@@ -6,9 +6,10 @@ import {
     getDonutPost,
     createPost,
     updatePost,
-    createPostReaction,
+    handlePostReaction,
     deletePost,
-    getProfileDonutPost
+    getProfileDonutPost,
+    getImagesOfPost
 } from '../services/postService.js';
 import multer from 'multer'
 
@@ -68,6 +69,21 @@ router.get('/donut/:donutID/profile/:profile', auth, async (req, res) => {
     }
 });
 
+router.get('/donut/:donutID/order/:postOrder/pictures', auth, async (req, res) => {
+    try {
+        const { donutID, postOrder } = req.params;
+
+        const data = await getImagesOfPost(donutID, postOrder);
+
+        res.status(200).json(data)
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: `Error fetching post ${donutID}, ${profile} with comments`
+        })
+    }
+});
+
 router.post('/:donutID', auth, multerMid.array("files"), async (req, res) => {
     try {
         const { donutID } = req.params;
@@ -81,7 +97,7 @@ router.post('/:donutID', auth, multerMid.array("files"), async (req, res) => {
         const { title, author, description } = req.body;
 
         // Create a post
-        console.log(title, author, description, req.files, donutID)
+        // console.log(title, author, description, req.files, donutID)
         await createPost(donutID, { title, author, description }, req.files);
         
         res.status(200).json({
@@ -95,25 +111,28 @@ router.post('/:donutID', auth, multerMid.array("files"), async (req, res) => {
     }
 });
 
-router.patch('/:donutID/:postOrder', auth, async (req, res) => {
+router.patch('/:donutID/:postOrder', auth, multerMid.array("files"), async (req, res) => {
+    const { donutID, postOrder } = req.params;
     try {
-        const { donutID, postOrder } = req.params;
+        console.log(donutID, postOrder)
         /**
          * type post = {
-         *    donutID: string;
          *    title: string;
-         *    postOrder: number;
-         *    createdAt: date;
+         *    description: string;
          *    author: string;
          * }
          */
-        const { post } = req.body;
+        const { title, description, _imagesToDelete } = req.body;
 
         // Edit post
-        const editedPost = await updatePost(donutID, postOrder, post)
+        await updatePost(
+            donutID, 
+            postOrder, 
+            { title, description, _imagesToDelete: JSON.parse(_imagesToDelete) }, 
+            req.files)
         
         res.status(200).json({
-            data: editedPost
+            data: 'Successfully updated post'
         })
     } catch (err) {
         console.log(err);
@@ -130,17 +149,15 @@ router.post('/:donutID/:postOrder/reaction', auth, async (req, res) => {
         /**
          * type PostReaction = {
          *    profile: string;
-         *    donutID: string;
-         *    postOrder: number; 
          *    emoji: string;
          * }
          */
         const { reaction } = req.body;
 
         // create a reaction
-        const data = createPostReaction(donutID, postOrder, reaction);
+        await handlePostReaction(donutID, postOrder, reaction);
 
-        res.status(200).json(data)
+        res.status(200).json('Created post reaction')
     } catch (err) {
         console.log(err);
         res.status(500).json({

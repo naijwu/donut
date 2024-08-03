@@ -3,7 +3,7 @@ import Avatar from "../Avatar/Avatar";
 import { P } from '../Typography/Typography';
 
 type AuthorT = {
-    author: string;
+    author: any;
     createdAt: string;
 }
 
@@ -14,17 +14,17 @@ export default function Author({
 
     return (
         <div className={styles.author}>
-            <Avatar pictureURL='https://lh3.googleusercontent.com/a/ACg8ocLg2Dv28OPh2nV0uWRhctqkHMTSpuEybGqCtFc-jxDmP8OhuaoqMA=s96-c' />
+            <Avatar pictureURL={author?.pictureURL} />
             <div className={styles.author_text}>
                 <P small bold>
-                    {author}
+                    {author?.email || 'A user'}
                 </P>
-                <P small>
+                {/* <P small>
                     on
                 </P>
                 <P bold small>
                     {createdAt}
-                </P>
+                </P> */}
             </div>
         </div>
     )

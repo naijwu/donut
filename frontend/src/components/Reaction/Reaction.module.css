@@ -1,0 +1,32 @@
+.wrapper {
+  position: relative;
+}
+
+.label {
+}
+
+.tray {
+  position: absolute;
+  top: 100%;
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  border: 1px solid var(--color-ui-10);
+  border-radius: 14px;
+  padding: 0.5rem 0.8rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  background: white;
+
+  transition: all 0.13s ease;
+  opacity: 0;
+  transform: translateY(5px);
+  visibility: hidden;
+}
+.tray.open {
+  opacity: 1;
+  transform: translateY(0px);
+  visibility: visible;
+}
+
+.emoji {
+}

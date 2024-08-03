@@ -20,14 +20,19 @@ const DROP_QUERIES = [
 ]
 
 const INSERT_HOBBIES = [
-    `INSERT INTO Hobby VALUES ('Hiking', 'Exploring nature by walking.')`,
-    `INSERT INTO Hobby VALUES ('Anime', 'Discussing Japanese animation and manga.')`,
-    `INSERT INTO Hobby VALUES ('Driving', 'Racing or commuting by vehicle.')`,
-    `INSERT INTO Hobby VALUES ('Investing', 'Buying equities.')`,
-    `INSERT INTO Hobby VALUES ('Running', 'Walking fast for fitness and enjoyment.')`,
-    `INSERT INTO Hobby VALUES ('Singing', 'Enjoying vocal music.')`,
-    `INSERT INTO Hobby VALUES ('Building', 'Creating various projects.')`,
-    `INSERT INTO Hobby VALUES ('Weightlifting', 'Lifting weights.')`
+    `INSERT INTO Hobby VALUES ('Hiking', 'Exploring nature by walking.', 'Sports')`,
+    `INSERT INTO Hobby VALUES ('Anime', 'Discussing Japanese animation and manga.', 'Anime')`,
+    `INSERT INTO Hobby VALUES ('Driving', 'Racing or commuting by vehicle.', 'Other')`,
+    `INSERT INTO Hobby VALUES ('Investing', 'Buying equities.', 'Other')`,
+    `INSERT INTO Hobby VALUES ('Running', 'Walking fast for fitness and enjoyment.', 'Sports')`,
+    `INSERT INTO Hobby VALUES ('Singing', 'Enjoying vocal music.', 'Music')`,
+    `INSERT INTO Hobby VALUES ('Building', 'Creating various projects.', 'Other')`,
+    `INSERT INTO Hobby VALUES ('Weightlifting', 'Lifting weights.', 'Sports')`,
+    `INSERT INTO Hobby VALUES ('Drawing', 'Drawing some pictures.', 'Art')`,
+    `INSERT INTO Hobby VALUES ('Painting', 'Painting some paintings.', 'Art')`,
+    `INSERT INTO Hobby VALUES ('League Of Legends', 'I hate my life.', 'Gaming')`,
+    `INSERT INTO Hobby VALUES ('CSGO', 'Pew pew.', 'Gaming')`,
+    `INSERT INTO Hobby VALUES ('Harry Potter', 'Expelliarmus!', 'Media')`,
 ]
 
 const CREATE_QUERIES = [
@@ -49,8 +54,7 @@ const CREATE_QUERIES = [
         address VARCHAR2(255 CHAR),
         postalCode CHAR(6),
         PRIMARY KEY (email),
-        FOREIGN KEY (postalCode) REFERENCES PostalLocation(postalCode)
-        ON DELETE SET NULL)`,
+        FOREIGN KEY (postalCode) REFERENCES PostalLocation(postalCode) ON DELETE SET NULL)`,
     `CREATE TABLE BeenPaired(
         profileA VARCHAR2(255 CHAR),
         profileB VARCHAR2(255 CHAR),
@@ -86,7 +90,7 @@ const CREATE_QUERIES = [
         author VARCHAR2(255 CHAR) NOT NULL,
         description VARCHAR2(1000 CHAR) NOT NULL,
         PRIMARY KEY (donutID, postOrder),
-        FOREIGN KEY (author) REFERENCES Profile(email) ON DELETE CASCADE,
+        FOREIGN KEY (author) REFERENCES Profile(email),
         FOREIGN KEY (donutID) REFERENCES Donut(donutID) ON DELETE CASCADE)`,
     `CREATE TABLE Picture(
         pictureURL VARCHAR2(1000 CHAR),
@@ -99,7 +103,7 @@ const CREATE_QUERIES = [
         messageID CHAR(36),
         donutID CHAR(36),
         message VARCHAR2(1000 CHAR) NOT NULL,
-        sentAt DATE NOT NULL,
+        sentAt TIMESTAMP WITH TIME ZONE NOT NULL,
         sender VARCHAR2(255 CHAR) NOT NULL,
         PRIMARY KEY (messageID),
         FOREIGN KEY (donutID) REFERENCES Donut(donutID) ON DELETE CASCADE,
@@ -107,6 +111,7 @@ const CREATE_QUERIES = [
     `CREATE TABLE Hobby(
         name VARCHAR2(255 CHAR),
         description VARCHAR2(255 CHAR) NOT NULL,
+        category VARCHAR2(255 CHAR) NOT NULL,
         PRIMARY KEY (name))`,
     `CREATE TABLE ProfileHobby(
         profile VARCHAR2(255 CHAR),
@@ -126,7 +131,7 @@ const CREATE_QUERIES = [
         donutID CHAR(36),
         postOrder INT,
         emoji VARCHAR2(16 CHAR) NOT NULL,
-        PRIMARY KEY (profile, donutID, postOrder),
+        PRIMARY KEY (profile, donutID, postOrder, emoji),
         FOREIGN KEY (profile) REFERENCES Profile(email) ON DELETE CASCADE,
         FOREIGN KEY (donutID, postOrder) REFERENCES Post(donutID, postOrder) ON DELETE CASCADE)`,
     `CREATE TABLE Thread(
@@ -136,7 +141,7 @@ const CREATE_QUERIES = [
         postOrder INT,
         parent CHAR(36),
         text VARCHAR2(2000 CHAR) NOT NULL,
-        createdAt DATE NOT NULL,
+        createdAt TIMESTAMP WITH TIME ZONE NOT NULL,
         PRIMARY KEY (threadID),
         FOREIGN KEY (author) REFERENCES Profile(email) ON DELETE SET NULL,
         FOREIGN KEY (donutID, postOrder) REFERENCES Post(donutID, postOrder) ON DELETE CASCADE,
@@ -145,7 +150,7 @@ const CREATE_QUERIES = [
         profile VARCHAR2(255 CHAR),
         threadID CHAR(36),
         emoji VARCHAR2(16 CHAR) NOT NULL,
-        PRIMARY KEY (profile, threadID),
+        PRIMARY KEY (profile, threadID, emoji),
         FOREIGN KEY (profile) REFERENCES Profile(email) ON DELETE CASCADE,
         FOREIGN KEY (threadID) REFERENCES Thread(threadID) ON DELETE CASCADE)`
 ]
@@ -209,38 +214,6 @@ export async function insertHobbies() {
     }).catch((err) => {
         return err;
     })
-}
-
-const SMC = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC']
-/**
- * 
- * @param {*} date the date to turn into SQL date format
- * @returns a string compatible with SQL date format
- */
-export function sqlifyDate(date) {
-
-    const pad = (num) => ('00'+num).slice(-2)
-    const newDate = pad(date.getUTCDate()) + '-' + 
-                    SMC[date.getUTCMonth()] + '-' +
-                    date.getUTCFullYear()
-                    
-    return newDate;
-}
-
-/**
- * 
- * @param {*} date the date to turn into SQL date format
- * @returns a string compatible with SQL date format
- */
-function sqlifyDatetime(date) {
-    const pad = (num) => ('00'+num).slice(-2)
-    const newDate = date.getUTCFullYear() + '-' +
-                    pad(date.getUTCMonth() + 1) + '-' +
-                    pad(date.getUTCDate()) + ' ' +
-                    pad(date.getUTCHours()) + ':' +
-                    pad(date.getUTCMinutes()) + ':' +
-                    pad(date.getUTCSeconds());
-    return newDate;
 }
 
 /**

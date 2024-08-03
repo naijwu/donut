@@ -3,10 +3,11 @@ import styles from './Button.module.css'
 type ButtonT = {
     size: 'medium' | 'small',
     variant: 'ghost' | 'solid',
-    onClick: () => void,
+    onClick: any;
     children: any,
     active?: boolean,
-    disabled?: boolean
+    disabled?: boolean,
+    className?: any;
 }
 
 export default function Button({
@@ -15,11 +16,12 @@ export default function Button({
     children,
     onClick,
     active,
-    disabled
+    disabled,
+    className
 }: ButtonT) {
 
     return (
-        <button disabled={disabled} onClick={onClick} className={`${styles.base} ${styles[size]} ${styles[variant]} ${active ? styles.active : ''}`}>
+        <button disabled={disabled} onClick={onClick} className={`${styles.base} ${styles[size]} ${styles[variant]} ${active ? styles.active : ''} ${className}`}>
             {children}
         </button>
     )

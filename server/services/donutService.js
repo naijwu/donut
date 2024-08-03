@@ -106,12 +106,30 @@ export async function getDonut(donutID) {
 export async function getDonutMessages(donutID) {
     return await withOracleDB(async (connection) => {
         try {
-            const result = await connection.execute(
-                `SELECT * FROM Message WHERE donutID=:donutID`, {
+            const { rows } = await connection.execute(
+                `SELECT * 
+                FROM 
+                    Message 
+                WHERE 
+                    donutID=:donutID 
+                ORDER BY sentAt ASC`, {
                     donutID
                 }
             );
-            return result.rows;
+            
+            const msgs = [];
+            for (let i = 0; i < rows.length; i++) {
+                const msg = rows[i];
+                msgs.push({
+                    messageID: msg[0],
+                    donutID: msg[1],
+                    message: msg[2],
+                    sentAt: msg[3],
+                    sender: msg[4]
+                })
+            }
+
+            return msgs;
         } catch(err) {
             console.log('err: ', err);
         }
@@ -119,6 +137,7 @@ export async function getDonutMessages(donutID) {
         return err;
     });
 }
+
 
 /**
  * 
@@ -129,15 +148,14 @@ export async function getDonutMessages(donutID) {
 export async function sendDonutMessage(donutID, messageData) {
     return await withOracleDB(async (connection) => {
         try {
-            const messageID = uuidv4();
-            const { message, sentAt, sender } = messageData;
+            const { messageID, message, sqlFriendlyDate, sender } = messageData;
 
             await connection.execute(
                 `INSERT INTO Message VALUES (:messageID, :donutID, :message, :sentAt, :sender)`, {
                     messageID,
                     donutID,
                     message,
-                    sentAt,
+                    sentAt: sqlFriendlyDate,
                     sender
                 }, {
                     autoCommit: true

@@ -198,6 +198,11 @@
     "@types/prop-types" "*"
     csstype "^3.0.2"
 
+"@types/uuid@^10.0.0":
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-10.0.0.tgz#e9c07fe50da0f53dc24970cca94d619ff03f6f6d"
+  integrity sha512-7gqG38EyHgyP1S+7+xomFtL+ZNHcKv6DwNaCZmJmo1vgMugyF3TCnXVg4t1uk89mLNwnLtnY3TpOpCOyp1/xHQ==
+
 "@typescript-eslint/parser@^5.4.2 || ^6.0.0 || 7.0.0 - 7.2.0":
   version "7.2.0"
   resolved "https://registry.npmjs.org/@typescript-eslint/parser/-/parser-7.2.0.tgz"
@@ -1958,6 +1963,11 @@ react-is@^16.13.1:
   resolved "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
+react-use-websocket@^4.8.1:
+  version "4.8.1"
+  resolved "https://registry.yarnpkg.com/react-use-websocket/-/react-use-websocket-4.8.1.tgz#be06a0bc956c6d56391a29cbe2caa6ae8edb5615"
+  integrity sha512-FTXuG5O+LFozmu1BRfrzl7UIQngECvGJmL7BHsK4TYXuVt+mCizVA8lT0hGSIF0Z0TedF7bOo1nRzOUdginhDw==
+
 react@^18:
   version "18.3.1"
   resolved "https://registry.npmjs.org/react/-/react-18.3.1.tgz"
@@ -2400,6 +2410,11 @@ uri-js@^4.2.2:
   integrity sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==
   dependencies:
     punycode "^2.1.0"
+
+uuid@^10.0.0:
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-10.0.0.tgz#5a95aa454e6e002725c79055fd42aaba30ca6294"
+  integrity sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==
 
 which-boxed-primitive@^1.0.2:
   version "1.0.2"
