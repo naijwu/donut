@@ -14,6 +14,7 @@ import Reaction from '../Reaction/Reaction'
 import { useAuthContext } from '@/utility/Auth'
 import { useState } from 'react'
 import axios from 'axios'
+import { deltaTime } from '@/utility/helpers'
 
 export default function Threads({
     threadNodes,
@@ -139,13 +140,14 @@ function Thread({
                 <div className={styles.content}>
                     <div className={styles.poster}>
                         <P small dark bold>
-                            {data.author.split('@')[0]}
+                            {/* {data.author.split('@')[0]} */}
+                            {data.profile.fullName}
                         </P>
                         <P small>
                             &middot;
                         </P>
                         <P small>
-                            {readableDate(data.createdAt)}
+                            {deltaTime(data.createdAt)}
                         </P>
                     </div>
                     <div className={styles.comment}>

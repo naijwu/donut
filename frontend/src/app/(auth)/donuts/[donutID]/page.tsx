@@ -10,13 +10,18 @@ export default function DonutChat() {
   const { donutID } = useParams();
 
   const [donutData, setDonutData] = useState<any>();
+  const [chat, setChat] = useState<any>();
 
   async function fetchDonut() {
     try {
       const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/donut/${donutID}`, {
         withCredentials: true
       });
+      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/donut/${donutID}/messages`, {
+        withCredentials: true
+      });
       setDonutData(res.data[0]);
+      setChat(data);
     } catch (err) {
       console.error(err);
     }
@@ -26,5 +31,5 @@ export default function DonutChat() {
     fetchDonut();
   }, [])
     
-  return donutData && <DonutChatScreen donut={donutData} />
+  return donutData && <DonutChatScreen donut={donutData} chat={chat} />
 }

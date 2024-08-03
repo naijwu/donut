@@ -1,3 +1,8 @@
+.top {
+  position: fixed;
+  width: calc(100% - 2.2rem);
+  z-index: 100;
+}
 .tray {
   display: flex;
   gap: 0.5rem;
@@ -28,4 +33,30 @@
 }
 .commentField input[type="text"]::placeholder {
   color: var(--color-ui-60);
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 100%;
+  flex-grow: 1;
+  gap: 1rem;
+  overflow: auto;
+  padding: 140px 0 10px 0;
+}
+.msg {
+  display: grid;
+  grid-template-columns: 2.2rem 1fr;
+  gap: 0.5rem;
+}
+.msgMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  justify-content: space-between;
+  padding-bottom: 0.45rem;
+}
+.msgMeta.hide {
+  display: none;
 }

@@ -103,7 +103,7 @@ const CREATE_QUERIES = [
         messageID CHAR(36),
         donutID CHAR(36),
         message VARCHAR2(1000 CHAR) NOT NULL,
-        sentAt TIMESTAMP NOT NULL,
+        sentAt TIMESTAMP WITH TIME ZONE NOT NULL,
         sender VARCHAR2(255 CHAR) NOT NULL,
         PRIMARY KEY (messageID),
         FOREIGN KEY (donutID) REFERENCES Donut(donutID) ON DELETE CASCADE,
@@ -141,7 +141,7 @@ const CREATE_QUERIES = [
         postOrder INT,
         parent CHAR(36),
         text VARCHAR2(2000 CHAR) NOT NULL,
-        createdAt DATE NOT NULL,
+        createdAt TIMESTAMP WITH TIME ZONE NOT NULL,
         PRIMARY KEY (threadID),
         FOREIGN KEY (author) REFERENCES Profile(email) ON DELETE SET NULL,
         FOREIGN KEY (donutID, postOrder) REFERENCES Post(donutID, postOrder) ON DELETE CASCADE,
@@ -214,38 +214,6 @@ export async function insertHobbies() {
     }).catch((err) => {
         return err;
     })
-}
-
-const SMC = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC']
-/**
- * 
- * @param {*} date the date to turn into SQL date format
- * @returns a string compatible with SQL date format
- */
-export function sqlifyDate(date) {
-
-    const pad = (num) => ('00'+num).slice(-2)
-    const newDate = pad(date.getUTCDate()) + '-' + 
-                    SMC[date.getUTCMonth()] + '-' +
-                    date.getUTCFullYear()
-                    
-    return newDate;
-}
-
-/**
- * 
- * @param {*} date the date to turn into SQL date format
- * @returns a string compatible with SQL date format
- */
-function sqlifyDatetime(date) {
-    const pad = (num) => ('00'+num).slice(-2)
-    const newDate = date.getUTCFullYear() + '-' +
-                    pad(date.getUTCMonth() + 1) + '-' +
-                    pad(date.getUTCDate()) + ' ' +
-                    pad(date.getUTCHours()) + ':' +
-                    pad(date.getUTCMinutes()) + ':' +
-                    pad(date.getUTCSeconds());
-    return newDate;
 }
 
 /**

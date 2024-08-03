@@ -1,6 +1,6 @@
 import { withOracleDB } from "../dbConfig.js";
 import { v4 as uuidv4 } from 'uuid'
-import { sqlifyDate } from "./queryService.js";
+import { sqlifyDatetime } from "../utils/helpers.js";
 
 export async function getThreads(donutID, postOrder) {
     return await withOracleDB(async (connection) => {
@@ -90,7 +90,7 @@ export async function createThread(donutID, postOrder, threadData) {
 
     return await withOracleDB(async (connection) => {
         try {
-            const createdAt = sqlifyDate(new Date());
+            const createdAt = sqlifyDatetime(new Date());
             const threadID = uuidv4();
 
             await connection.execute(

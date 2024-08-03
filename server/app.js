@@ -53,11 +53,11 @@ const WS_PORT = process.env.WS_PORT || 8080;
 const wss = new WebSocketServer({ port: WS_PORT })
 // WebSocket event handling
 wss.on('connection', (ws) => {
-    console.log('A new client connected.');
+    // console.log('A new client connected.');
   
     // Event listener for incoming messages
     ws.on('message', (message) => {
-      console.log('Received message:', message.toString());
+    //   console.log('Received message:', message.toString());
       // message is stringified before being sent
   
       // Broadcast the message to all connected clients
@@ -70,6 +70,6 @@ wss.on('connection', (ws) => {
   
     // Event listener for client disconnection
     ws.on('close', () => {
-      console.log('A client disconnected.');
+    //   console.log('A client disconnected.');
     });
 });
