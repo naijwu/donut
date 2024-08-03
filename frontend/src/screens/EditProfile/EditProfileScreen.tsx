@@ -115,7 +115,9 @@ export default function EditProfile({
                           type="number" 
                           placeholder={profile[ProfileCols.year] || 'Your year standing...'}
                           value={editedProfile?.year || 0}
-                          onChange={e=>handleEditField('year',e.target.value)} />
+                          onChange={e=>handleEditField('year',e.target.value)}
+                          min='1'
+                          max='8' />
                     </div>
                     <div className={styles.formControl}>
                         <P dark>
@@ -125,7 +127,8 @@ export default function EditProfile({
                           type="number" 
                           placeholder={profile[ProfileCols.age]  || 'Your age...'}
                           value={editedProfile?.age || 0}
-                          onChange={e=>handleEditField('age',e.target.value)} />
+                          onChange={e=>handleEditField('age',e.target.value)}
+                          min='1' />
                     </div>
                     <div className={styles.formControl}>
                         <P dark>
@@ -133,10 +136,12 @@ export default function EditProfile({
                         </P>
                         <select 
                           name="gender"
-                          value={editedProfile?.gender || 'male'} 
+                          value={editedProfile?.gender || 'unspecified'} 
                           onChange={e=>{handleEditField('gender', e.target.value);console.log(e.target.value)}}>
                             <option value="male">Male</option>
                             <option value="female">Female</option>
+                            <option value="unspecified">Unspecified</option>
+                            <option value="other">Other</option>
                         </select>
                     </div>
                     <div className={styles.formControl}>
