@@ -6,9 +6,9 @@ import { getUserNotifications, insertNotification } from '../services/notificati
 const router = express.Router();
 
 router.get('/:email', auth, async (req, res) => {
-    try {
-        const { email } = req.params;
+    const { email } = req.params;
 
+    try {
         // return all Notification of a user
         const data = await getUserNotifications(email);
 
@@ -23,9 +23,9 @@ router.get('/:email', auth, async (req, res) => {
 
 router.post('/:email/:message', auth, async (req, res) => {
     console.log("inserting a notif")
-    try {
-        const { email, message } = req.params;
+    const { email, message } = req.params;
 
+    try {
         // return all Notification of a user
         const data = await insertNotification(email, message);
 
@@ -39,9 +39,9 @@ router.post('/:email/:message', auth, async (req, res) => {
 })
 
 router.delete('/:notificationID', auth, async (req, res) => {
-    try {
-        const { notificationID } = req.params;
+    const { notificationID } = req.params;
 
+    try {
         // Deletes notificatioin
         await deleteNotification(notificationID);
         

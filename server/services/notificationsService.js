@@ -1,3 +1,4 @@
+import { withOracleDB } from "../dbConfig.js";
 import { v4 as uuidv4 } from 'uuid';
 
 /**
@@ -6,7 +7,24 @@ import { v4 as uuidv4 } from 'uuid';
  */
 export async function getUserNotifications(email) {
     console.log("getting user notifications");
+
+    return await withOracleDB(async (connection) => {
+        try {
+            const result = await connection.execute(
+                `SELECT * FROM Notifications WHERE receiver = :email`, 
+                { email: email }
+            );
+            console.log(result);
+            return result.rows;
+        } catch(err) {
+            console.log('err: ', err);
+
+        }
+    }).catch((err) => {
+        return err;
+    });
 }
+
 
 /**
  * 
