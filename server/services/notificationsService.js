@@ -18,7 +18,6 @@ export async function getUserNotifications(email) {
             return result.rows;
         } catch(err) {
             console.log('err: ', err);
-
         }
     }).catch((err) => {
         return err;
@@ -66,5 +65,21 @@ export async function insertNotification(receiver, message) {
  * @param {*} notificationID of the notification being deleted
  */
 export async function deleteNotification(notificationID) {
-
+    return await withOracleDB(async (connection) => {
+        try {
+            await connection.execute(
+                `DELETE FROM Notification WHERE notificationID = :notificationID`, 
+                {
+                    notificationID,
+                }, {
+                    autoCommit: true
+                }
+            );
+            return true;
+        } catch(err) {
+            console.log('err: ', err);
+        }
+    }).catch((err) => {
+        return err;
+    });
 }
