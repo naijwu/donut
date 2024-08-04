@@ -8,7 +8,8 @@ import {
     deleteProfile,
     getAllHobbies,
     createHobbiesOfUser,
-    deleteHobbiesOfUser
+    deleteHobbiesOfUser,
+    findHobby
 } from '../services/profileService.js'
 
 const router = express.Router();
@@ -42,6 +43,22 @@ router.get('/hobbies', auth, async (req, res) => {
         })
     }
 });
+
+// Find select (filtered) hobbies
+router.get('/:startsWith/:category/findHobby/', auth, async (req, res) => {
+    try {
+        const { startWith, category } = req.params;
+
+        const data = await findHobby(startWith, category);
+
+        req.status(200).json(data);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: `Error filtering hobbies`
+        })
+    }
+})
 
 router.get('/:email', auth, async (req, res) => {
     try {

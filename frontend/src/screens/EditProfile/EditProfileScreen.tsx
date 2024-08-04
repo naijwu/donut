@@ -36,6 +36,9 @@ export default function EditProfile({
         address: profile[ProfileCols.address],
         postalCode: profile[ProfileCols.postalCode],
     });
+
+    const [validHobbies, setValidHobbies] = useState<typeof hobbies>(hobbies);
+
     const [selectedHobbies, setSelectedHobbies] = useState<string[]>(profileHobbies?.map((h: any)=>h[1]));
 
     const handleEditField = (key: string, value: any) => {
@@ -71,6 +74,46 @@ export default function EditProfile({
         } catch (err) {
             console.error(err)
             setLoading(false);
+        }
+    }
+
+    // DROPDOWN HOBBIES
+    const hobbyCategories = [
+        { value: 'Sports' },
+        { value: 'Music' },
+        { value: 'Art' },
+        { value: 'Media' },
+        { value: 'Gaming' },
+        { value: 'Other' }
+    ];
+    
+    const [selectedHobbyCategory, setSelectedHobbyCategory] = useState('');
+
+    const [hobbyStartsWith, setHobbyStartsWith] = useState('');
+    
+    const handleHobbyCategoryChange = (event: any) => {
+        const value = event.target.value;
+        setSelectedHobbyCategory(value);
+        console.log('Selected hobby:', value);
+    };
+
+    const handleSearchChange = (event: any) => {
+        setHobbyStartsWith(event.target.value);
+    };
+
+    const handleSubmitSearch = () => {
+        requeryHobbies()
+    }
+
+    async function requeryHobbies() {
+        try {
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/profile/${hobbyStartsWith}/${selectedHobbyCategory}/findHobby`, {
+                withCredentials: true
+             });
+
+            setValidHobbies(res.data);
+        } catch (err) {
+            console.error(err);
         }
     }
 
@@ -164,8 +207,43 @@ export default function EditProfile({
                     <P bold>
                         Hobbies
                     </P>
+                    
+                    <div>
+                        <P>Select a Hobby</P>
+                        <select value={selectedHobbyCategory} onChange={handleHobbyCategoryChange}>
+                            <option value="" disabled>Select an option</option>
+                            {hobbyCategories.map((category) => (
+                                <option value={category.value}>
+                                    {category.value}
+                                </option>
+                            ))}
+                        </select>
+                        {selectedHobbyCategory && (
+                            <div>
+                                <P dark>You have selected: {selectedHobbyCategory}</P>
+                            </div>
+                        )}
+                    </div>
+
+                    <div>
+                        <div>   
+                            <P>Search for a Hobby</P>
+                        </div>
+                        <input
+                            type="text"
+                            value={hobbyStartsWith}
+                            onChange={handleSearchChange}
+                            placeholder="Type a hobby..."
+                        />
+                        <div>
+                            <P dark>Searching for: {hobbyStartsWith}</P>
+                        </div>
+                    </div>
+
+                    <button onClick={handleSubmitSearch}>Filter Hobbies</button>
+
                     <div className={styles.hobbiesList}>
-                        {hobbies?.map((hobby: any) => (
+                        {validHobbies?.map((hobby: any) => (
                             <div 
                               key={hobby[0]} 
                               className={`${styles.hobby} ${selectedHobbies?.includes(hobby[0]) ? styles.active : ''}`}

@@ -129,6 +129,32 @@ export async function createHobbiesOfUser(email, hobbies) {
 }
 
 /**
+ * Filters hobbies of user
+ * @param {*} startsWith the first few (or all) letters of the hobby
+ * @param {*} hobbyCategory user selected category attribute for hobby
+ */
+export async function findHobby(startsWith, hobbyCategory) {
+    return await withOracleDB(async (connection) => {
+        console.log('finding filtered hobbies')
+        try {
+            const hobbiesResult = await connection.execute(
+                `SELECT * FROM hobbies
+                    WHERE hobby LIKE 'startsWith%'
+                    AND category = :hobbyCategory`, 
+                { startsWith, hobbyCategory }
+            );
+            return {
+                hobbies: hobbiesResult
+            };
+        } catch(err) {
+            console.log('err: ', err);
+        }
+    }).catch((err) => {
+        return err;
+    });
+}
+
+/**
  * 
  * @param {*} email the email of the profile to delete
  */
