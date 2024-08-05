@@ -32,8 +32,8 @@ export default function EditDonutPost() {
       }
 
       setDonutData(donutRes.data[0]);
-      setPostData(postRes.data[0]);
-      setImagesData(imagesRes.data);
+      setPostData(postRes.data[0] || []);
+      setImagesData(imagesRes.data || []);
     //   console.log(donutRes, postRes)
     } catch (err) {
       console.error(err);
@@ -46,5 +46,5 @@ export default function EditDonutPost() {
     }
   }, [user])
     
-  return donutData && <EditPost donut={donutData} post={postData} pictures={imagesData} />
+  return (donutData && imagesData && postData) && <EditPost donut={donutData} post={postData} pictures={imagesData} />
 }

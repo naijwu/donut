@@ -205,6 +205,29 @@ export default function EditPost({
         setLoading(false);
     }
 
+    async function handleDelete() {
+        if (loading) return
+        setLoading(true);
+
+        if (confirm("Are you sure you want to delete")) {
+
+            try {
+                await axios.delete(`${process.env.NEXT_PUBLIC_SERVER_URL}/post/${donut[0]}/${post[2]}`,
+                    {
+                        withCredentials: true,
+                    });
+                
+                setLoading(false);
+                router.push(`/donuts/${donut[0]}`)
+            } catch (err) {
+                console.error(err)
+                setLoading(false);
+            }
+        } else {
+            setLoading(false);
+        }
+    }
+
     return (
         <div className={styles.wrapper}>
             {/* TODO: Use a different UI element to show which donut this post is in -- maybe a bar at the bottom instead (carrying over consistency from previous page is misleading) */}
@@ -233,6 +256,9 @@ export default function EditPost({
                     </Button>
                     <Button size="medium" variant="solid" onClick={handleSave}>
                         Save post
+                    </Button>
+                    <Button size="medium" variant="solid" onClick={handleDelete}>
+                        Delete
                     </Button>
                 </div>
             </div>

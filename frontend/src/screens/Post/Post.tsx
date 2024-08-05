@@ -11,6 +11,7 @@ import { Donut, DonutPost, ThreadNodeList } from '@/lib/types'
 import { useAuthContext } from '@/utility/Auth'
 import SwipeAlerter from '@/utility/SwipeAlerter'
 import axios from 'axios'
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import styles from './Post.module.css'
 
@@ -62,6 +63,7 @@ export default function Post({
     const [reactionsData, setReactionsData] = useState<any>(data.reactions);
 
     const { user } = useAuthContext();
+    const router = useRouter()
 
     const [refresh, setRefresh] = useState<boolean>(false);
     async function loadThreads() {
@@ -214,9 +216,14 @@ export default function Post({
         <div className={styles.wrapper}>
             <DonutBanner partial={data.donut} />
             <div className={styles.post}>
-                {/* <div>
-                    <Tag type="social" />
-                </div> */}
+                {data?.profile?.email == user?.email && (
+                    <div>
+                        {/* <Tag type="social" /> */}
+                        <Button onClick={()=>router.push(`/donuts/${data.donutID}/post`)} size="medium" variant="solid">
+                            Edit post
+                        </Button>
+                    </div>
+                )}
                 <Header1>
                     {data.title}
                 </Header1>

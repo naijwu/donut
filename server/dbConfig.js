@@ -54,9 +54,9 @@ export async function withOracleDB(action) {
     } finally {
         if (connection) {
             try {
-                // console.log('closing connection...')
+                console.log('closing connection...')
                 await connection.close();
-                // console.log('connection closed')
+                console.log('connection closed')
             } catch (err) {
                 console.log('finally error);')
                 console.error(err);

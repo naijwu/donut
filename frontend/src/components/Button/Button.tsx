@@ -1,8 +1,8 @@
 import styles from './Button.module.css'
 
 type ButtonT = {
-    size: 'medium' | 'small',
-    variant: 'ghost' | 'solid',
+    size?: 'medium' | 'small',
+    variant?: 'ghost' | 'solid',
     onClick: any;
     children: any,
     active?: boolean,

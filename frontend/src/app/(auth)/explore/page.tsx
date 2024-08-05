@@ -1,11 +1,11 @@
 "use client"
 
-import SuperadminScreen from "@/screens/Superadmin/Superadmin";
+import ExploreScreen from "@/screens/Explore/Explore";
 import { useAuthContext } from "@/utility/Auth";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-export default function Superadmin() {
+export default function Explore() {
     const { user } = useAuthContext();
 
     const [tables, setTables] = useState<string[]>([]);
@@ -14,19 +14,15 @@ export default function Superadmin() {
 
     async function fetchData() {
         try {
-            const tableResponse = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/admin/tables`, {
+            const { data } = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/explore/tables`, {
                 withCredentials: true
             });
 
-            setTables(tableResponse.data.tableNames);
+            setTables(data);
         } catch (error) {
             console.error("could not get data: ", error);
         }
     }
-
-    // useEffect(() => {
-    //     fetchData();
-    // }, []);
 
     useEffect(() => {
         if (user) {
@@ -34,5 +30,5 @@ export default function Superadmin() {
         }
     }, [user])
 
-    return tables &&<SuperadminScreen tables={tables} columns={columns} projectColumns={projectColumns} />;
+    return tables && <ExploreScreen tables={tables} columns={columns} projectColumns={projectColumns} />;
 }

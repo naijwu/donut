@@ -20,7 +20,7 @@ export default function DonutChatScreen({
     chat
 }: {
     donut: any[],
-    chat: any;
+    chat: any[];
 }) {
     const parsedDonut = {
         donutID: donut[List_DonutCols.donutID],

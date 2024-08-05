@@ -9,7 +9,7 @@ export async function findPartner(email) {
     
     return await withOracleDB(async (connection) => {
         try {
-            const result = await connection.execute(
+            const { rows } = await connection.execute(
                 `SELECT P.email
                 FROM Profile P
                 WHERE NOT EXISTS (
@@ -34,9 +34,7 @@ export async function findPartner(email) {
                 LIMIT 1`, 
                 { email }
             );
-            return {
-                profile: result.rows,
-            };
+            return rows;
         } catch(err) {
             console.log('err: ', err);
         }

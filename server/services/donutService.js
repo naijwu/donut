@@ -1,5 +1,4 @@
 import { withOracleDB } from "../dbConfig.js";
-import { v4 as uuidv4 } from 'uuid';
 
 /**
  * 
@@ -34,7 +33,8 @@ export async function getDonutsOfUser(email) {
                     d.donutID = a2.donutID AND
                     a2.profile=p2.email AND
                     p1.email <> p2.email AND
-                    a1.profile=:profile`, {
+                    a1.profile=:profile
+                ORDER BY d.createdAt DESC`, {
                     profile: email
                 }
             );
@@ -106,6 +106,38 @@ export async function getDonut(donutID) {
 export async function getDonutMessages(donutID) {
     return await withOracleDB(async (connection) => {
         try {
+            const result = await connection.execute(
+                `SELECT DISTINCT
+                    d.donutID,
+                    d.createdAt,
+                    d.isCompleted,
+                    d.course,
+                    d.suggestedActivity,
+                    d.groupName,
+                    p1.email AS member1,
+                    p1.fullName AS member1name,
+                    p1.pictureURL AS member1picture,
+                    p2.email AS member2,
+                    p2.fullName AS member2name,
+                    p2.pictureURL AS member2picture
+                FROM 
+                    Donut d, 
+                    AssignedTo a1, 
+                    AssignedTo a2, 
+                    Profile p1, 
+                    Profile p2 
+                WHERE 
+                    d.donutID = a1.donutID AND 
+                    a1.profile=p1.email AND 
+                    d.donutID = a2.donutID AND
+                    a2.profile=p2.email AND
+                    p1.email <> p2.email AND
+                    d.donutID=:donutID`, {
+                    donutID
+                }
+            );
+
+
             const { rows } = await connection.execute(
                 `SELECT * 
                 FROM 
@@ -129,7 +161,7 @@ export async function getDonutMessages(donutID) {
                 })
             }
 
-            return msgs;
+            return { donutData: result.rows, msgs};
         } catch(err) {
             console.log('err: ', err);
         }

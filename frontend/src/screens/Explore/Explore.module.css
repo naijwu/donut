@@ -1,0 +1,5 @@
+.attrItem {
+}
+.attrItem.active {
+  font-weight: bold;
+}

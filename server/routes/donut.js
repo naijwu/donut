@@ -42,7 +42,7 @@ router.get('/:donutID', auth, async (req, res) => {
     }
 });
 
-router.get('/:donutID/messages', auth, async (req, res) => {
+router.get('/groupchat/:donutID', auth, async (req, res) => {
     try {
         const { donutID } = req.params;
 

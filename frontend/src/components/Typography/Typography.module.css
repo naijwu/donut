@@ -6,6 +6,15 @@
   font-size: 2rem;
 }
 
+/* Subtitle component */
+.h2 {
+  padding-top: 1rem;
+  padding-bottom: 0.4rem;
+  font-weight: 550;
+  letter-spacing: -0.5px;
+  font-size: 1.45rem;
+}
+
 /* Header1 component */
 .h3 {
   font-weight: 500;

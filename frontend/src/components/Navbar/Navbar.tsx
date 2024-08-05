@@ -1,4 +1,5 @@
 import BellIcon from '@/icons/BellIcon'
+import CompassIcon from '@/icons/CompassIcon'
 import FoodIcon from '@/icons/FoodIcon'
 import HomeIcon from '@/icons/HomeIcon'
 import UserIcon from '@/icons/UserIcon'
@@ -36,11 +37,14 @@ export default function Navbar() {
                 <TrayButton link="/" active={pn == '/'}>
                     <HomeIcon />
                 </TrayButton>
-                <TrayButton link="/notifications" active={pn?.includes('/notifications')}>
-                    <BellIcon />
+                <TrayButton link="/explore" active={pn?.includes('/explore')}>
+                    <CompassIcon />
                 </TrayButton>
                 <TrayButton link="/donuts" active={pn?.includes('/donuts')}>
                     <FoodIcon />
+                </TrayButton>
+                <TrayButton link="/notifications" active={pn?.includes('/notifications')}>
+                    <BellIcon />
                 </TrayButton>
                 <TrayButton link={`/profile/${user.email}`} active={pn?.includes('/profile')}>
                     <UserIcon />

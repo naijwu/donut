@@ -6,6 +6,12 @@ const Title = ({ children }: { children?: any }) => (
         {children}
     </h1>
 )
+// Used at top of main/directly navigable screens
+const Subtitle = ({ children }: { children?: any }) => (
+    <h2 className={styles.h2}>
+        {children}
+    </h2>
+)
 
 // Used for post title
 const Header1 = ({children}:{children?: any}) => (
@@ -22,6 +28,7 @@ const P = ({children, bold, small, dark, style}:{children?:any, bold?: boolean, 
 
 export {
     Title,
+    Subtitle,
     Header1,
     P
 }

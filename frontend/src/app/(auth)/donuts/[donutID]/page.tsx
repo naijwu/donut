@@ -10,18 +10,18 @@ export default function DonutChat() {
   const { donutID } = useParams();
 
   const [donutData, setDonutData] = useState<any>();
-  const [chat, setChat] = useState<any>();
+  const [chat, setChat] = useState<any[]>([]);
 
   async function fetchDonut() {
     try {
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/donut/${donutID}`, {
+      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/donut/groupchat/${donutID}`, {
         withCredentials: true
       });
-      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/donut/${donutID}/messages`, {
-        withCredentials: true
-      });
-      setDonutData(res.data[0]);
-      setChat(data);
+      setDonutData(data.donutData[0]);
+      if (data.msgs && data.msgs?.length > 0) {
+        setChat(data.msgs);
+      }
+      console.log(data)
     } catch (err) {
       console.error(err);
     }

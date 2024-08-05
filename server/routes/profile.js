@@ -16,7 +16,7 @@ import {
 const router = express.Router();
 
 // Division: Find all users with the exact same hobbies
-router.get('/:email/findpartner', auth, async (req, res) => {
+router.get('/findpartner/:email', auth, async (req, res) => {
     try {
         const { email } = req.params;
 
