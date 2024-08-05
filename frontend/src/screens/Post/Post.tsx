@@ -77,7 +77,6 @@ export default function Post({
         }
     }
 
-    // this is such a fucking tight piece of code i love it
     const [threadNodes, setThreadNodes] = useState<ThreadNodeList>()
     function listToTree (threadsArray: any[]) {
         const threadList: any = threadsArray;
@@ -141,7 +140,11 @@ export default function Post({
             setReplyTo([]);
             setRefresh(!refresh);
             setLoading(false)
-        } catch (err) {
+        } catch (err: any) {
+            if (err && err?.response?.data && err?.response?.data?.errorNum) {
+                alert('Post no longer exists')
+            }
+            router.push('/')
             console.error(err)
             setLoading(false)
         }

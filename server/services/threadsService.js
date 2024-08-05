@@ -110,6 +110,7 @@ export async function createThread(donutID, postOrder, threadData) {
             return true;
         } catch(err) {
             console.log('err: ', err);
+            return err;
         }
     }).catch((err) => {
         return err;
