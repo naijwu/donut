@@ -1,7 +1,7 @@
 import Avatar from "@/components/Avatar/Avatar";
 import Button from "@/components/Button/Button";
 import Logout from "@/components/Logout";
-import { Header1, P, Title } from "@/components/Typography/Typography";
+import { Header1, P, Subtitle, Title } from "@/components/Typography/Typography";
 import { ProfileCols } from "@/lib/maps";
 import { useAuthContext } from "@/utility/Auth";
 import { useRouter } from "next/navigation";
@@ -44,7 +44,37 @@ export default function ProfileScreen({ profile, hobbies }: { profile?: any[], h
                     <P>{profile[ProfileCols.email]}</P>
                 </div>
 
+                <div className={styles.info}>
+                    <P dark>
+                        🎓 {profile[ProfileCols.major] || '(No major)'} {profile[ProfileCols.year] || '(No year)'}
+                    </P>
+                    <P dark>
+                        🎂 {profile[ProfileCols.age] || '(No age)'}
+                    </P>
+                    <P dark>
+                        {profile[ProfileCols.gender] == 'Female' ? '♀' : '♂'} {profile[ProfileCols.gender] || '(No gender)'}
+                    </P>
+                    <P dark>
+                        🍩 {profile[ProfileCols.enabled] == 1 ? 'Going on donuts!' : 'Currently not being assigned'}
+                    </P>
+                </div>
+                <div className={styles.hobbies}>
+                    <Subtitle>
+                        Hobbies
+                    </Subtitle>
+                    <div>
+                        {hobbies?.map((hobby) => (
+                            <div key={hobby[1]}>{hobby[1]}</div>
+                        ))}
+                    </div>
+                </div>
                 <div className={styles.donutCount}>
+                    <Subtitle>
+                        Explore
+                    </Subtitle>
+                    <P>
+                        View the number of donuts in a given year and month that you have been in.
+                    </P>
                     <div className={styles.dateSelect}>
                         <label htmlFor="month">Select Year and Month: </label>
                         <input 
@@ -64,35 +94,9 @@ export default function ProfileScreen({ profile, hobbies }: { profile?: any[], h
                         </div>
                     ) : (
                         <div className={styles.donutCountInfo}>
-                            Click the button above to view the number of donuts in a given year and month that you have been in.
+                           
                         </div>
                     )}
-                </div>
-
-                <div className={styles.info}>
-                    <P dark>
-                        🎓 {profile[ProfileCols.major] || '(No major)'} {profile[ProfileCols.year] || '(No year)'}
-                    </P>
-                    <P dark>
-                        🎂 {profile[ProfileCols.age] || '(No age)'}
-                    </P>
-                    <P dark>
-                        {profile[ProfileCols.gender] == 'Female' ? '♀' : '♂'} {profile[ProfileCols.gender] || '(No gender)'}
-                    </P>
-                    <P dark>
-                        🏠 {profile[ProfileCols.postalCode] || '(No postal code)'}
-                    </P>
-                    <P dark>
-                        🍩 {profile[ProfileCols.enabled] == 1 ? 'Going on donuts!' : 'Currently not being assigned'}
-                    </P>
-                </div>
-                <div className={styles.hobbies}>
-                    <P bold>Hobbies</P>
-                    <div>
-                        {hobbies?.map((hobby) => (
-                            <div key={hobby[1]}>{hobby[1]}</div>
-                        ))}
-                    </div>
                 </div>
             </div>
             {profile[ProfileCols.email] == user?.email && (

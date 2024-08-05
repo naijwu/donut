@@ -61,11 +61,16 @@ router.post('/:donutID/:postOrder', auth, async (req, res) => {
         const { thread } = req.body;
 
         // create thread
-        await createThread(donutID, postOrder, thread);
-        
-        res.status(200).json({ 
-            message: 'Successfully created comment'
-         })
+        const status = await createThread(donutID, postOrder, thread);
+        console.log(status)
+
+        if (status === true) {
+            res.status(200).json({ 
+                message: 'Successfully created comment'
+             })
+        } else {
+            res.status(400).json(status)
+        }
     } catch (err) {
         console.log(err);
         res.status(500).json({
