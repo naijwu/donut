@@ -15,7 +15,7 @@ export default function Profile() {
     try {
       const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/profile/${profileEmail}`, {
         withCredentials: true
-      });
+      });   
       setProfileData(res.data);
     } catch (err) {
       console.error(err);

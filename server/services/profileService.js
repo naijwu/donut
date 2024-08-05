@@ -5,7 +5,44 @@ import { withOracleDB } from "../dbConfig.js";
  * @param {*} email the email of the user whom hobbies will be used as a divisor
  */
 export async function findPartner(email) {
-
+    if(!email) return false;
+    
+    return await withOracleDB(async (connection) => {
+        try {
+            const result = await connection.execute(
+                `SELECT P.email
+                FROM Profile P
+                WHERE NOT EXISTS (
+                    SELECT PH.hobby
+                    FROM ProfileHobby PH
+                    WHERE PH.profile = :email
+                    EXCEPT
+                    SELECT PH2.hobby
+                    FROM ProfileHobby PH2
+                    WHERE PH2.profile = P.email
+                )
+                AND NOT EXISTS (
+                    SELECT PH2.hobby
+                    FROM ProfileHobby PH2
+                    WHERE PH2.profile = P.email
+                    EXCEPT
+                    SELECT PH.hobby
+                    FROM ProfileHobby PH
+                    WHERE PH.profile = :email
+                )
+                AND P.email <> :email
+                LIMIT 1`, 
+                { email }
+            );
+            return {
+                profile: result.rows,
+            };
+        } catch(err) {
+            console.log('err: ', err);
+        }
+    }).catch((err) => {
+        return err;
+    });
 }
 
 /**
@@ -167,6 +204,31 @@ export async function deleteProfile(email) {
                 { email }
             )
             return true;
+        } catch (err) {
+            console.log('err: ', err);
+        }
+    })
+}
+
+/**
+ * 
+ * @param {*} email the eamil fo the profile to delete
+ */
+export async function donutCount(email) {
+    return await withOracleDB(async (connection) => {
+        console.log('finding number of donuts')
+        try {
+            const result = await connection.execute(
+                `SELECT TO_CHAR(Donut.createdAt, 'YYYY-MM') AS donut_created_month, COUNT(*) AS donut_count
+                FROM Profile
+                INNER JOIN AssignedTo ON Profile.email = AssignedTo.profile
+                INNER JOIN Donut ON AssignedTo.donutID = Donut.donutID
+                WHERE Profile.email = :email
+                GROUP BY TO_CHAR(Donut.createdAt, 'YYYY-MM')
+                ORDER BY donut_created_month;`,
+                { email }
+            )
+            return result.rows;
         } catch (err) {
             console.log('err: ', err);
         }

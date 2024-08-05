@@ -1,6 +1,6 @@
 
 import express from 'express'
-import { auth } from '../middleware/auth.js';
+import { auth } from '../middleware/auth.js'
 import {
     findPartner,
     getProfile,
@@ -9,7 +9,8 @@ import {
     getAllHobbies,
     createHobbiesOfUser,
     deleteHobbiesOfUser,
-    findHobby
+    findHobby,
+    donutCount
 } from '../services/profileService.js'
 
 const router = express.Router();
@@ -44,7 +45,7 @@ router.get('/hobbies', auth, async (req, res) => {
     }
 });
 
-// Find select (filtered) hobbies
+// Selection: Find filtered hobbies
 router.get('/:startsWith/:category/findHobby/', auth, async (req, res) => {
     try {
         const { startWith, category } = req.params;
@@ -131,5 +132,18 @@ router.delete('/:email', auth, async(req, res) => {
     }
 })
 
+// Group By (aggregation): find the number of donuts for profiel
+router.get('/:email/donutCount', auth, async (req, res) => {
+    try {
+        const { email } = req.params;
+        const data = await donutCount(email);
+        res.status(200).json(data);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: `Error retrieving donut count`
+        });
+    }
+});
 
 export default router;

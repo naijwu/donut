@@ -14,6 +14,7 @@ import postRoute from './routes/post.js';
 import threadsRoute from './routes/threads.js';
 import notificationsRoute from './routes/notifications.js'
 import queryRoute from './routes/query.js';
+import adminRoute from './routes/admin.js'
 
 
 const app = express();
@@ -38,6 +39,7 @@ app.use('/post', postRoute);
 app.use('/threads', threadsRoute);
 app.use('/notifications', notificationsRoute);
 app.use('/query', queryRoute);
+app.use('/admin', adminRoute);
 
 // ----------------------------------------------------------
 // Starting the server

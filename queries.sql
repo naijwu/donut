@@ -55,7 +55,7 @@ WHERE email = :email
 -- Selection (dyanmic WHERE + AND/OR)
 
 -- findHobby(startsWith, category)
--- TODO: create search function findHobby; searchbar for startsWith; category selected by dropdown
+
 -- CATEGORIES:
 --   SPORTS: "Sports",
 --   MUSIC: "Music",
@@ -145,7 +145,6 @@ GROUP BY reaction_type
 -- Division
 
 -- matchingProfiles(email)
--- TODO: create a feature that finds and matches you with the first profile queried that has all the same hobbies as profile with :email
 
 SELECT P.email
 FROM Profile P
