@@ -18,11 +18,15 @@ export default function FeedScreen({
             <Title>
                 Welcome,<br/>{user?.name}
             </Title>
-            <div className={styles.container}>
-                {donuts?.map((d,i) => (
-                    <DonutCard key={i} data={d} />
-                ))}
-            </div>
+            {
+                donuts ? 
+                <div className={styles.container}>
+                    {donuts?.map((d,i) => (
+                        <DonutCard key={i} data={d} />
+                    ))}
+                </div> :
+                <div>No Donuts Available</div>
+            }
         </div>
     )
 }
