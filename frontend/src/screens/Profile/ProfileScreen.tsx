@@ -3,19 +3,13 @@ import Button from "@/components/Button/Button";
 import Logout from "@/components/Logout";
 import { Header1, P, Title } from "@/components/Typography/Typography";
 import { ProfileCols } from "@/lib/maps";
-import { useAuthContext } from "@/utility/Auth"
+import { useAuthContext } from "@/utility/Auth";
 import { useRouter } from "next/navigation";
-import { useState } from 'react'
-import styles from './ProfileScreen.module.css'
-import axios from 'axios'
+import { useState } from 'react';
+import styles from './ProfileScreen.module.css';
+import axios from 'axios';
 
-export default function ProfileScreen({
-    profile,
-    hobbies
-}: {
-    profile?: any[];
-    hobbies?: any[];
-}) {
+export default function ProfileScreen({ profile, hobbies }: { profile?: any[], hobbies?: any[] }) {
     const { user } = useAuthContext();
     const router = useRouter();
     const [donutCount, setDonutCount] = useState<any>(0);
@@ -25,35 +19,29 @@ export default function ProfileScreen({
     async function handleToggle() {
         if (date) {
             try {
-                const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/profile/${user.email}/donutCount`, {
-                    params: { date },
+                console.log(date, typeof(date));
+                const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/profile/${user.email}/${date}/donutCount`, {
                     withCredentials: true
-                })
+                });
                 console.log('Donut Count Updated');
-                console.log(res.data)
                 setCountToggle(true);
-                setDonutCount(res.data);
+                setDonutCount(res.data[0] ? res.data[0][1] : 0);
             } catch (err) {
-                console.error(err)
+                console.error(err);
             }
         } else {
-            alert("Please select a date")
+            alert("Please select a date");
         }
     }
+
     return profile ? (
         <div className={styles.wrapper}>
-            <Title>
-                Profile
-            </Title>
+            <Title>Profile</Title>
             <div className={styles.container}>
                 <div className={styles.about}>
                     <Avatar pictureURL={profile[ProfileCols.pictureURL]} size="xlarge" />
-                    <Header1>
-                        {profile[ProfileCols.fullName]}
-                    </Header1>
-                    <P>
-                        {profile[ProfileCols.email]}
-                    </P>
+                    <Header1>{profile[ProfileCols.fullName]}</Header1>
+                    <P>{profile[ProfileCols.email]}</P>
                 </div>
 
                 <div className={styles.donutCount}>
@@ -76,7 +64,7 @@ export default function ProfileScreen({
                         </div>
                     ) : (
                         <div className={styles.donutCountInfo}>
-                            Click the button above to view the number of donuts in a given year and month that you has been in.
+                            Click the button above to view the number of donuts in a given year and month that you have been in.
                         </div>
                     )}
                 </div>
@@ -96,14 +84,10 @@ export default function ProfileScreen({
                     </P>
                 </div>
                 <div className={styles.hobbies}>
-                    <P bold>
-                        Hobbies
-                    </P>
+                    <P bold>Hobbies</P>
                     <div>
                         {hobbies?.map((hobby) => (
-                            <div>
-                                {hobby[1]}
-                            </div>
+                            <div key={hobby[1]}>{hobby[1]}</div>
                         ))}
                     </div>
                 </div>
@@ -111,7 +95,7 @@ export default function ProfileScreen({
             {profile[ProfileCols.email] == user?.email && (
                 <div className={styles.floatie}>
                     <div className={styles.floatieInner}>
-                        <Button onClick={()=>router.push('/profile/edit')} size="medium" variant="solid">
+                        <Button onClick={() => router.push('/profile/edit')} size="medium" variant="solid">
                             Edit profile
                         </Button>
                         <Logout />

@@ -107,10 +107,11 @@ export default function EditProfile({
 
     async function requeryHobbies() {
         try {
-            const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/profile/${hobbyStartsWith}/${selectedHobbyCategory}/findHobby`, {
+            const searchTerm = hobbyStartsWith || '-';
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/profile/${searchTerm}/${selectedHobbyCategory}/findHobby`, {
                 withCredentials: true
-             });
-
+            });
+            console.log(res.data)
             setValidHobbies(res.data);
         } catch (err) {
             console.error(err);
@@ -223,9 +224,6 @@ export default function EditProfile({
                                 <P dark>You have selected: {selectedHobbyCategory}</P>
                             </div>
                         )}
-                    </div>
-
-                    <div>
                         <div>   
                             <P>Search for a Hobby</P>
                         </div>
@@ -238,12 +236,27 @@ export default function EditProfile({
                         <div>
                             <P dark>Searching for: {hobbyStartsWith}</P>
                         </div>
+                        <button onClick={handleSubmitSearch}>Filter Hobbies</button>
                     </div>
-
-                    <button onClick={handleSubmitSearch}>Filter Hobbies</button>
 
                     <div className={styles.hobbiesList}>
                         {validHobbies?.map((hobby: any) => (
+                            <div 
+                              key={hobby[0]} 
+                              className={`${styles.hobby} ${selectedHobbies?.includes(hobby[0]) ? styles.active : ''}`}
+                              onClick={()=>handleHobby(hobby[0])}>
+                                <P small dark>
+                                    {hobby[0]}
+                                </P>
+                                <P small>
+                                    {hobby[1]}
+                                </P>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className={styles.hobbiesList}>
+                        {hobbies?.map((hobby: any) => (
                             <div 
                               key={hobby[0]} 
                               className={`${styles.hobby} ${selectedHobbies?.includes(hobby[0]) ? styles.active : ''}`}
