@@ -54,6 +54,7 @@ Goes without saying, list is tentative. We don't want to split the work sequenti
 | Post  | GET, POST, PATCH, DELETE | /post | CRUD a Post |
 | Profile  | GET, POST, PATCH, DELETE  | /profile/:email | CRUD a Profile |
 | Notification  | GET  | /notifications/:email | Get all notifications for a user |
+| Notification  | POST  | /notifications/:email/:message | Insert a new notification for a user |
 | Notification  | DELETE  | /notifications/:notificationID | Delete a notification |
 | Donut  | GET | /donut/:donutID | Get a donut |
 | Donut  | GET  | /donut/:donutID/messages | Get all messages of that donut groupchat |

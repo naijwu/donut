@@ -3,7 +3,7 @@ import { P, Title } from "@/components/Typography/Typography";
 import { Notification } from "@/lib/types";
 import Avatar from '@/components/Avatar/Avatar';
 
-function Notification({
+function NotificationUI({
     causer,
     pictureURL,
     time,
@@ -42,7 +42,7 @@ export default function NotificationsScreen({
                 Notifications
             </Title>
             <div className={styles.container}>
-                {notifications?.map((notif) => <Notification key={notif.notificationID} {...notif} />)}
+                {notifications?.map((notif) => <NotificationUI key={notif.notificationID} {...notif} />)}
             </div>
         </div>
     )
