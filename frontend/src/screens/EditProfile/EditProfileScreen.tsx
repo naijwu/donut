@@ -92,7 +92,28 @@ export default function EditProfile({
     
     const [hobbySearch, setHobbySearch] = useState<string>('');
 
+    const validateSearch = () => {
+        if(hobbySearch.replace(/ /g,'').length == 0) return false
+
+        let isValid = true;
+        const statements = hobbySearch.split(/(\|\||&&)/)
+        for (let i = 0; i < statements.length; i++) {
+            const lhsrhs: any = statements[i].split('==')
+            if (lhsrhs.length == 1) {
+                // can't terminate with an operator
+                if (i == statements.length - 1) isValid = false;
+                // invalid operator
+                if (!(statements[i].includes('AND') || statements[i].includes('OR'))) isValid = false;
+            } else {
+                // invalid attribute/col to query
+                if(!['name','description','category'].includes(lhsrhs[0].toLowerCase())) isValid = false;
+            }
+        }
+        return isValid;
+    }
     async function handleSearch() {
+        const isValid = validateSearch();
+        if(!isValid )return
         try {
             const { data } = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/profile/hobbies/search`, {
                 search: hobbySearch
