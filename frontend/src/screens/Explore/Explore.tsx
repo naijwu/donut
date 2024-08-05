@@ -92,28 +92,33 @@ export default function SuperadminScreen({
     }, [table])
 
     return (
-        <div>
+        <div className={styles.wrapper}>
             <Title>Explore</Title>
             <Subtitle>
                 Statistics
             </Subtitle>
             <P>Get number of profiles of a specific attribute (major, gender, year)</P>
             <div>
-                
+                <select>
+                    <option value=""></option>
+                </select>
+                <Button onClick={()=>{}} size="medium" variant="solid">
+                    Find now
+                </Button>
+                {}
             </div>
             <Subtitle>
-                Deeper stats
+                Are you old?
             </Subtitle>
             <P>Discover avg year of students of an attribute (major, gender)</P>
             <div>
-                
-            </div>
-            <Subtitle>
-                Find peers
-            </Subtitle>
-            <P>Find others of specific hobbies</P>
-            <div>
-                
+                <select>
+                    <option value=""></option>
+                </select>
+                <Button onClick={()=>{}} size="medium" variant="solid">
+                    Find now
+                </Button>
+                {}
             </div>
             <Subtitle>
                 Find your partner
@@ -123,8 +128,8 @@ export default function SuperadminScreen({
                 <Button onClick={handleFindPartner} size="medium" variant="solid">
                     Find now
                 </Button>
+                {JSON.stringify(partner)}
             </div>
-            {JSON.stringify(partner)}
             <Subtitle>
                 God mode
             </Subtitle>
@@ -138,15 +143,17 @@ export default function SuperadminScreen({
                 </select>
             </div>
             <P dark>Attributes to find:</P>
-            <div className={styles.selector}>
-                {attributes?.length > 0 ? attributes?.map((a: string) => (
-                    <div key={a} onClick={()=>handleAttribute(a)} className={`${styles.attrItem} ${selected.includes(a) ? styles.active : ''}`}>{a}</div>
-                )) : 'No attributes'}
+            <div>
+                <div className={styles.selector}>
+                    {attributes?.length > 0 ? attributes?.map((a: string) => (
+                        <div key={a} onClick={()=>handleAttribute(a)} className={`${styles.attrItem} ${selected.includes(a) ? styles.active : ''}`}>{a}</div>
+                    )) : 'No attributes'}
+                </div>
+                <Button onClick={handleProjection}>
+                    Get results
+                </Button>
+                {JSON.stringify(projected)}
             </div>
-            <Button onClick={handleProjection}>
-                Get results
-            </Button>
-            {JSON.stringify(projected)}
         </div>
     );
 }

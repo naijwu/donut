@@ -1,3 +1,7 @@
+.wrapper {
+  padding-bottom: calc(80px + 1rem);
+}
+
 .attrItem {
 }
 .attrItem.active {
