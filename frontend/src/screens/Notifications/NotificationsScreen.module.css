@@ -8,14 +8,23 @@
 .notif {
   display: flex;
   gap: 0.5rem;
+  width: 100%;
 }
 .content {
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
+  width: 100%;
+  color: #000;
 }
 .whoWhen {
   display: flex;
   gap: 0.4rem;
   flex-wrap: wrap;
+}
+
+.time {
+  text-align: right;
+  width: 100%;
+  color: gray;
 }

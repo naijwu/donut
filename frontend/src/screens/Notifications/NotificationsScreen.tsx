@@ -2,40 +2,47 @@ import styles from './NotificationsScreen.module.css';
 import { P, Title } from "@/components/Typography/Typography";
 import { Notification } from "@/lib/types";
 import Avatar from '@/components/Avatar/Avatar';
+import { useAuthContext } from "@/utility/Auth";
 
 function NotificationUI({
-    // causer,
     pictureURL,
     time,
     message
 }: {
-    // causer: string;
     pictureURL: string;
     time: any;
-    message: string
+    message: string;
 }) {
+    const DEFAULT_PICTURE_URL = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';
+
+    const displayPictureURL = pictureURL || DEFAULT_PICTURE_URL;
+
     return (
         <div className={styles.notif}>
             <div>
-                <Avatar pictureURL={pictureURL} />
+                <Avatar pictureURL={displayPictureURL} />
             </div>
             <div className={styles.content}>
                 <P dark>
                     {message}
                 </P>
-                <P small>
+                <p className={styles.time}>
                     {time}
-                </P>
+                </p>
             </div>
         </div>
     );
 }
+
 
 export default function NotificationsScreen({
     notifications
 }: {
     notifications: Notification[]
 }) {
+
+    const { user } = useAuthContext();
+
     return (
         <div>
             <Title>
@@ -44,11 +51,11 @@ export default function NotificationsScreen({
             {notifications && notifications.length > 0 ? (
                 <div className={styles.container}>
                     {notifications.map((notif) => (
-                        <>
-                        {/* TODO, DISPLAY NOTIF PROPERLY */}
-                        {/* ADD A ONCLICK DELETE NOTIF */}
-                        <NotificationUI key={notif.notificationID} {...notif} />
-                        </>
+                        <NotificationUI 
+                            key={notif[0]} 
+                            time={notif[1]} 
+                            message={notif[2]} 
+                        />
                     ))}
                 </div>
             ) : (
