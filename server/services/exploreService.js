@@ -54,3 +54,30 @@ export async function projectColumns(tableName, attributes) {
         return err;
     });
 }
+
+export async function profileCount(maj, yr, gend) {
+    return await withOracleDB(async (connection) => {
+        try {
+            const result = await connection.execute(
+                `SELECT major, year, gender, count(*) as profileCount
+                 FROM Profile
+                 WHERE major = :maj AND year = :yr AND gender = :gend
+                 GROUP BY major, year, gender`,
+                { maj, yr, gend }
+            );
+
+            if (result.rows.length > 0) {
+                console.log('Query result:', result.rows[0]);
+                return result.rows[0].PROFILECOUNT;
+            } else {
+                return 0;
+            }
+        } catch (err) {
+            console.error('Database query error:', err);
+            throw err;
+        }
+    }).catch((err) => {
+        console.error('DB Error:', err);
+        throw err;
+    });
+}

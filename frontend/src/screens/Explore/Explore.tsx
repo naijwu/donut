@@ -91,6 +91,31 @@ export default function SuperadminScreen({
         }
     }, [table])
 
+    // Group by (aggregation) - users with x,y,z
+
+    const [major, setMajor] = useState<any>();
+    const [year, setYear] = useState<any>();
+    const [gender, setGender] = useState<any>();
+
+    const [profileCount, setProfileCount] = useState<any>();
+
+    async function handleProfileCount() {
+        console.log(major, year, gender)
+        setLoading(true);
+        try {
+            const data = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/explore/${major}/${year}/${gender}/profileCount`, {
+                withCredentials: true
+            });
+            
+            console.log('Received data:', data);
+            setProfileCount(data.data.profileCount)
+            setLoading(false);
+        } catch (error) {
+            console.error(error);
+            setLoading(false);
+        }
+    }
+
     return (
         <div className={styles.wrapper}>
             <Title>Explore</Title>
@@ -102,10 +127,40 @@ export default function SuperadminScreen({
                 <select>
                     <option value=""></option>
                 </select>
-                <Button onClick={()=>{}} size="medium" variant="solid">
+                <div>
+                    <P dark>Major</P>
+                    <input 
+                        name="major"
+                        value={major}
+                        onChange={e=>setMajor(e.target.value)}
+                        placeholder='e.g. math' />
+                </div>
+                <div>
+                    <P dark>Year</P>
+                    <input 
+                        type="number" 
+                        name="year"
+                        value={year}
+                        onChange={e=>setYear(e.target.value)}
+                        placeholder='e.g. 3' />
+                </div>
+                <div>
+                    <P dark>Gender</P>
+                    <select 
+                        name="gender"
+                        value={gender}
+                        onChange={e=>setGender(e.target.value)}>
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="unspecified">Unspecified</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <Button onClick={handleProfileCount} size="medium" variant="solid">
                     Find now
                 </Button>
-                {}
+                <div>Number of profiles: {profileCount}</div>
             </div>
             <Subtitle>
                 Are you old?
