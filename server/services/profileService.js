@@ -175,22 +175,49 @@ export async function createHobbiesOfUser(email, hobbies) {
     });
 }
 
+function parseToQuery(search) {
+    let query = `SELECT * FROM Hobby WHERE`
+    let args = []
+
+    const statements = search.split(/(\|\||&&)/)
+    console.log(statements);
+    for (let i = 0; i < statements.length; i++) {
+        const s  = statements[i].trim();
+
+        const lhsrhs = s.split('=='); // only supports equality, because diversity equity inclusion <3
+        if (lhsrhs.length > 1) {
+            query += ` ${lhsrhs[0]}=:${(i / 2)}`
+            args.push(lhsrhs[1].replace(/['"]/g, ''))
+            if (i < (statements.length - 1)) {
+                // not last child
+                query += ` ${statements[i + 1] == '&&' ? 'AND' : 'OR'} `
+            }
+        }
+    }
+
+    console.log(query, args)
+
+    return {
+        query,
+        args
+    };
+}
+
 /**
  * Filters hobbies of user
  * @param {*} startsWith the first few (or all) letters of the hobby
  * @param {*} hobbyCategory user selected category attribute for hobby
  */
-export async function findHobby(startsWith, hobbyCategory) {
+export async function findHobby(search) {
     return await withOracleDB(async (connection) => {
         console.log('finding filtered hobbies')
         try {
-            const result = await connection.execute(
-                `SELECT * FROM hobbies
-                    WHERE hobby LIKE 'startsWith%'
-                    AND category = :hobbyCategory`, 
-                { startsWith, hobbyCategory }
+            const {query, args} = parseToQuery(search);
+            const { rows } = await connection.execute(
+                query, 
+                args
             );
-            return result
+            return rows
         } catch(err) {
             console.log('err: ', err);
         }

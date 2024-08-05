@@ -46,22 +46,21 @@ router.get('/hobbies', auth, async (req, res) => {
     }
 });
 
-// Selection: Find filtered hobbies
-router.get('/:startsWith/:category/findHobby/', auth, async (req, res) => {
+// Find all hobbies
+router.post('/hobbies/search', auth, async (req, res) => {
     try {
-        const { startWith, category } = req.params;
+        const data = await findHobby(req.body.search);
 
-        const data = await findHobby(startWith, category);
-
-        res.status(200).json(data);
+        res.status(200).json(data)
     } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: `Error filtering hobbies`
+            message: `Error getting all hobbies`
         })
     }
-})
+});
 
+// fetch profile
 router.get('/:email', auth, async (req, res) => {
     try {
         const { email } = req.params;
