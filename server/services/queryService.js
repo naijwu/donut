@@ -54,6 +54,7 @@ const CREATE_QUERIES = [
         settings VARCHAR2(255 CHAR),
         address VARCHAR2(255 CHAR),
         postalCode CHAR(6),
+        username VARCHAR2(20 CHAR) UNIQUE,
         PRIMARY KEY (email),
         FOREIGN KEY (postalCode) REFERENCES PostalLocation(postalCode) ON DELETE SET NULL)`,
     `CREATE TABLE BeenPaired(

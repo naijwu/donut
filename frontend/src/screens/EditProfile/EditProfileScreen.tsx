@@ -35,6 +35,7 @@ export default function EditProfile({
         settings: profile[ProfileCols.settings],
         address: profile[ProfileCols.address],
         postalCode: profile[ProfileCols.postalCode],
+        username: profile[ProfileCols.username],
     });
 
     const [validHobbies, setValidHobbies] = useState<typeof hobbies>(hobbies);
@@ -120,23 +121,6 @@ export default function EditProfile({
         }
     }
 
-    // Address - have to seperate address due to fk constraint (i.e. cannot add a postal code w/ no valid address)
-    const [city, setCity] = useState<string>('');
-    const [province, setProvince] = useState<string>('');
-
-    async function handleCreateAddress() {
-        console.log(city, province, editedProfile.postalCode)
-        try {
-            const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/profile/${city}/${province}/${editedProfile.postalCode}/createAddy`, {
-                withCredentials: true
-            });
-            console.log('Returned Address');
-            setCity(res.data);
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
     return profile ? (
         <div className={styles.wrapper}>
             <Title>
@@ -159,6 +143,16 @@ export default function EditProfile({
                           placeholder={profile[ProfileCols.fullName] || "Your name..."} 
                           value={editedProfile?.fullName || ''}
                           onChange={e=>handleEditField('fullName', e.target.value)} />
+                    </div>
+                    <div className={styles.formControl}>
+                        <P dark>
+                            Username
+                        </P>
+                        <input 
+                          type="text" 
+                          placeholder={profile[ProfileCols.username] || "Your username..."} 
+                          value={editedProfile?.username || ''}
+                          onChange={e=>handleEditField('username', e.target.value)} />
                     </div>
                     <div className={styles.formControl}>
                         <P dark>
@@ -206,32 +200,6 @@ export default function EditProfile({
                             <option value="unspecified">Unspecified</option>
                             <option value="other">Other</option>
                         </select>
-                    </div>
-                    <div className={styles.formControl}>
-                        <P dark>
-                            City
-                        </P>
-                        <input 
-                          type="text" 
-                          placeholder={city || "Your city..."} 
-                          value={city}
-                          onChange={e=>setCity(e.target.value)} />
-                        <P dark>
-                            Province
-                        </P>
-                        <input 
-                          type="text" 
-                          placeholder={province || "Your province..."} 
-                          value={province}
-                          onChange={e=>setProvince(e.target.value)} />
-                        <P dark>
-                            Postal Code
-                        </P>
-                        <input 
-                          type="text" 
-                          placeholder={profile[ProfileCols.postalCode] || "Your postal code..."} 
-                          value={editedProfile?.postalCode || ''}
-                          onChange={e=>handleEditField('postalCode', e.target.value)} />
                     </div>
                     <div className={styles.formControl}>
                         <P dark>
@@ -286,22 +254,6 @@ export default function EditProfile({
 
                     <div className={styles.hobbiesList}>
                         {validHobbies?.map((hobby: any) => (
-                            <div 
-                              key={hobby[0]} 
-                              className={`${styles.hobby} ${selectedHobbies?.includes(hobby[0]) ? styles.active : ''}`}
-                              onClick={()=>handleHobby(hobby[0])}>
-                                <P small dark>
-                                    {hobby[0]}
-                                </P>
-                                <P small>
-                                    {hobby[1]}
-                                </P>
-                            </div>
-                        ))}
-                    </div>
-
-                    <div className={styles.hobbiesList}>
-                        {hobbies?.map((hobby: any) => (
                             <div 
                               key={hobby[0]} 
                               className={`${styles.hobby} ${selectedHobbies?.includes(hobby[0]) ? styles.active : ''}`}
