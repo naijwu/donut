@@ -5,38 +5,39 @@ import { withOracleDB } from "../dbConfig.js";
  * @param {*} email the email of the user whom hobbies will be used as a divisor
  */
 export async function findPartner(email) {
-    if(!email) return false;
+    if (!email) return false;
     
     return await withOracleDB(async (connection) => {
         try {
             const { rows } = await connection.execute(
                 `SELECT P.email
-                FROM Profile P
-                WHERE NOT EXISTS (
-                    SELECT PH.hobby
-                    FROM ProfileHobby PH
-                    WHERE PH.profile = :email
-                    EXCEPT
-                    SELECT PH2.hobby
-                    FROM ProfileHobby PH2
-                    WHERE PH2.profile = P.email
-                )
-                AND NOT EXISTS (
-                    SELECT PH2.hobby
-                    FROM ProfileHobby PH2
-                    WHERE PH2.profile = P.email
-                    EXCEPT
-                    SELECT PH.hobby
-                    FROM ProfileHobby PH
-                    WHERE PH.profile = :email
-                )
-                AND P.email <> :email
-                LIMIT 1`, 
+                 FROM Profile P
+                 WHERE NOT EXISTS (
+                     SELECT PH.hobby
+                     FROM ProfileHobby PH
+                     WHERE PH.profile = :email
+                     MINUS
+                     SELECT PH2.hobby
+                     FROM ProfileHobby PH2
+                     WHERE PH2.profile = P.email
+                 )
+                 AND NOT EXISTS (
+                     SELECT PH2.hobby
+                     FROM ProfileHobby PH2
+                     WHERE PH2.profile = P.email
+                     MINUS
+                     SELECT PH.hobby
+                     FROM ProfileHobby PH
+                     WHERE PH.profile = :email
+                 )
+                 AND P.email <> :email
+                 FETCH FIRST 1 ROWS ONLY`, 
                 { email }
             );
             return rows;
-        } catch(err) {
+        } catch (err) {
             console.log('err: ', err);
+            throw err;
         }
     }).catch((err) => {
         return err;
