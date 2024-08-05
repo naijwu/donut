@@ -196,6 +196,7 @@ export async function handleThreadReaction(threadID, reactionData) {
  */
 export async function filterThreads(donutID, postOrder, filterNum) {
     console.log("filteringgg");
+    console.log("\n\n\n\n")
     console.log(filterNum)
     return await withOracleDB(async (connection) => {
         try {
@@ -211,19 +212,27 @@ export async function filterThreads(donutID, postOrder, filterNum) {
                     t.createdAt,
                     p.email,
                     p.pictureURL,
-                    p.fullName
+                    p.fullName,
+                    COUNT(r.threadID)
                 FROM 
-                    Thread t,
-                    Profile p
+                    Thread t
+                JOIN 
+                    Profile p ON t.author = p.email
+                JOIN 
+                    ThreadReaction r ON t.threadID = r.threadID
                 WHERE 
-                    t.donutID=:donutID AND 
-                    t.postOrder=:postOrder AND
-                    t.author=p.email`, 
+                    t.donutID = :donutID AND 
+                    t.postOrder = :postOrder
+                GROUP BY 
+                    t.threadID, t.author, t.donutID, t.postOrder, t.parent, t.text, t.createdAt, p.email, p.pictureURL, p.fullName
+                HAVING 
+                    COUNT(r.threadID) >= :filterNum`, 
                 {
                     donutID,
                     postOrder,
+                    filterNum
                 }
-            )
+            )            
             for (let i = 0; i < threadsRes.rows.length; i++) {
                 const trow = threadsRes.rows[i];
 
