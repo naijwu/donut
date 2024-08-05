@@ -1,13 +1,12 @@
 "use client"
 
 import SuperadminScreen from "@/screens/Superadmin/Superadmin";
-// import { useAuthContext } from "@/utility/Auth";
+import { useAuthContext } from "@/utility/Auth";
 import axios from "axios";
-import { table } from "console";
 import { useEffect, useState } from "react";
 
 export default function Superadmin() {
-    // const { user } = useAuthContext();
+    const { user } = useAuthContext();
 
     const [tables, setTables] = useState<string[]>([]);
     const [columns, setColumns] = useState<string[]>([]);
@@ -25,15 +24,15 @@ export default function Superadmin() {
         }
     }
 
-    useEffect(() => {
-        fetchData();
-    }, []);
-
     // useEffect(() => {
-    //     if (user) {
-    //         fetchData();
-    //     }
-    // }, [user])
+    //     fetchData();
+    // }, []);
+
+    useEffect(() => {
+        if (user) {
+            fetchData();
+        }
+    }, [user])
 
     return tables &&<SuperadminScreen tables={tables} columns={columns} projectColumns={projectColumns} />;
 }

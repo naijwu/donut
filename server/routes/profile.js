@@ -52,7 +52,7 @@ router.get('/:startsWith/:category/findHobby/', auth, async (req, res) => {
 
         const data = await findHobby(startWith, category);
 
-        req.status(200).json(data);
+        res.status(200).json(data);
     } catch (err) {
         console.log(err);
         res.status(500).json({
