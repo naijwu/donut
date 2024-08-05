@@ -99,7 +99,16 @@ export default function EditProfile({
             }, {
                 withCredentials: true
             });
-            console.log(data)
+            setValidHobbies(data);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+    async function handleReset() {
+        try {
+            const { data } = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/profile/hobbies`, {
+                withCredentials: true
+            });
             setValidHobbies(data);
         } catch (err) {
             console.error(err);
@@ -216,6 +225,9 @@ export default function EditProfile({
                             placeholder="e.g. category==Music && category==Art"
                         />
                         <Button onClick={handleSearch}>Filter Hobbies</Button>
+                        {validHobbies?.length != hobbies?.length && (
+                            <Button onClick={handleReset}>Reset</Button>
+                        )}
                     </div>
 
                     <div className={styles.hobbiesList}>

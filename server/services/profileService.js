@@ -182,12 +182,10 @@ function parseToQuery(search) {
     const statements = search.split(/(\|\||&&)/)
     console.log(statements);
     for (let i = 0; i < statements.length; i++) {
-        if ((statements + 1) % 2 == 0) {
-            // continue
-        } else {
-            const s  = statements[i].trim();
+        const s  = statements[i].trim();
 
-            const lhsrhs = s.split('=='); // only supports equality, because diversity equity inclusion <3
+        const lhsrhs = s.split('=='); // only supports equality, because diversity equity inclusion <3
+        if (lhsrhs.length > 1) {
             query += ` ${lhsrhs[0]}=:${(i / 2)}`
             args.push(lhsrhs[1].replace(/['"]/g, ''))
             if (i < (statements.length - 1)) {
