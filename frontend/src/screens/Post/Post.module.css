@@ -53,4 +53,6 @@
 .reactionsInput {
   background: #fff;
   color: black;
+  display: inline;
+  width: 200px;
 }

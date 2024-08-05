@@ -226,7 +226,6 @@ export default function Post({
 
     const [filterNum, setFilterNum] = useState<number | null>(null);
     async function filterReactions() {
-        // alert(filterNum);        
         try {
             const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/threads/${data.donutID}/${data.postOrder}/${filterNum}`, {
                 withCredentials: true
@@ -290,6 +289,7 @@ export default function Post({
                 Comments
             </P>
             <form>
+                <p>Filter for comments based off reactions</p>
                 <input
                     className={styles.reactionsInput}
                     type="number"
