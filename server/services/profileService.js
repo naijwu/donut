@@ -5,38 +5,39 @@ import { withOracleDB } from "../dbConfig.js";
  * @param {*} email the email of the user whom hobbies will be used as a divisor
  */
 export async function findPartner(email) {
-    if(!email) return false;
+    if (!email) return false;
     
     return await withOracleDB(async (connection) => {
         try {
             const { rows } = await connection.execute(
                 `SELECT P.email
-                FROM Profile P
-                WHERE NOT EXISTS (
-                    SELECT PH.hobby
-                    FROM ProfileHobby PH
-                    WHERE PH.profile = :email
-                    EXCEPT
-                    SELECT PH2.hobby
-                    FROM ProfileHobby PH2
-                    WHERE PH2.profile = P.email
-                )
-                AND NOT EXISTS (
-                    SELECT PH2.hobby
-                    FROM ProfileHobby PH2
-                    WHERE PH2.profile = P.email
-                    EXCEPT
-                    SELECT PH.hobby
-                    FROM ProfileHobby PH
-                    WHERE PH.profile = :email
-                )
-                AND P.email <> :email
-                LIMIT 1`, 
+                 FROM Profile P
+                 WHERE NOT EXISTS (
+                     SELECT PH.hobby
+                     FROM ProfileHobby PH
+                     WHERE PH.profile = :email
+                     MINUS
+                     SELECT PH2.hobby
+                     FROM ProfileHobby PH2
+                     WHERE PH2.profile = P.email
+                 )
+                 AND NOT EXISTS (
+                     SELECT PH2.hobby
+                     FROM ProfileHobby PH2
+                     WHERE PH2.profile = P.email
+                     MINUS
+                     SELECT PH.hobby
+                     FROM ProfileHobby PH
+                     WHERE PH.profile = :email
+                 )
+                 AND P.email <> :email
+                 FETCH FIRST 1 ROWS ONLY`, 
                 { email }
             );
             return rows;
-        } catch(err) {
+        } catch (err) {
             console.log('err: ', err);
+            throw err;
         }
     }).catch((err) => {
         return err;
@@ -105,7 +106,18 @@ export async function updateProfile(email, profileData) {
         try {
             const result = await connection.execute(
                 `UPDATE Profile 
-                SET gender=:gender,age=:age,fullName=:fullName,enabled=:enabled,year=:year,major=:major,settings=:settings,address=:address,postalCode=:postalCode,pictureURL=:pictureURL
+                SET 
+                gender=:gender,
+                age=:age,
+                fullName=:fullName,
+                enabled=:enabled,
+                year=:year,
+                major=:major,
+                settings=:settings,
+                address=:address,
+                postalCode=:postalCode,
+                pictureURL=:pictureURL,
+                username=:username
                 WHERE email = :email`, 
                 { ...profileData, email }
             );
@@ -163,6 +175,32 @@ export async function createHobbiesOfUser(email, hobbies) {
     });
 }
 
+<<<<<<< HEAD
+=======
+export async function donutCount(email, month) {
+    return await withOracleDB(async (connection) => {
+        console.log('finding number of donuts');
+        try {
+            const result = await connection.execute(`
+                SELECT TO_CHAR(Donut.createdAt, 'YYYY-MM') AS donut_created_month, COUNT(*) AS donut_count
+                FROM Profile
+                INNER JOIN AssignedTo ON Profile.email = AssignedTo.profile
+                INNER JOIN Donut ON AssignedTo.donutID = Donut.donutID
+                WHERE Profile.email = :email AND TO_CHAR(Donut.createdAt, 'YYYY-MM') = :month
+                GROUP BY TO_CHAR(Donut.createdAt, 'YYYY-MM')`, 
+                { email, month }
+            );
+            return result.rows;
+        } catch (err) {
+            console.log('err: ', err);
+            throw err;
+        }
+    }).catch((err) => {w
+        return err;
+    });
+}
+
+>>>>>>> c735070 ((explore) completed profile count:)
 /**
  * Filters hobbies of user
  * @param {*} startsWith the first few (or all) letters of the hobby
@@ -218,6 +256,34 @@ export async function createAddress(city, province, postalCode) {
             
             return true;
         } catch(err) {
+            console.log('err: ', err);
+            throw err;
+        }
+    }).catch((err) => {
+        return err;
+    });
+}
+
+/**
+ * 
+ * @param {*} email the email of the profile to delete
+ * @param {*} date the year and month for which to find the donut count
+ */
+export async function donutCount(email, month) {
+    return await withOracleDB(async (connection) => {
+        console.log('finding number of donuts');
+        try {
+            const result = await connection.execute(`
+                SELECT TO_CHAR(Donut.createdAt, 'YYYY-MM') AS donut_created_month, COUNT(*) AS donut_count
+                FROM Profile
+                INNER JOIN AssignedTo ON Profile.email = AssignedTo.profile
+                INNER JOIN Donut ON AssignedTo.donutID = Donut.donutID
+                WHERE Profile.email = :email AND TO_CHAR(Donut.createdAt, 'YYYY-MM') = :month
+                GROUP BY TO_CHAR(Donut.createdAt, 'YYYY-MM')
+            `, 
+            { email, month });
+            return result.rows;
+        } catch (err) {
             console.log('err: ', err);
             throw err;
         }

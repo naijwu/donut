@@ -84,7 +84,7 @@ router.patch('/:email', auth, async (req, res) => {
     try {
         const { email } = req.params;
         /**
-         * type post = {
+         * type profile = {
          *    email: string;
          *    pictureURL: string;
          *    gender: 'male' | 'female';
@@ -96,6 +96,7 @@ router.patch('/:email', auth, async (req, res) => {
          *    settings: any;
          *    address: string;
          *    postalCode: string;
+         *    username: string;
          * }
          */
         const { profile, hobbies } = req.body;

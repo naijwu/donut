@@ -11,7 +11,8 @@ export const ProfileCols = {
     major: 7,
     settings: 8,
     address: 9,
-    postalCode: 10
+    postalCode: 10,
+    username: 11
 }
 
 export const List_DonutCols = {

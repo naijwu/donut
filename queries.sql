@@ -89,7 +89,7 @@ SELECT (
     (SELECT COUNT(*) 
      FROM PostReaction
      WHERE donutID = :donutID AND postOrder = :postOrder)
-) AS total_reaction_count;
+) AS total_reaction_count
 
 ------------------------------------------------------------------------------------------------
 

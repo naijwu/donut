@@ -46,6 +46,9 @@ export default function ProfileScreen({ profile, hobbies }: { profile?: any[], h
 
                 <div className={styles.info}>
                     <P dark>
+                        @{profile[ProfileCols.username] || '(No username)'}
+                    </P>
+                    <P dark>
                         🎓 {profile[ProfileCols.major] || '(No major)'} {profile[ProfileCols.year] || '(No year)'}
                     </P>
                     <P dark>
