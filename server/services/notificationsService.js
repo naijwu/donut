@@ -1,4 +1,6 @@
+import { withOracleDB } from "../dbConfig.js";
 import { v4 as uuidv4 } from 'uuid';
+import { sqlifyDate } from "../utils/helpers.js";
 
 /**
  * 
@@ -6,7 +8,23 @@ import { v4 as uuidv4 } from 'uuid';
  */
 export async function getUserNotifications(email) {
     console.log("getting user notifications");
+
+    return await withOracleDB(async (connection) => {
+        try {
+            const result = await connection.execute(
+                `SELECT * FROM Notification WHERE receiver = :email`, 
+                { email: email }
+            );
+            console.log(result);
+            return result.rows;
+        } catch(err) {
+            console.log('err: ', err);
+        }
+    }).catch((err) => {
+        return err;
+    });
 }
+
 
 /**
  * 
@@ -20,11 +38,11 @@ export async function insertNotification(receiver, message) {
 
     return await withOracleDB(async (connection) => {
         try {
-            const time = sqlifyDatetime(new Date());
+            const time = sqlifyDate(new Date());
             const notificationID = uuidv4();
 
             await connection.execute(
-                `INSERT INTO Notification VALUES (:notificationID, :time, :message, :receiver)`, 
+                `INSERT INTO Notification (notificationID, time, message, receiver) VALUES (:notificationID, :time, :message, :receiver)`, 
                 {
                     notificationID,
                     time,
@@ -48,5 +66,22 @@ export async function insertNotification(receiver, message) {
  * @param {*} notificationID of the notification being deleted
  */
 export async function deleteNotification(notificationID) {
-
+    return await withOracleDB(async (connection) => {
+        console.log("Deleting notification");
+        try {
+            await connection.execute(
+                `DELETE FROM Notification WHERE notificationID = :notificationID`, 
+                {
+                    notificationID,
+                }, {
+                    autoCommit: true
+                }
+            );
+            return true;
+        } catch(err) {
+            console.log('err: ', err);
+        }
+    }).catch((err) => {
+        return err;
+    });
 }

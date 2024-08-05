@@ -1,15 +1,15 @@
-import styles from './NotificationsScreen.module.css'
+import styles from './NotificationsScreen.module.css';
 import { P, Title } from "@/components/Typography/Typography";
 import { Notification } from "@/lib/types";
 import Avatar from '@/components/Avatar/Avatar';
 
-function Notification({
-    causer,
+function NotificationUI({
+    // causer,
     pictureURL,
     time,
     message
 }: {
-    causer: string;
+    // causer: string;
     pictureURL: string;
     time: any;
     message: string
@@ -28,7 +28,7 @@ function Notification({
                 </P>
             </div>
         </div>
-    )
+    );
 }
 
 export default function NotificationsScreen({
@@ -41,9 +41,21 @@ export default function NotificationsScreen({
             <Title>
                 Notifications
             </Title>
-            <div className={styles.container}>
-                {notifications?.map((notif) => <Notification key={notif.notificationID} {...notif} />)}
-            </div>
+            {notifications && notifications.length > 0 ? (
+                <div className={styles.container}>
+                    {notifications.map((notif) => (
+                        <>
+                        {/* TODO, DISPLAY NOTIF PROPERLY */}
+                        {/* ADD A ONCLICK DELETE NOTIF */}
+                        <NotificationUI key={notif.notificationID} {...notif} />
+                        </>
+                    ))}
+                </div>
+            ) : (
+                <P dark>
+                    You do not have any notifications to display!
+                </P>
+            )}
         </div>
-    )
+    );
 }

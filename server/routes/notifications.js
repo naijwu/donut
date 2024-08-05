@@ -1,14 +1,14 @@
 
 import express from 'express'
 import { auth } from '../middleware/auth.js';
-import { getUserNotifications, insertNotification } from '../services/notificationsService.js';
+import { getUserNotifications, insertNotification, deleteNotification } from '../services/notificationsService.js';
 
 const router = express.Router();
 
-router.get('/:email', auth, async (req, res) => {
-    try {
-        const { email } = req.params;
+router.get('/:email', async (req, res) => {
+    const { email } = req.params;
 
+    try {
         // return all Notification of a user
         const data = await getUserNotifications(email);
 
@@ -21,11 +21,11 @@ router.get('/:email', auth, async (req, res) => {
     }
 });
 
-router.post('/:email/:message', auth, async (req, res) => {
+router.post('/:email/:message', async (req, res) => {
     console.log("inserting a notif")
-    try {
-        const { email, message } = req.params;
+    const { email, message } = req.params;
 
+    try {
         // return all Notification of a user
         const data = await insertNotification(email, message);
 
@@ -38,10 +38,10 @@ router.post('/:email/:message', auth, async (req, res) => {
     }
 })
 
-router.delete('/:notificationID', auth, async (req, res) => {
-    try {
-        const { notificationID } = req.params;
+router.delete('/:notificationID', async (req, res) => {
+    const { notificationID } = req.params;
 
+    try {
         // Deletes notificatioin
         await deleteNotification(notificationID);
         
