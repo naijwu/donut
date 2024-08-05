@@ -215,6 +215,20 @@ export default function Post({
         }
     }
 
+    const [filterNum, setFilterNum] = useState<number | null>(null);
+    async function filterReactions() {
+        alert(filterNum);
+        try {
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/`, {
+                withCredentials: true
+            });
+            // Process the response data
+            console.log(res.data);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     return (
         <div className={styles.wrapper}>
             <DonutBanner partial={data.donut} />
@@ -267,6 +281,17 @@ export default function Post({
                     <P small dark>
                         Comments
                     </P>
+                    <form>
+                        <input
+                            className={styles.reactionsInput}
+                            type="number"
+                            min="0"
+                            placeholder="Number of Reactions"
+                            id="filterReactionNum"
+                            onChange={(e) => setFilterNum(e.target.value)}  // Add this line to capture the input value
+                        />
+                        <button type="button" onClick={filterReactions}>Filter</button>
+                    </form>
                     <Threads threadNodes={threadNodes} onReply={onReply} />
                 </div>
             )}

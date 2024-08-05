@@ -49,3 +49,8 @@
 .commentField input[type="text"]::placeholder {
   color: var(--color-ui-60);
 }
+
+.reactionsInput {
+  background: #fff;
+  color: black;
+}

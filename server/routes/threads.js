@@ -37,10 +37,11 @@ router.post('/reaction/:threadID', auth, async(req, res) => {
 })
 
 router.get('/:donutID/:postOrder', auth, async (req, res) => {
+    console.log("getting threads")
     const { donutID, postOrder } = req.params;
     try {
         const data = await getThreads(donutID, postOrder);
-        
+        console.log(data);
         res.status(200).json({ data })
     } catch (err) {
         console.log(err);
