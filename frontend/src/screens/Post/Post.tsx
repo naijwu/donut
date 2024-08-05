@@ -93,9 +93,17 @@ export default function Post({
         for (let i = 0; i < threadList.length; i++) {
             node = threadList[i]
             if(node.parent !== null) {
-                threadList[map[node.parent]].children?.push(node)
+                try {
+                    threadList[map[node.parent]].children?.push(node)
+                } catch (err) {
+                    console.error(err);
+                };
             } else {
-                roots.push(node)
+                try {
+                    roots.push(node)
+                } catch (err) {
+                    console.error(err);
+                };
             }
         }
 
@@ -218,15 +226,14 @@ export default function Post({
 
     const [filterNum, setFilterNum] = useState<number | null>(null);
     async function filterReactions() {
-        // alert(filterNum);
+        // alert(filterNum);        
         try {
             const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/threads/${data.donutID}/${data.postOrder}/${filterNum}`, {
                 withCredentials: true
             });
             // Process the response data
-            console.log(res.data);
+            console.log(res.data.data);
             listToTree(res.data.data)
-
         } catch (error) {
             console.error(error);
         }
@@ -279,22 +286,22 @@ export default function Post({
                     <Reaction onClick={(e)=>handleReaction(e)} />
                 </div>
             </div>
+            <P small dark>
+                Comments
+            </P>
+            <form>
+                <input
+                    className={styles.reactionsInput}
+                    type="number"
+                    min="0"
+                    placeholder="Number of Reactions"
+                    id="filterReactionNum"
+                    onChange={(e) => setFilterNum(e.target.value)}  // Add this line to capture the input value
+                />
+                <button type="button" onClick={filterReactions}>Filter</button>
+            </form>
             {threadNodes && threadNodes?.length > 0 && (
                 <div key={threadNodes.length} className={styles.comments}>
-                    <P small dark>
-                        Comments
-                    </P>
-                    <form>
-                        <input
-                            className={styles.reactionsInput}
-                            type="number"
-                            min="0"
-                            placeholder="Number of Reactions"
-                            id="filterReactionNum"
-                            onChange={(e) => setFilterNum(e.target.value)}  // Add this line to capture the input value
-                        />
-                        <button type="button" onClick={filterReactions}>Filter</button>
-                    </form>
                     <Threads threadNodes={threadNodes} onReply={onReply} />
                 </div>
             )}
