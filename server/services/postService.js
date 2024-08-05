@@ -30,6 +30,8 @@ const deleteFiles = async (path, names) => {
  * Returns all posts
  */
 export async function getAllPosts() {
+    console.log("getting donut posts")
+
     return await withOracleDB(async (connection) => {
         try {
             // should've parsed from array to objects at the service level earlier :(

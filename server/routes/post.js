@@ -38,6 +38,23 @@ router.get('/', auth, async (req, res) => {
     }
 });
 
+router.get('/filterPost/:terms', auth, async (req, res) => {
+    const { terms } = req.params;
+    try {
+        console.log(terms)
+        // return all from select Post, Donut, PostReaction
+        const data = await getAllPosts();
+
+        res.status(200).json(data)
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: `Error fetching all posts`
+        })
+    }
+});
+
+
 router.get('/donut/:donutID/order/:postOrder', auth, async (req, res) => {
     try {
         const { donutID, postOrder } = req.params;
