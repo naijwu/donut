@@ -104,7 +104,7 @@ INNER JOIN AssignedTo ON Profile.email = AssignedTo.profile
 INNER JOIN Donut ON AssignedTo.donutID = Donut.donutID
 WHERE Profile.email = :email
 GROUP BY TO_CHAR(Donut.createdAt, 'YYYY-MM')
-ORDER BY donut_created_month;
+ORDER BY donut_created_month
 
 ------------------------------------------------------------------------------------------------
 

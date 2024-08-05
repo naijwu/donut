@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import styles from './Superadmin.module.css'
+import { P, Title } from "@/components/Typography/Typography";
 
 export default function SuperadminScreen({
     tables,
@@ -23,7 +24,8 @@ export default function SuperadminScreen({
 
     return (
         <div className="App">
-            <h1>Admin Interface</h1>
+            <Title>Admin Interface</Title>
+            <P>Acces user and donut information</P>
             <div>
                 <label htmlFor="table-select">Select Table: </label>
                 <select

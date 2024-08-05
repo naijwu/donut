@@ -18,11 +18,26 @@
   width: 100%;
   padding: 2rem 0;
 }
+
+.donutCount {
+  padding: 1rem 0;
+}
+
+.donutCountInfo {
+  padding: 1rem 0;
+  color: blue;
+}
+
+.dateSelect {
+  padding: 1rem 0;
+}
+
 .info {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
+
 .hobbies {
   padding-top: 1rem;
 }
@@ -34,6 +49,7 @@
   bottom: 76px;
   padding: 0 1rem 1rem 1rem;
 }
+
 .floatieInner {
   border: 1px solid var(--color-ui-10);
   padding: 1rem;

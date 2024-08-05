@@ -20,20 +20,26 @@ export default function ProfileScreen({
     const router = useRouter();
     const [donutCount, setDonutCount] = useState<any>(0);
     const [countToggle, setCountToggle] = useState<boolean>(false);
+    const [date, setDate] = useState('');
 
     async function handleToggle() {
-        try {
-            const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/profile/${user.email}/donutCount`, {
-                withCredentials: true
-            })
-            console.log('Donut Count Updated');
-            setCountToggle(true);
-            setDonutCount(res.data);
-        } catch (err) {
-            console.error(err)
+        if (date) {
+            try {
+                const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/profile/${user.email}/donutCount`, {
+                    params: { date },
+                    withCredentials: true
+                })
+                console.log('Donut Count Updated');
+                console.log(res.data)
+                setCountToggle(true);
+                setDonutCount(res.data);
+            } catch (err) {
+                console.error(err)
+            }
+        } else {
+            alert("Please select a date")
         }
     }
-
     return profile ? (
         <div className={styles.wrapper}>
             <Title>
@@ -50,19 +56,27 @@ export default function ProfileScreen({
                     </P>
                 </div>
 
-                <div>
-                    <button onClick={handleToggle}>
+                <div className={styles.donutCount}>
+                    <div className={styles.dateSelect}>
+                        <label htmlFor="month">Select Year and Month: </label>
+                        <input 
+                            type="month" 
+                            id="month" 
+                            name="month" 
+                            value={date} 
+                            onChange={(e) => setDate(e.target.value)} 
+                        />
+                    </div>
+                    <Button onClick={handleToggle} size="medium" variant="solid">
                         {countToggle ? 'Update Count' : 'Donut Count'}
-                    </button>
+                    </Button>
                     {countToggle ? (
-                        <div>
-                            <P dark>Content is visible</P>
-                            <P>This content is shown when countToggle is true.</P>
+                        <div className={styles.donutCountInfo}>
+                            You have been in {donutCount} donuts!
                         </div>
                     ) : (
-                        <div>
-                            <P dark>No Content</P>
-                            <P>This content is shown when countToggle is false.</P>
+                        <div className={styles.donutCountInfo}>
+                            Click the button above to view the number of donuts in a given year and month that you has been in.
                         </div>
                     )}
                 </div>
