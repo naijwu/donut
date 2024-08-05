@@ -1,11 +1,11 @@
 
 import express from 'express'
 import { auth } from '../middleware/auth.js';
-import { getUserNotifications, insertNotification } from '../services/notificationsService.js';
+import { getUserNotifications, insertNotification, deleteNotification } from '../services/notificationsService.js';
 
 const router = express.Router();
 
-router.get('/:email', auth, async (req, res) => {
+router.get('/:email', async (req, res) => {
     const { email } = req.params;
 
     try {
@@ -21,7 +21,7 @@ router.get('/:email', auth, async (req, res) => {
     }
 });
 
-router.post('/:email/:message', auth, async (req, res) => {
+router.post('/:email/:message', async (req, res) => {
     console.log("inserting a notif")
     const { email, message } = req.params;
 
@@ -38,7 +38,7 @@ router.post('/:email/:message', auth, async (req, res) => {
     }
 })
 
-router.delete('/:notificationID', auth, async (req, res) => {
+router.delete('/:notificationID', async (req, res) => {
     const { notificationID } = req.params;
 
     try {

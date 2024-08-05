@@ -1,5 +1,6 @@
 import { withOracleDB } from "../dbConfig.js";
 import { v4 as uuidv4 } from 'uuid';
+import { sqlifyDate } from "../utils/helpers.js";
 
 /**
  * 
@@ -11,7 +12,7 @@ export async function getUserNotifications(email) {
     return await withOracleDB(async (connection) => {
         try {
             const result = await connection.execute(
-                `SELECT * FROM Notifications WHERE receiver = :email`, 
+                `SELECT * FROM Notification WHERE receiver = :email`, 
                 { email: email }
             );
             console.log(result);
@@ -37,11 +38,11 @@ export async function insertNotification(receiver, message) {
 
     return await withOracleDB(async (connection) => {
         try {
-            const time = sqlifyDatetime(new Date());
+            const time = sqlifyDate(new Date());
             const notificationID = uuidv4();
 
             await connection.execute(
-                `INSERT INTO Notification VALUES (:notificationID, :time, :message, :receiver)`, 
+                `INSERT INTO Notification (notificationID, time, message, receiver) VALUES (:notificationID, :time, :message, :receiver)`, 
                 {
                     notificationID,
                     time,
@@ -66,6 +67,7 @@ export async function insertNotification(receiver, message) {
  */
 export async function deleteNotification(notificationID) {
     return await withOracleDB(async (connection) => {
+        console.log("Deleting notification");
         try {
             await connection.execute(
                 `DELETE FROM Notification WHERE notificationID = :notificationID`, 
