@@ -9,7 +9,8 @@ import {
     handlePostReaction,
     deletePost,
     getProfileDonutPost,
-    getImagesOfPost
+    getImagesOfPost,
+    emojiStats
 } from '../services/postService.js';
 import multer from 'multer'
 
@@ -201,5 +202,17 @@ router.delete('/:donutID/:postOrder', auth, async(req, res) => {
     }
 })
 
+router.get('/emojiStats', auth, async (req, res) => {
+    try {
+        const data = await emojiStats();
+
+        res.status(200).json(data);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: `Error retrieving emoji stats`
+        });
+    }
+});
 
 export default router;

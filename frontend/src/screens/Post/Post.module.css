@@ -50,6 +50,9 @@
   color: var(--color-ui-60);
 }
 
+.emojiStatsContainer {
+  padding: 1rem 0;
+}
 .reactionsInput {
   background: #fff;
   color: black;

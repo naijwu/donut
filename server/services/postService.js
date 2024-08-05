@@ -631,3 +631,29 @@ export async function deletePost(donutID, postOrder) {
         }
     })
 }
+
+export async function emojiStats() {
+    return await withOracleDB(async (connection) => {
+        console.log('Getting emoji stats...');
+        try {
+            const result = await connection.execute(`
+                SELECT reaction_type, AVG(reaction_count) AS avg_reaction_count
+                FROM (
+                    SELECT emoji AS reaction_type, COUNT(*) as reaction_count
+                    FROM ThreadReaction
+                    GROUP BY emoji
+
+                    UNION ALL
+
+                    SELECT emoji AS reaction_type, COUNT(*) AS reaction_count
+                    FROM PostReaction
+                    GROUP BY emoji
+                ) reactions
+                GROUP BY reaction_type`
+            );
+            return result.rows;
+        } catch (err) {
+            console.log('err: ', err);
+        }
+    });
+}

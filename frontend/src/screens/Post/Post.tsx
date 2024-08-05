@@ -224,6 +224,27 @@ export default function Post({
         }
     }
 
+    // reactions stats
+    const [emojiStats, setEmojiStats] = useState<any>();
+    
+    async function handleEmojiStats() {
+        if (loading || !user) return;
+        setLoading(true);
+
+        try {
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/post/emojiStats`, {
+                withCredentials: true
+            })
+            console.log("emojiStats retrieved")
+            console.log(res.data)
+            setLoading(false);
+            setEmojiStats(res.data)
+        } catch (error) {
+            console.error(error);
+            setLoading(false);
+        }
+    }
+
     const [filterNum, setFilterNum] = useState<number | null>(null);
     async function filterReactions() {
         try {
@@ -300,6 +321,13 @@ export default function Post({
                 />
                 <button type="button" onClick={filterReactions}>Filter</button>
             </form>
+
+            <div className={styles.emojiStatsContainer} >
+                <P dark>Emoji Stats - average reaction count for each type of emoji across thread and posts!</P>
+                <Button size="small" variant="solid" onClick={handleEmojiStats}>Show Stats</Button>
+                <div>Average Per Emoji - {emojiStats}</div>
+            </div>
+
             {threadNodes && threadNodes?.length > 0 && (
                 <div key={threadNodes.length} className={styles.comments}>
                     <Threads threadNodes={threadNodes} onReply={onReply} />
