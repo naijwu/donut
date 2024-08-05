@@ -133,10 +133,12 @@ router.delete('/:email', auth, async(req, res) => {
 })
 
 // Group By (aggregation): find the number of donuts for profiel
-router.get('/:email/donutCount', auth, async (req, res) => {
+router.get('/:email/:date/donutCount', auth, async (req, res) => {
     try {
-        const { email } = req.params;
-        const data = await donutCount(email);
+        const { email, date } = req.params;
+
+        const data = await donutCount(email, date);
+
         res.status(200).json(data);
     } catch (err) {
         console.log(err);
