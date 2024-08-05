@@ -5,7 +5,8 @@ import {
     createThread,
     updateThread,
     handleThreadReaction,
-    getThreads
+    getThreads,
+    filterThreads
 } from '../services/threadsService.js';
 
 const router = express.Router();
@@ -50,6 +51,23 @@ router.get('/:donutID/:postOrder', auth, async (req, res) => {
         })
     }
 });
+
+router.get('/:donutID/:postOrder/:filternum', auth, async (req, res) => {
+    console.log("getting filter threads")
+    const { donutID, postOrder, filternum } = req.params;
+    console.log(filternum);
+    try {
+        const data = await filterThreads(donutID, postOrder, filternum);
+        console.log(data);
+        res.status(200).json({ data })
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: `Error getting filtered threads for ${donutID}, ${postOrder}`
+        })
+    }
+});
+
 
 router.post('/:donutID/:postOrder', auth, async (req, res) => {
     try {

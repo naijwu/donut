@@ -186,3 +186,88 @@ export async function handleThreadReaction(threadID, reactionData) {
         return err;
     });
 }
+
+
+/**
+ * 
+ * @param {*} threadID the thread that is being reacted on
+ * @param {*} reactionData the data of the ThreadReaction entity
+ * @param {*} filterNum the number of reactions a thread must have
+ */
+export async function filterThreads(donutID, postOrder, filterNum) {
+    console.log("filteringgg");
+    console.log(filterNum)
+    return await withOracleDB(async (connection) => {
+        try {
+            const threads = []
+            const threadsRes = await connection.execute(
+                `SELECT 
+                    t.threadID,
+                    t.author,
+                    t.donutID,
+                    t.postOrder,
+                    t.parent,
+                    t.text,
+                    t.createdAt,
+                    p.email,
+                    p.pictureURL,
+                    p.fullName
+                FROM 
+                    Thread t,
+                    Profile p
+                WHERE 
+                    t.donutID=:donutID AND 
+                    t.postOrder=:postOrder AND
+                    t.author=p.email`, 
+                {
+                    donutID,
+                    postOrder,
+                }
+            )
+            for (let i = 0; i < threadsRes.rows.length; i++) {
+                const trow = threadsRes.rows[i];
+
+                const treactions = {}
+                const treac = await connection.execute(
+                    `SELECT * FROM ThreadReaction WHERE threadID=:threadID`, {
+                        threadID: `${trow[0]}`
+                    }
+                );
+
+                // freq table of all emojis (rows[j][3])
+                for (let j = 0; j < treac.rows.length; j++) {
+                    if (treactions[treac.rows[j][2]] && treactions[treac.rows[j][2]].count > 0) {
+                        const cpy = JSON.parse(JSON.stringify(treactions[treac.rows[j][2]]))
+                        cpy.profiles.push(treac.rows[j][0])
+                        cpy.count += 1;
+                        treactions[treac.rows[j][2]] = cpy
+                    } else {
+                        treactions[treac.rows[j][2]] = {
+                            count: 1,
+                            profiles: [treac.rows[j][0]]
+                        };
+                    }
+                }
+
+                threads.push({
+                    threadID: trow[0],
+                    author: trow[1],
+                    parent: trow[4],
+                    text: trow[5],
+                    createdAt: trow[6],
+                    profile: {
+                        email: trow[7],
+                        pictureURL: trow[8],
+                        fullName: trow[9]
+                    },
+                    reactions: treactions
+                })
+            }
+            return threads;
+        } catch(err) {
+            console.log('err: ', err);
+        }
+    }).catch((err) => {
+        return err;
+    });
+}

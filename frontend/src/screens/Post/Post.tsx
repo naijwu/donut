@@ -79,6 +79,7 @@ export default function Post({
 
     const [threadNodes, setThreadNodes] = useState<ThreadNodeList>()
     function listToTree (threadsArray: any[]) {
+        // alert("new things to push")
         const threadList: any = threadsArray;
         const map: any = {};
         const roots: any = [];
@@ -217,13 +218,15 @@ export default function Post({
 
     const [filterNum, setFilterNum] = useState<number | null>(null);
     async function filterReactions() {
-        alert(filterNum);
+        // alert(filterNum);
         try {
-            const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/`, {
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/threads/${data.donutID}/${data.postOrder}/${filterNum}`, {
                 withCredentials: true
             });
             // Process the response data
             console.log(res.data);
+            listToTree(res.data.data)
+
         } catch (error) {
             console.error(error);
         }
