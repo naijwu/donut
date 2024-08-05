@@ -45,6 +45,8 @@ export default function NotificationsScreen({
                 <div className={styles.container}>
                     {notifications.map((notif) => (
                         <>
+                        {/* TODO, DISPLAY NOTIF PROPERLY */}
+                        {/* ADD A ONCLICK DELETE NOTIF */}
                         <NotificationUI key={notif.notificationID} {...notif} />
                         </>
                     ))}
