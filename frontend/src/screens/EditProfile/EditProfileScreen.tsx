@@ -38,7 +38,7 @@ export default function EditProfile({
         username: profile[ProfileCols.username],
     });
 
-    const [validHobbies, setValidHobbies] = useState<typeof hobbies>(hobbies);
+    const [validHobbies, setValidHobbies] = useState<any>(hobbies);
 
     const [selectedHobbies, setSelectedHobbies] = useState<string[]>(profileHobbies?.map((h: any)=>h[1]));
 
@@ -90,32 +90,17 @@ export default function EditProfile({
         { value: 'Other' }
     ];
     
-    const [selectedHobbyCategory, setSelectedHobbyCategory] = useState('');
+    const [hobbySearch, setHobbySearch] = useState<string>('');
 
-    const [hobbyStartsWith, setHobbyStartsWith] = useState('');
-    
-    const handleHobbyCategoryChange = (event: any) => {
-        const value = event.target.value;
-        setSelectedHobbyCategory(value);
-        console.log('Selected hobby:', value);
-    };
-
-    const handleSearchChange = (event: any) => {
-        setHobbyStartsWith(event.target.value);
-    };
-
-    const handleSubmitSearch = () => {
-        requeryHobbies()
-    }
-
-    async function requeryHobbies() {
+    async function handleSearch() {
         try {
-            const searchTerm = hobbyStartsWith || '-';
-            const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/profile/${searchTerm}/${selectedHobbyCategory}/findHobby`, {
+            const { data } = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/profile/hobbies/search`, {
+                search: hobbySearch
+            }, {
                 withCredentials: true
             });
-            console.log(res.data)
-            setValidHobbies(res.data);
+            console.log(data)
+            setValidHobbies(data);
         } catch (err) {
             console.error(err);
         }
@@ -222,34 +207,15 @@ export default function EditProfile({
                         Hobbies
                     </P>
                     
-                    <div>
-                        <P>Select a Hobby</P>
-                        <select value={selectedHobbyCategory} onChange={handleHobbyCategoryChange}>
-                            <option value="" disabled>Select an option</option>
-                            {hobbyCategories.map((category) => (
-                                <option value={category.value}>
-                                    {category.value}
-                                </option>
-                            ))}
-                        </select>
-                        {selectedHobbyCategory && (
-                            <div>
-                                <P dark>You have selected: {selectedHobbyCategory}</P>
-                            </div>
-                        )}
-                        <div>   
-                            <P>Search for a Hobby</P>
-                        </div>
+                    <div className={styles.formControl}>
+                        <P>Advanced search</P>
                         <input
                             type="text"
-                            value={hobbyStartsWith}
-                            onChange={handleSearchChange}
-                            placeholder="Type a hobby..."
+                            value={hobbySearch}
+                            onChange={e=>setHobbySearch(e.target.value)}
+                            placeholder="e.g. category==Music && category==Art"
                         />
-                        <div>
-                            <P dark>Searching for: {hobbyStartsWith}</P>
-                        </div>
-                        <button onClick={handleSubmitSearch}>Filter Hobbies</button>
+                        <Button onClick={handleSearch}>Filter Hobbies</Button>
                     </div>
 
                     <div className={styles.hobbiesList}>
