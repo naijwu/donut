@@ -13,18 +13,21 @@ export default function Notifications() {
 
   async function fetchData() {
     try {
-      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/notifications/${user.email}`, {
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/notifications/${user.email}`, {
         withCredentials: true
       });  
-      setNotifData(data);
+      setNotifData(res.data);
+      console.log(res.data);
     } catch (err) {
       console.error(err);
     }
   }
 
   useEffect(() => {
+    if (user) {
       fetchData();
-  }, [])
+    }
+  }, [user])
 
-  return <NotificationsScreen notifications={notifData} />
+  return notifData && <NotificationsScreen notifications={notifData} />
 }
