@@ -163,6 +163,29 @@ export async function createHobbiesOfUser(email, hobbies) {
     });
 }
 
+export async function donutCount(email, month) {
+    return await withOracleDB(async (connection) => {
+        console.log('finding number of donuts');
+        try {
+            const result = await connection.execute(`
+                SELECT TO_CHAR(Donut.createdAt, 'YYYY-MM') AS donut_created_month, COUNT(*) AS donut_count
+                FROM Profile
+                INNER JOIN AssignedTo ON Profile.email = AssignedTo.profile
+                INNER JOIN Donut ON AssignedTo.donutID = Donut.donutID
+                WHERE Profile.email = :email AND TO_CHAR(Donut.createdAt, 'YYYY-MM') = :month
+                GROUP BY TO_CHAR(Donut.createdAt, 'YYYY-MM')
+            `, 
+            { email, month });
+            return result.rows;
+        } catch (err) {
+            console.log('err: ', err);
+            throw err;
+        }
+    }).catch((err) => {
+        return err;
+    });
+}
+
 /**
  * Filters hobbies of user
  * @param {*} startsWith the first few (or all) letters of the hobby
@@ -172,15 +195,13 @@ export async function findHobby(startsWith, hobbyCategory) {
     return await withOracleDB(async (connection) => {
         console.log('finding filtered hobbies')
         try {
-            const hobbiesResult = await connection.execute(
+            const result = await connection.execute(
                 `SELECT * FROM hobbies
                     WHERE hobby LIKE 'startsWith%'
                     AND category = :hobbyCategory`, 
                 { startsWith, hobbyCategory }
             );
-            return {
-                hobbies: hobbiesResult
-            };
+            return result
         } catch(err) {
             console.log('err: ', err);
         }
