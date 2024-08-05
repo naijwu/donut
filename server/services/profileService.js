@@ -201,6 +201,8 @@ function parseToQuery(search) {
         query,
         args
     };
+}
+
 export async function donutCount(email, month) {
     return await withOracleDB(async (connection) => {
         console.log('finding number of donuts');
