@@ -10,7 +10,8 @@ import {
     createHobbiesOfUser,
     deleteHobbiesOfUser,
     findHobby,
-    donutCount
+    donutCount,
+    createAddress
 } from '../services/profileService.js'
 
 const router = express.Router();
@@ -145,6 +146,24 @@ router.get('/:email/:date/donutCount', auth, async (req, res) => {
         res.status(500).json({
             message: `Error retrieving donut count`
         });
+    }
+});
+
+// http://localhost:4000/profile/Surrey/BC/V4N1Z1/createAddy
+router.patch('/:city/:province/:postalCode/createAddy', auth, async (req, res) => {
+    try {
+        const { city, province, postalCode } = req.params;
+
+        await createAddress(city, province, postalCode);
+
+        res.status(200).json({
+            message: 'Successfully created address'
+        })
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: `Error creating address`
+        })
     }
 });
 

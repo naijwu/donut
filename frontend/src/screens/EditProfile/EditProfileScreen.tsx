@@ -61,6 +61,8 @@ export default function EditProfile({
         if(loading || !user?.email) return;
         setLoading(true);
 
+        // await handleCreateAddress();
+
         try {
             const res = await axios.patch(`${process.env.NEXT_PUBLIC_SERVER_URL}/profile/${user.email}`, {
                 profile: editedProfile,
@@ -113,6 +115,23 @@ export default function EditProfile({
             });
             console.log(res.data)
             setValidHobbies(res.data);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    // Address - have to seperate address due to fk constraint (i.e. cannot add a postal code w/ no valid address)
+    const [city, setCity] = useState<string>('');
+    const [province, setProvince] = useState<string>('');
+
+    async function handleCreateAddress() {
+        console.log(city, province, editedProfile.postalCode)
+        try {
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/profile/${city}/${province}/${editedProfile.postalCode}/createAddy`, {
+                withCredentials: true
+            });
+            console.log('Returned Address');
+            setCity(res.data);
         } catch (err) {
             console.error(err);
         }
@@ -187,6 +206,32 @@ export default function EditProfile({
                             <option value="unspecified">Unspecified</option>
                             <option value="other">Other</option>
                         </select>
+                    </div>
+                    <div className={styles.formControl}>
+                        <P dark>
+                            City
+                        </P>
+                        <input 
+                          type="text" 
+                          placeholder={city || "Your city..."} 
+                          value={city}
+                          onChange={e=>setCity(e.target.value)} />
+                        <P dark>
+                            Province
+                        </P>
+                        <input 
+                          type="text" 
+                          placeholder={province || "Your province..."} 
+                          value={province}
+                          onChange={e=>setProvince(e.target.value)} />
+                        <P dark>
+                            Postal Code
+                        </P>
+                        <input 
+                          type="text" 
+                          placeholder={profile[ProfileCols.postalCode] || "Your postal code..."} 
+                          value={editedProfile?.postalCode || ''}
+                          onChange={e=>handleEditField('postalCode', e.target.value)} />
                     </div>
                     <div className={styles.formControl}>
                         <P dark>

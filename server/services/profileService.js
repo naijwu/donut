@@ -229,26 +229,18 @@ export async function deleteProfile(email) {
     })
 }
 
-/**
- * 
- * @param {*} email the email of the profile to delete
- * @param {*} date the year and month for which to find the donut count
- */
-export async function donutCount(email, month) {
+
+export async function createAddress(city, province, postalCode) {
+    // if(!city || !province || !postalCode) return false;
     return await withOracleDB(async (connection) => {
-        console.log('finding number of donuts');
         try {
-            const result = await connection.execute(`
-                SELECT TO_CHAR(Donut.createdAt, 'YYYY-MM') AS donut_created_month, COUNT(*) AS donut_count
-                FROM Profile
-                INNER JOIN AssignedTo ON Profile.email = AssignedTo.profile
-                INNER JOIN Donut ON AssignedTo.donutID = Donut.donutID
-                WHERE Profile.email = :email AND TO_CHAR(Donut.createdAt, 'YYYY-MM') = :month
-                GROUP BY TO_CHAR(Donut.createdAt, 'YYYY-MM')
-            `, 
-            { email, month });
-            return result.rows;
-        } catch (err) {
+            const result = await connection.execute(
+                `INSERT INTO PostalLocation (postalCode, city, province) VALUES (:postalCode, :city, :province)`, 
+                { postalCode, city, province }
+            );
+            
+            return true;
+        } catch(err) {
             console.log('err: ', err);
             throw err;
         }

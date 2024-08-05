@@ -80,6 +80,9 @@ export default function ProfileScreen({ profile, hobbies }: { profile?: any[], h
                         {profile[ProfileCols.gender] == 'Female' ? '♀' : '♂'} {profile[ProfileCols.gender] || '(No gender)'}
                     </P>
                     <P dark>
+                        🏠 {profile[ProfileCols.postalCode] || '(No postal code)'}
+                    </P>
+                    <P dark>
                         🍩 {profile[ProfileCols.enabled] == 1 ? 'Going on donuts!' : 'Currently not being assigned'}
                     </P>
                 </div>
