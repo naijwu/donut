@@ -315,7 +315,7 @@ export default function Post({
                     <input
                         className={styles.reactionsInput}
                         type="number"
-                        min="0"
+                        min={1}
                         placeholder="Number of Reactions"
                         id="filterReactionNum"
                         onChange={(e) => setFilterNum(e.target.value)}  // Add this line to capture the input value
