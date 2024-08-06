@@ -113,5 +113,5 @@ export default function ProfileScreen({ profile, hobbies }: { profile?: any[], h
                 </div>
             )}
         </div>
-    ) : <></>
+    ) : <><Logout /></>
 }
