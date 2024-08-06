@@ -123,7 +123,7 @@ const CREATE_QUERIES = [
         FOREIGN KEY (hobby) REFERENCES Hobby(name) ON DELETE CASCADE)`,
     `CREATE TABLE Notification(
         notificationID CHAR(36),
-        time DATE NOT NULL,
+        time TIMESTAMP WITH TIME ZONE NOT NULL,
         message VARCHAR2(255 CHAR) NOT NULL,
         receiver VARCHAR2(255 CHAR) NOT NULL,
         FOREIGN KEY (receiver) REFERENCES Profile(email) ON DELETE CASCADE,
