@@ -309,23 +309,26 @@ export default function Post({
             <P small dark>
                 Comments
             </P>
-            <form>
-                <p>Filter for comments based off reactions</p>
-                <input
-                    className={styles.reactionsInput}
-                    type="number"
-                    min="0"
-                    placeholder="Number of Reactions"
-                    id="filterReactionNum"
-                    onChange={(e) => setFilterNum(e.target.value)}  // Add this line to capture the input value
-                />
-                <button type="button" onClick={filterReactions}>Filter</button>
-            </form>
+            <div style={{padding: '1rem',borderRadius: 12, backgroundColor:'var(--color-ui-10)'}}>
+                <div>
+                    <p>Filter for comments based off reactions</p>
+                    <input
+                        className={styles.reactionsInput}
+                        type="number"
+                        min="0"
+                        placeholder="Number of Reactions"
+                        id="filterReactionNum"
+                        onChange={(e) => setFilterNum(e.target.value)}  // Add this line to capture the input value
+                    />
+                    <Button onClick={filterReactions}>Filter</Button>
+                    <Button onClick={loadThreads}>Reset</Button>
+                </div>
 
-            <div className={styles.emojiStatsContainer} >
-                <P dark>Emoji Stats - average reaction count for each type of emoji across thread and posts!</P>
-                <Button size="small" variant="solid" onClick={handleEmojiStats}>Show Stats</Button>
-                <div>Average Per Emoji - {emojiStats}</div>
+                <div className={styles.emojiStatsContainer} >
+                    <P dark>Emoji Stats - average reaction count for each type of emoji across thread and posts!</P>
+                    <Button size="small" variant="solid" onClick={handleEmojiStats}>Show Stats</Button>
+                    <div>Average Per Emoji - {emojiStats}</div>
+                </div>
             </div>
 
             {threadNodes && threadNodes?.length > 0 && (

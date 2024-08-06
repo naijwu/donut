@@ -25,57 +25,207 @@ const deleteFiles = async (path, names) => {
 
     await deleteFilesInFolder(path, names);
 }
-  
-/**
- * Returns all posts
- */
-export async function getAllPosts() {
-    console.log("getting donut posts")
 
+export async function getAllPosts() {
     return await withOracleDB(async (connection) => {
         try {
-            // should've parsed from array to objects at the service level earlier :(
-            const parsed = {}
-            const result = await connection.execute(
+            
+            // get donuts data
+            const q =
                 `SELECT 
-                    p.donutID,
-                    p.title,
-                    p.postOrder,
-                    p.createdAt,
-                    p.author,
-                    p.description,
                     d.donutID,
                     d.createdAt,
                     d.isCompleted,
                     d.course,
                     d.suggestedActivity,
                     d.groupName,
-                    p1.email,
-                    p1.pictureURL,
-                    p1.fullName,
-                    p2.email,
-                    p2.pictureURL,
-                    p2.fullName,
-                    p3.email,
-                    p3.pictureURL,
-                    p3.fullName
+                    p1.email AS member1,
+                    p1.fullName AS member1name,
+                    p1.pictureURL AS member1picture,
+                    p2.email AS member2,
+                    p2.fullName AS member2name,
+                    p2.pictureURL AS member2picture
                 FROM 
-                    Post p, 
-                    Donut d,
-                    AssignedTo a1,
-                    AssignedTo a2,
-                    Profile p1,
-                    Profile p2,
-                    Profile p3
+                    Donut d, 
+                    AssignedTo a1, 
+                    AssignedTo a2, 
+                    Profile p1, 
+                    Profile p2 
                 WHERE 
-                    p.donutID = d.donutID AND
                     d.donutID = a1.donutID AND 
                     a1.profile=p1.email AND 
                     d.donutID = a2.donutID AND
                     a2.profile=p2.email AND
-                    p1.email <> p2.email AND
-                    p3.email = p.author`
-            );
+                    p1.email <> p2.email
+                ORDER BY d.createdAt DESC`
+
+            const { rows } = await connection.execute(q);
+
+            // get posts per donut
+            const donutMap = {}
+            for (let i= 0; i < rows.length; i++) {
+                const row = rows[i]
+                donutMap[row[0]] = {
+                    donutID: row[0],
+                    createdAt: row[1],
+                    isCompleted: row[2],
+                    course: row[3],
+                    suggestedActivity: row[4],
+                    groupName: row[5],
+                    members: [
+                        {
+                            email: row[6],
+                            fullName: row[7],
+                            pictureURL: row[8]
+                        },
+                        {
+                            email: row[9],
+                            fullName: row[10],
+                            pictureURL: row[11]
+                        }
+                    ],
+                    posts: []
+                }
+            }
+
+            const donutIDs = Object.keys(donutMap)
+            for (let i = 0; i < donutIDs.length; i++) {
+                const postQ = `
+                    SELECT
+                        p.donutID,
+                        p.title,
+                        p.postOrder,
+                        p.description,
+                        p.createdAt,
+                        p1.email,
+                        p1.fullName,
+                        p1.pictureURL
+                    FROM
+                        Post p,
+                        Profile p1
+                    WHERE
+                        p.author=p1.email AND 
+                        p.donutID=:donutID`;
+                const { rows } = await connection.execute(postQ, {donutID: donutIDs[i]});
+                
+                const postsData = []
+                for (let j = 0; j < rows.length; j++) {
+                    const pRow = rows[j]
+
+                    const reactions = {}
+                    const reac = await connection.execute(
+                        `SELECT * FROM PostReaction WHERE donutID=:donutID AND postOrder=:postOrder`, {
+                            donutID: donutIDs[i],
+                            postOrder: pRow[2]
+                        }
+                    );
+                    // freq table of all emojis (rows[j][3])
+                    for (let j = 0; j < reac.rows.length; j++) {
+                        if (reactions[reac.rows[j][3]] && reactions[reac.rows[j][3]] > 0) {
+                            reactions[reac.rows[j][3]] += 1;
+                        }
+                    }
+                    const images = []
+                    const imgs = await connection.execute(
+                        `SELECT * FROM Picture WHERE donutID=:donutID AND postOrder=:postOrder`, {
+                            donutID: donutIDs[i],
+                            postOrder: pRow[2]
+                        }
+                    );
+                    // add images to an array
+                    for (let j = 0; j < imgs.rows.length; j++) {
+                        const imgRow = imgs.rows[j]
+                        images.push({
+                            pictureURL: imgRow[0],
+                            alt: imgRow[3]
+                        })
+                    }
+
+                    postsData.push({
+                        title: pRow[1],
+                        postOrder: pRow[2],
+                        description: pRow[3],
+                        createdAt: pRow[4],
+                        author: pRow[5],
+                        profile: {
+                            email: pRow[5],
+                            fullName: pRow[6],
+                            pictureURL: pRow[7]
+                        },
+                        reactions,
+                        images
+                    })
+                }
+                donutMap[donutIDs[i]].posts = postsData;
+            }
+
+            const retArr = []
+            for (let i = 0; i < donutIDs.length; i++) {
+                if (donutMap[donutIDs[i]]?.posts.length > 0) {
+                    retArr.push(donutMap[donutIDs[i]])
+                }
+            }
+
+            return retArr;
+        } catch (error) {
+            console.log(error);
+        }
+    }).catch((err) => {
+        console.error(err)
+    })
+}
+  
+/**
+ * Returns all posts
+ */
+export async function getAllPostsOLD() {
+    console.log("getting donut posts")
+
+    return await withOracleDB(async (connection) => {
+        try {
+            // should've parsed from array to objects at the service level earlier :(
+            const parsed = {}
+            const oldQ = `
+            SELECT 
+                p.donutID,
+                p.title,
+                p.postOrder,
+                p.createdAt,
+                p.author,
+                p.description,
+                d.donutID,
+                d.createdAt,
+                d.isCompleted,
+                d.course,
+                d.suggestedActivity,
+                d.groupName,
+                p1.email,
+                p1.pictureURL,
+                p1.fullName,
+                p2.email,
+                p2.pictureURL,
+                p2.fullName,
+                p3.email,
+                p3.pictureURL,
+                p3.fullName
+            FROM 
+                Post p, 
+                Donut d,
+                AssignedTo a1,
+                AssignedTo a2,
+                Profile p1,
+                Profile p2,
+                Profile p3
+            WHERE 
+                p.donutID = d.donutID AND
+                d.donutID = a1.donutID AND 
+                a1.profile=p1.email AND 
+                d.donutID = a2.donutID AND
+                a2.profile=p2.email AND
+                p1.email <> p2.email AND
+                p3.email = p.author`;
+            const result = await connection.execute(oldQ);
+            
             const keysAreIDandOrder = {} // alternatively, `new Set()`...
             const allDonuts = {} // ... and this too 
             for (let i = 0; i < result.rows.length; i++) {
