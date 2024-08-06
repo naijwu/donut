@@ -105,7 +105,7 @@ export async function generateInsertStatements(tables) {
                         typeof rowData[k] == 'number'
                             ? rowData[k]
                             : typeof (rowData[k])?.getMonth == 'function' 
-                                ? `TO_DATE(${sqlifyDate(rowData[k])})${k < rowData.length - 1 ? `,` : ``}`
+                                ? `TO_DATE('${sqlifyDate(rowData[k])}','yyyy-mmm-dd')${k < rowData.length - 1 ? `,` : ``}`
                                 : `'${rowData[k]}${k < rowData.length - 1 ? `',` : `'`}`
                 }
                 insertStatement+=`);`
