@@ -248,12 +248,17 @@ export default function Post({
     const [filterNum, setFilterNum] = useState<any>(null);
     async function filterReactions() {
         try {
-            const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/threads/${data.donutID}/${data.postOrder}/${filterNum}`, {
-                withCredentials: true
-            });
-            // Process the response data
-            console.log(res.data.data);
-            listToTree(res.data.data)
+            if (filterNum > 0) {
+                const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/threads/${data.donutID}/${data.postOrder}/${filterNum}`, {
+                    withCredentials: true
+                });
+                // Process the response data
+                console.log(res.data.data);
+                listToTree(res.data.data)
+            }
+            else {
+                location.reload();
+            }
         } catch (error) {
             console.error(error);
         }
@@ -314,7 +319,7 @@ export default function Post({
                 <input
                     className={styles.reactionsInput}
                     type="number"
-                    min="0"
+                    min={1}
                     placeholder="Number of Reactions"
                     id="filterReactionNum"
                     onChange={(e) => setFilterNum(e.target.value)}  // Add this line to capture the input value
