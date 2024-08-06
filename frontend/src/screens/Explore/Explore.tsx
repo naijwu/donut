@@ -166,9 +166,8 @@ export default function SuperadminScreen({
                 Generate
             </Button>
             {Object.keys(inserts)?.map((k) => {
-                return inserts[k]?.map((statement: string) => statement)
+                return inserts[k]?.map((statement: string) => <div>{statement}</div>)
             })}
-            {JSON.stringify(inserts)}
             <Subtitle>
                 Find your partner
             </Subtitle>

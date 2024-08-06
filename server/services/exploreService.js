@@ -1,4 +1,5 @@
 import { withOracleDB } from "../dbConfig.js";
+import { sqlifyDate } from "../utils/helpers.js";
 
 export async function getTableNames() {
     return await withOracleDB(async (connection) => {
@@ -100,7 +101,12 @@ export async function generateInsertStatements(tables) {
                 let insertStatement = `INSERT INTO ${tables[i]} VALUES (`
 
                 for (let k = 0; k < rowData.length; k++) {
-                    insertStatement += `'${rowData[k]}${k < rowData.length - 1 ? `',` : `'`}`
+                    insertStatement += !rowData[k] ? `NULL${k < rowData.length - 1 ? `,` : ``}` : 
+                        typeof rowData[k] == 'number'
+                            ? rowData[k]
+                            : typeof (rowData[k])?.getMonth == 'function' 
+                                ? `TO_DATE(${sqlifyDate(rowData[k])})${k < rowData.length - 1 ? `,` : ``}`
+                                : `'${rowData[k]}${k < rowData.length - 1 ? `',` : `'`}`
                 }
                 insertStatement+=`);`
 
