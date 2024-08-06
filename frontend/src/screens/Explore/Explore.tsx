@@ -4,6 +4,7 @@ import { P, Subtitle, Title } from "@/components/Typography/Typography";
 import Button from '@/components/Button/Button';
 import axios from 'axios';
 import { useAuthContext } from '@/utility/Auth';
+import Avatar from '@/components/Avatar/Avatar';
 
 export default function SuperadminScreen({
     tables
@@ -25,7 +26,11 @@ export default function SuperadminScreen({
             const { data } = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/profile/findpartner/${user.email}`, {
                 withCredentials: true
             })
-            setPartner(data)
+            setPartner({
+                email: data[0][0],
+                fullName: data[0][1],
+                pictureURL: data[0][2]
+            })
             setFinding(false);
         } catch (error) {
             console.error(error);
@@ -92,23 +97,20 @@ export default function SuperadminScreen({
     }, [table])
 
     // Group by (aggregation) - users with x,y,z
-
-    const [major, setMajor] = useState<any>();
-    const [year, setYear] = useState<any>();
-    const [gender, setGender] = useState<any>();
-
+    const [attr, setAttr] = useState<any>('major');
+    const [attrVal, setAttrVal] = useState<string>('');
     const [profileCount, setProfileCount] = useState<any>();
-
     async function handleProfileCount() {
-        console.log(major, year, gender)
+        if(loading) return
         setLoading(true);
         try {
-            const data = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/explore/${major}/${year}/${gender}/profileCount`, {
+            const { data } = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/explore/profileCount/${attr}`, {
+                value: attr=="year" ? parseInt(attrVal) : attrVal
+            }, {
                 withCredentials: true
             });
             
-            console.log('Received data:', data);
-            setProfileCount(data.data.profileCount)
+            setProfileCount(data[0])
             setLoading(false);
         } catch (error) {
             console.error(error);
@@ -120,62 +122,6 @@ export default function SuperadminScreen({
         <div className={styles.wrapper}>
             <Title>Explore</Title>
             <Subtitle>
-                Statistics
-            </Subtitle>
-            <P>Get number of profiles of a specific attribute (major, gender, year)</P>
-            <div>
-                <select>
-                    <option value=""></option>
-                </select>
-                <div>
-                    <P dark>Major</P>
-                    <input 
-                        name="major"
-                        value={major}
-                        onChange={e=>setMajor(e.target.value)}
-                        placeholder='e.g. math' />
-                </div>
-                <div>
-                    <P dark>Year</P>
-                    <input 
-                        type="number" 
-                        name="year"
-                        value={year}
-                        onChange={e=>setYear(e.target.value)}
-                        placeholder='e.g. 3' />
-                </div>
-                <div>
-                    <P dark>Gender</P>
-                    <select 
-                        name="gender"
-                        value={gender}
-                        onChange={e=>setGender(e.target.value)}>
-                        <option value="">Select Gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="unspecified">Unspecified</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
-                <Button onClick={handleProfileCount} size="medium" variant="solid">
-                    Find now
-                </Button>
-                <div>Number of profiles: {profileCount}</div>
-            </div>
-            <Subtitle>
-                Are you old?
-            </Subtitle>
-            <P>Discover avg year of students of an attribute (major, gender)</P>
-            <div>
-                <select>
-                    <option value=""></option>
-                </select>
-                <Button onClick={()=>{}} size="medium" variant="solid">
-                    Find now
-                </Button>
-                {}
-            </div>
-            <Subtitle>
                 Find your partner
             </Subtitle>
             <P>Find someone with your exact same hobbies</P>
@@ -183,7 +129,43 @@ export default function SuperadminScreen({
                 <Button onClick={handleFindPartner} size="medium" variant="solid">
                     Find now
                 </Button>
-                {JSON.stringify(partner)}
+                {partner && (
+                    <div className={styles.partner}>
+                        <Avatar pictureURL={partner?.pictureURL} name={partner?.fullName} />
+                        <div className={styles.partnerInner}>
+                            <P dark  bold>
+                                {partner?.fullName}
+                            </P>
+                            <P dark>
+                                {partner?.email}
+                            </P>
+                        </div>
+                    </div>
+                )}
+            </div>
+            <Subtitle>
+                Statistics
+            </Subtitle>
+            <P>Get number of profiles of a specific attribute (major, gender, year)</P>
+            <div>
+                <P dark>Attribute</P>
+                <select value={attr} onChange={e=>setAttr(e.target.value)}>
+                    <option value="major">Major</option>
+                    <option value="year">Year</option>
+                    <option value="gender">Gender</option>
+                </select>
+                <P>
+                    Value
+                </P>
+                <input 
+                    name="major"
+                    value={attrVal}
+                    onChange={e=>setAttrVal(e.target.value)}
+                    placeholder={attr == 'major' ? 'e.g. math' : attr == 'year' ? 'e.g. 3' : 'e.g. male'} />
+                <Button onClick={handleProfileCount} size="medium" variant="solid">
+                    Find now
+                </Button>
+                <div>Number of profiles: {profileCount || 0}</div>
             </div>
             <Subtitle>
                 God mode

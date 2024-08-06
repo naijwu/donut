@@ -49,14 +49,12 @@ router.post('/:table/projection', auth, async (req, res) => {
     }
 });
 
-router.get('/:major/:year/:gender/profileCount', auth, async (req, res) => {
+router.post('/profileCount/:attribute', auth, async (req, res) => {
     try {
-        const { major, year, gender } = req.params;
-        console.log(`Request received: major=${major}, year=${year}, gender=${gender}`);
-
-        const count = await profileCount(major, year, gender);
-
-        res.status(200).json({ profileCount: count }); // Ensure correct response format
+        const { attribute } = req.params;
+        const { value } = req.body;
+        const data = await profileCount(attribute, value);
+        res.status(200).json(data); 
     } catch (err) {
         console.error('Failed to get profile count:', err);
         res.status(500).json({

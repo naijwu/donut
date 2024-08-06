@@ -103,7 +103,7 @@ export default function EditProfile({
                 // can't terminate with an operator
                 if (i == statements.length - 1) isValid = false;
                 // invalid operator
-                if (!(statements[i].includes('AND') || statements[i].includes('OR'))) isValid = false;
+                if (!(statements[i].includes('&&') || statements[i].includes('||'))) isValid = false;
             } else {
                 // invalid attribute/col to query
                 if(!['name','description','category'].includes(lhsrhs[0].toLowerCase())) isValid = false;
