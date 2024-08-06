@@ -245,7 +245,7 @@ export default function Post({
         }
     }
 
-    const [filterNum, setFilterNum] = useState<number | null>(null);
+    const [filterNum, setFilterNum] = useState<any>(null);
     async function filterReactions() {
         try {
             const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/threads/${data.donutID}/${data.postOrder}/${filterNum}`, {

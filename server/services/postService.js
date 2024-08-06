@@ -636,18 +636,12 @@ export async function emojiStats() {
     return await withOracleDB(async (connection) => {
         console.log('Getting emoji stats...');
         try {
-            const result = await connection.execute(`
-                SELECT reaction_type, AVG(reaction_count) AS avg_reaction_count
+            const result = await connection.execute(
+                `SELECT reaction_type, AVG(reaction_count) AS avg_reaction_count
                 FROM (
-                    SELECT emoji AS reaction_type, COUNT(*) as reaction_count
+                    SELECT emoji AS reaction_type, threadID, COUNT(*) AS reaction_count
                     FROM ThreadReaction
-                    GROUP BY emoji
-
-                    UNION ALL
-
-                    SELECT emoji AS reaction_type, COUNT(*) AS reaction_count
-                    FROM PostReaction
-                    GROUP BY emoji
+                    GROUP BY emoji, threadID
                 ) reactions
                 GROUP BY reaction_type`
             );

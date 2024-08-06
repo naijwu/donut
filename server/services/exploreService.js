@@ -55,23 +55,24 @@ export async function projectColumns(tableName, attributes) {
     });
 }
 
-export async function profileCount(maj, yr, gend) {
+export async function profileCount(attr, value) {
     return await withOracleDB(async (connection) => {
         try {
-            const result = await connection.execute(
-                `SELECT major, year, gender, count(*) as profileCount
-                 FROM Profile
-                 WHERE major = :maj AND year = :yr AND gender = :gend
-                 GROUP BY major, year, gender`,
-                { maj, yr, gend }
+            let query = `
+                SELECT 
+                    count(email)
+                FROM 
+                    Profile
+                WHERE 
+                    ${attr}=:value
+                GROUP BY 
+                    ${attr}`;
+            const { rows } = await connection.execute(
+                query,
+                { value }
             );
 
-            if (result.rows.length > 0) {
-                console.log('Query result:', result.rows[0]);
-                return result.rows[0].PROFILECOUNT;
-            } else {
-                return 0;
-            }
+            return rows[0]
         } catch (err) {
             console.error('Database query error:', err);
             throw err;

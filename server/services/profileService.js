@@ -10,7 +10,10 @@ export async function findPartner(email) {
     return await withOracleDB(async (connection) => {
         try {
             const { rows } = await connection.execute(
-                `SELECT P.email
+                `SELECT 
+                    P.email,
+                    P.fullName,
+                    p.pictureURL
                  FROM Profile P
                  WHERE NOT EXISTS (
                      SELECT PH.hobby
