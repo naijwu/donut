@@ -82,3 +82,37 @@ export async function profileCount(attr, value) {
         throw err;
     });
 }
+
+export async function generateInsertStatements(tables) {
+    return await withOracleDB(async (connection) => {
+        const ret = {};
+        for (let i = 0; i < tables.length; i++) {
+            const query = `SELECT column_name FROM user_tab_columns WHERE table_name = :tableName`;
+            const result = await connection.execute(query, {tableName: tables[i]});
+            const tableCols = result.rows.map(row => row[0]);
+            
+            const q = `SELECT * FROM ${tables[i]}`;
+            const { rows } = await connection.execute(q);
+
+            const insertStatements = []
+            for (let j = 0; j < rows.length; j++) {
+                const rowData = rows[j];
+                let insertStatement = `INSERT INTO ${tables[i]} VALUES (`
+
+                for (let k = 0; k < rowData.length; k++) {
+                    insertStatement += `'${rowData[k]}${k < rowData.length - 1 ? `',` : `'`}`
+                }
+                insertStatement+=`);`
+
+                insertStatements.push(insertStatement);
+            }
+            
+            ret[tables[i]] = insertStatements;
+        }
+
+        return ret;
+    }).catch((err) => {
+        console.error('DB Error:', err);
+        throw err;
+    });
+}
