@@ -23,19 +23,20 @@ CREATE TABLE PostalLocation(
 	PRIMARY KEY (postalCode));
 
 CREATE TABLE Profile(
-    email VARCHAR2(255 CHAR),
-    pictureURL VARCHAR2(1000 CHAR),
-    gender CHAR(6),
-    age INT,
-    fullName VARCHAR2(255 CHAR) NOT NULL,
-    enabled CHAR(1) DEFAULT '1',
-    year INT,
-    major VARCHAR2(255 CHAR),
-    settings VARCHAR2(255 CHAR),
-    address VARCHAR2(255 CHAR),
-    postalCode CHAR(6),
-    PRIMARY KEY (email),
-    FOREIGN KEY (postalCode) REFERENCES PostalLocation(postalCode) ON DELETE SET NULL);
+	email VARCHAR2(255 CHAR),
+	pictureURL VARCHAR2(1000 CHAR),
+	gender CHAR(6),
+	age INT,
+	fullName VARCHAR2(255 CHAR) NOT NULL,
+	enabled CHAR(1) DEFAULT '1',
+	year INT,
+	major VARCHAR2(255 CHAR),
+	settings VARCHAR2(255 CHAR),
+	address VARCHAR2(255 CHAR),
+	postalCode CHAR(6),
+	username VARCHAR2(20 CHAR) UNIQUE,
+	PRIMARY KEY (email),
+	FOREIGN KEY (postalCode) REFERENCES PostalLocation(postalCode) ON DELETE SET NULL);
 
 CREATE TABLE BeenPaired(
 	profileA VARCHAR2(255 CHAR),
