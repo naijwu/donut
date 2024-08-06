@@ -284,27 +284,6 @@ export async function createTable() {
 export async function insertHobbies() {
     return await withOracleDB(async (conn) => {
         try {
-            console.log('inserting demo')
-
-            for (let i = 0; i < INSERT_ALL.length; i++) {
-                try {
-                    await conn.execute(INSERT_ALL[i], {}, {autoCommit: true})
-                } catch (err) {
-                    console.log(err);
-                }
-            }
-            return 'Successfully inserted demo';
-        } catch (err) {
-            console.log('error inserting demo', err)
-        }
-    }).catch((err) => {
-        return err;
-    })
-}
-
-export async function insertDemo() {
-    return await withOracleDB(async (conn) => {
-        try {
             console.log('inserting hobbies')
 
             for (let i = 0; i < INSERT_HOBBIES.length; i++) {
@@ -317,6 +296,27 @@ export async function insertDemo() {
             return 'Successfully inserted hobbies';
         } catch (err) {
             console.log('error inserting hobbies', err)
+        }
+    }).catch((err) => {
+        return err;
+    })
+}
+
+export async function insertDemo() {
+    return await withOracleDB(async (conn) => {
+        try {
+            console.log('inserting all data')
+
+            for (let i = 0; i < INSERT_ALL.length; i++) {
+                try {
+                    await conn.execute(INSERT_ALL[i], {}, {autoCommit: true})
+                } catch (err) {
+                    console.log(err);
+                }
+            }
+            return 'Successfully inserted all data';
+        } catch (err) {
+            console.log('error inserting all data', err)
         }
     }).catch((err) => {
         return err;
