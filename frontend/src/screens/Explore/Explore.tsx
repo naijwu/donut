@@ -44,6 +44,7 @@ export default function SuperadminScreen({
     const [attributes, setAttributes] = useState<string[]>([])
     const [selected, setSelected] = useState<string[]>([]);
     const [projected, setProjected] = useState<any>();
+    console.log(tables)
 
     async function getCols(table: string) {
         if (loading) return
@@ -118,9 +119,55 @@ export default function SuperadminScreen({
         }
     }
 
+    const [inserts, setInserts] = useState<any>([]);
+    async function handleGenerate() {
+        const tables = [
+            "POSTALLOCATION",
+            "PROFILE",
+            "BEENPAIRED",
+            "BLACKLIST",
+            "DONUT",
+            "ASSIGNEDTO",
+            "POST",
+            "PICTURE",
+            "MESSAGE",
+            "HOBBY",
+            "PROFILEHOBBY",
+            "NOTIFICATION",
+            "POSTREACTION",
+            "THREAD",
+            "THREADREACTION"
+        ];
+        if(loading) return
+        setLoading(true);
+        try {
+            const { data } = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/explore/all`, {
+                tables
+            }, {
+                withCredentials: true
+            });
+            
+            setInserts(data);
+            setLoading(false);
+        } catch (error) {
+            console.error(error);
+            setLoading(false);
+        }
+    }
+
     return (
         <div className={styles.wrapper}>
             <Title>Explore</Title>
+            <Subtitle>
+                Generate
+            </Subtitle>
+            <P>Generate insert statements for all data</P>
+            <Button onClick={handleGenerate} size="medium" variant="solid">
+                Generate
+            </Button>
+            {Object.keys(inserts)?.map((k) => {
+                return inserts[k]?.map((statement: string) => <div>{statement}</div>)
+            })}
             <Subtitle>
                 Find your partner
             </Subtitle>

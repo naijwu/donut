@@ -4,10 +4,25 @@ import {
     getTableNames, 
     getColumnNames,
     projectColumns,
-    profileCount
+    profileCount,
+    generateInsertStatements
 } from '../services/exploreService.js';
 
 const router = express.Router();
+
+router.post('/all', auth, async (req, res) => {
+    try {
+        const { tables } = req.body;
+        const statements = await generateInsertStatements(tables);
+
+        res.status(200).json(statements)
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: `Error finding partner`
+        })
+    }
+});
 
 router.get('/tables', auth, async (req, res) => {
     try {
@@ -15,7 +30,7 @@ router.get('/tables', auth, async (req, res) => {
 
         res.status(200).json(tables)
     } catch (error) {
-        console.log(err);
+        console.log(error);
         res.status(500).json({
             message: `Error finding partner`
         })
@@ -28,7 +43,7 @@ router.get('/:table/columns', auth, async (req, res) => {
         const columns = await getColumnNames(table);
         res.json(columns);
     } catch (error) {
-        console.log(err);
+        console.log(error);
         res.status(500).json({
             message: `Error finding partner`
         })

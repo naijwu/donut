@@ -24,7 +24,9 @@ export async function getThreads(donutID, postOrder) {
                 WHERE 
                     t.donutID=:donutID AND 
                     t.postOrder=:postOrder AND
-                    t.author=p.email`, 
+                    t.author=p.email
+                ORDER BY
+                    t.createdAt ASC`, 
                 {
                     donutID,
                     postOrder
@@ -226,7 +228,9 @@ export async function filterThreads(donutID, postOrder, filterNum) {
                 GROUP BY 
                     t.threadID, t.author, t.donutID, t.postOrder, t.parent, t.text, t.createdAt, p.email, p.pictureURL, p.fullName
                 HAVING 
-                    COUNT(r.threadID) >= :filterNum`, 
+                    COUNT(r.threadID) >= :filterNum
+                ORDER BY
+                    t.createdAt ASC`, 
                 {
                     donutID,
                     postOrder,

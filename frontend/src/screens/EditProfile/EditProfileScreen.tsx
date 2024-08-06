@@ -113,7 +113,10 @@ export default function EditProfile({
     }
     async function handleSearch() {
         const isValid = validateSearch();
-        if(!isValid )return
+        if(!isValid ){
+            alert('Bad search')
+            return
+        }
         try {
             const { data } = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/profile/hobbies/search`, {
                 search: hobbySearch
@@ -208,12 +211,10 @@ export default function EditProfile({
                         </P>
                         <select 
                           name="gender"
-                          value={editedProfile?.gender || 'unspecified'} 
+                          value={editedProfile?.gender} 
                           onChange={e=>{handleEditField('gender', e.target.value);console.log(e.target.value)}}>
                             <option value="male">Male</option>
                             <option value="female">Female</option>
-                            <option value="unspecified">Unspecified</option>
-                            <option value="other">Other</option>
                         </select>
                     </div>
                     <div className={styles.formControl}>
