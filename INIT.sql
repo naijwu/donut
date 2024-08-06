@@ -148,3 +148,18 @@ CREATE TABLE ThreadReaction(
     PRIMARY KEY (profile, threadID, emoji),
     FOREIGN KEY (profile) REFERENCES Profile(email) ON DELETE CASCADE,
 	FOREIGN KEY (threadID) REFERENCES Thread(threadID) ON DELETE CASCADE);
+
+
+INSERT INTO Hobby VALUES ('Hiking', 'Exploring nature by walking.', 'Sports');
+INSERT INTO Hobby VALUES ('Anime', 'Discussing Japanese animation and manga.', 'Anime');
+INSERT INTO Hobby VALUES ('Driving', 'Racing or commuting by vehicle.', 'Other');
+INSERT INTO Hobby VALUES ('Investing', 'Buying equities.', 'Other');
+INSERT INTO Hobby VALUES ('Running', 'Walking fast for fitness and enjoyment.', 'Sports');
+INSERT INTO Hobby VALUES ('Singing', 'Enjoying vocal music.', 'Music');
+INSERT INTO Hobby VALUES ('Building', 'Creating various projects.', 'Other');
+INSERT INTO Hobby VALUES ('Weightlifting', 'Lifting weights.', 'Sports');
+INSERT INTO Hobby VALUES ('Drawing', 'Drawing some pictures.', 'Art');
+INSERT INTO Hobby VALUES ('Painting', 'Painting some paintings.', 'Art');
+INSERT INTO Hobby VALUES ('League Of Legends', 'I hate my life.', 'Gaming');
+INSERT INTO Hobby VALUES ('CSGO', 'Pew pew.', 'Gaming');
+INSERT INTO Hobby VALUES ('Harry Potter', 'Expelliarmus!', 'Media');

@@ -142,6 +142,7 @@ export async function getAllPosts() {
                     }
 
                     postsData.push({
+                        donutID: pRow[0],
                         title: pRow[1],
                         postOrder: pRow[2],
                         description: pRow[3],

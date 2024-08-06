@@ -33,6 +33,8 @@ export function Post({
         setActiveIndex(activeIndex - 1);
     }
 
+    console.log(data)
+
     return (
         <div className={styles.postContainer}>
             <div className={styles.tag}>
