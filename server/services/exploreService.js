@@ -103,7 +103,7 @@ export async function generateInsertStatements(tables) {
                 for (let k = 0; k < rowData.length; k++) {
                     insertStatement += !rowData[k] ? `NULL${k < rowData.length - 1 ? `,` : ``}` : 
                         typeof rowData[k] == 'number'
-                            ? rowData[k]
+                            ? `${rowData[k]}${k < rowData.length - 1 ? `,` : ``}`
                             : typeof (rowData[k])?.getMonth == 'function' 
                                 ? `TO_DATE('${sqlifyDate(rowData[k])}','yyyy-mmm-dd')${k < rowData.length - 1 ? `,` : ``}`
                                 : `'${rowData[k]}${k < rowData.length - 1 ? `',` : `'`}`

@@ -113,7 +113,10 @@ export default function EditProfile({
     }
     async function handleSearch() {
         const isValid = validateSearch();
-        if(!isValid )return
+        if(!isValid ){
+            alert('Bad search')
+            return
+        }
         try {
             const { data } = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/profile/hobbies/search`, {
                 search: hobbySearch
