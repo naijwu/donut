@@ -3,6 +3,7 @@ import express from 'express'
 import {
     createTable,
     dropAllTables,
+    insertDemo,
     insertHobbies,
     makeRandomPairings
 } from '../services/queryService.js'
@@ -52,7 +53,23 @@ router.post('/inserthobbies', async(req, res) => {
             message: err
         })
     }
+});
+
+router.post('/insertdemo', async(req, res) => {
+    try {
+        const result = await insertDemo();
+
+        res.status(200).json({
+            message: `inserted`
+        })
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: err
+        })
+    }
 })
+
 
 router.post('/pair', async(req, res) => {
     try {
