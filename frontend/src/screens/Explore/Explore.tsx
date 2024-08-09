@@ -26,11 +26,15 @@ export default function SuperadminScreen({
             const { data } = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/profile/findpartner/${user.email}`, {
                 withCredentials: true
             })
-            setPartner({
-                email: data[0][0],
-                fullName: data[0][1],
-                pictureURL: data[0][2]
-            })
+            if (data[0]) {
+                setPartner({
+                    email: data[0][0],
+                    fullName: data[0][1],
+                    pictureURL: data[0][2]
+                })
+            } else {
+                alert('no partner found!')
+            }
             setFinding(false);
         } catch (error) {
             console.error(error);

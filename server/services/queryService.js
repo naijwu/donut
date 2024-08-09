@@ -72,7 +72,7 @@ const INSERT_ALL = [
     `INSERT INTO Notification VALUES ('8862445f-bf8b-4d97-9061-7cb9d6895536', TO_DATE('06-AUG-2024'), 'Added to donut', 'upnaijwu@gmail.com')`,
     `INSERT INTO BEENPAIRED VALUES ('davidd.lim0528@gmail.com','upnaijwu@gmail.com',TO_DATE('06-AUG-2024'))`,
     `INSERT INTO BEENPAIRED VALUES ('daviddlim11@gmail.com','jaewuchun@gmail.com',TO_DATE('06-AUG-2024'))`,
-    `INSERT INTO ASSIGNEDTO VALUES ('7107b36d-235b-475c-93a0-32f3be6bb375','daviddlim11@gmail.com')`,
+    `INSERT INTO ASSIGNEDTO VALUES ('7107b36d-235b-475c-93a0-32f3be6bb375','upnaijwu@gmail.com')`,
     `INSERT INTO ASSIGNEDTO VALUES ('7107b36d-235b-475c-93a0-32f3be6bb375','jaewuchun@gmail.com')`,
     `INSERT INTO ASSIGNEDTO VALUES ('cdf1e019-2675-4f29-b77b-2f59e6f08574','davidd.lim0528@gmail.com')`,
     `INSERT INTO ASSIGNEDTO VALUES ('cdf1e019-2675-4f29-b77b-2f59e6f08574','upnaijwu@gmail.com')`,

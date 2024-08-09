@@ -1,3 +1,7 @@
+.wrapper {
+  padding-bottom: 6.1rem;
+}
+
 .container {
   padding-top: 1rem;
   display: flex;
