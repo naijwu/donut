@@ -174,7 +174,7 @@ INSERT INTO PROFILE VALUES ('daviddlim11@gmail.com','https://lh3.googleuserconte
 INSERT INTO PROFILE VALUES ('jaewuchun@gmail.com','https://lh3.googleusercontent.com/a/ACg8ocLg2Dv28OPh2nV0uWRhctqkHMTSpuEybGqCtFc-jxDmP8OhuaoqMA=s96-c','male',21,'Jae Wu Chun','1',3,'CMS',NULL,NULL,NULL,'jaewuchun');
 INSERT INTO PROFILE VALUES ('upnaijwu@gmail.com','https://lh3.googleusercontent.com/a/ACg8ocJSvATw0FirEprPtEF0jh3i40XFTQuELR8BfAcEkI1ZOXPI4lA=s96-c','male',21,'Lebron James','1',3,'genderstudies',NULL,NULL,NULL,'lebron');
 
-INSERT INTO DONUT VALUES ('7107b36d-235b-475c-93a0-32f3be6bb375',TO_DATE('06-AUG-2024'),'0',NULL,NULL,NULL);
+INSERT INTO DONUT VALUES ('7107b36d-235b-475c-93a0-32f3be6bb375',TO_DATE('05-AUG-2024'),'0',NULL,NULL,NULL);
 INSERT INTO DONUT VALUES ('cdf1e019-2675-4f29-b77b-2f59e6f08574',TO_DATE('06-AUG-2024'),'0',NULL,NULL,NULL);
 INSERT INTO DONUT VALUES ('ed201242-3781-4fda-805b-af3914cbbaf9',TO_DATE('06-AUG-2024'),'0',NULL,NULL,NULL);
 INSERT INTO DONUT VALUES ('e10f602d-2b15-4cf9-8d1d-183eb9b4cada',TO_DATE('06-AUG-2024'),'0',NULL,NULL,NULL);
