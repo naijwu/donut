@@ -1,6 +1,6 @@
 import { withOracleDB } from "../dbConfig.js";
 import { v4 as uuidv4 } from 'uuid';
-import { sqlifyDatetime } from "../utils/helpers.js";
+import { sqlifyDate } from "../utils/helpers.js";
 
 /**
  * 
@@ -38,9 +38,10 @@ export async function insertNotification(receiver, message) {
 
     return await withOracleDB(async (connection) => {
         try {
-            const time = sqlifyDatetime(new Date());
+            const time = sqlifyDate(new Date());
             const notificationID = uuidv4();
 
+            console.log(notificationID);
             await connection.execute(
                 `INSERT INTO Notification (notificationID, time, message, receiver) VALUES (:notificationID, :time, :message, :receiver)`, 
                 {

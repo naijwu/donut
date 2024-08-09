@@ -74,6 +74,18 @@ export default function DonutChatScreen({
                 withCredentials: true
             })
 
+            // Determine the receiver of the message
+            const receiverEmail = Object.keys(possibleSenders).find(email => email !== message.sender);
+    
+            // Send a notification to the receiver
+            if (receiverEmail) {
+                await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/notifications/${receiverEmail}/${possibleSenders[message.sender].fullName} sent you ${message.message}`, {
+                    message
+                }, {
+                    withCredentials: true
+                })
+            }
+
             setLoading(false);
         } catch (err) {
             console.error(err);
