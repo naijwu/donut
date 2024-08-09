@@ -71,10 +71,12 @@ export default function EditProfile({
             }, {
                 withCredentials: true
             })
+
             console.log('Saved');
             setLoading(false);
             router.push(`/profile/${user.email}`)
         } catch (err) {
+            alert("Error saving profile! Your username may be taken!");
             console.error(err)
             setLoading(false);
         }

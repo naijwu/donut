@@ -100,17 +100,39 @@ router.patch('/:email', auth, async (req, res) => {
          */
         const { profile, hobbies } = req.body;
 
-        await updateProfile(email, profile);
-        await deleteHobbiesOfUser(email);
-        await createHobbiesOfUser(email, hobbies);
-        
-        res.status(200).json({
+        // Update profile
+        const updateProfileRes = await updateProfile(email, profile);
+        if (!updateProfileRes.success) {
+            return res.status(400).json({
+                message: `Failed to update profile: ${updateProfileRes.message}`
+            });
+        }
+
+        // Delete existing hobbies
+        const deleteHobbiesOfUserRes = await deleteHobbiesOfUser(email);
+        if (!deleteHobbiesOfUserRes.success) {
+            return res.status(400).json({
+                message: 'Failed to delete existing hobbies'
+            });
+        }
+
+        // Create new hobbies
+        const createHobbiesOfUserRes = await createHobbiesOfUser(email, hobbies);
+        if (!createHobbiesOfUserRes.success) {
+            return res.status(400).json({
+                message: 'Failed to create new hobbies'
+            });
+        }
+
+        // If all operations succeed, return success message
+        return res.status(200).json({
             message: 'Successfully updated profile'
-        })
+        });
+        
     } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: `Error updating profile ${email}`
+            message: `Error updating profile`
         })
     }
 });

@@ -124,9 +124,13 @@ export async function updateProfile(email, profileData) {
                 WHERE email = :email`, 
                 { ...profileData, email }
             );
-            return true;
+            return { success: true, message: 'Profile updated!' };
         } catch(err) {
             console.log('err: ', err);
+            if (err && err.errorNum === 1) {  // ORA-00001 for unique constraint violation
+                return { success: false, message: 'Username already exists.' };
+            }
+            return { success: false, message: 'Error saving profile' };
         }
     }).catch((err) => {
         return err;
@@ -145,9 +149,10 @@ export async function deleteHobbiesOfUser(email) {
                 `DELETE FROM ProfileHobby WHERE profile = :email`, 
                 { email }
             );
-            return true;
+            return { success: true };
         } catch(err) {
             console.log('err: ', err);
+            return { success: false, message: 'Error deleting hobbies' };
         }
     }).catch((err) => {
         return err;
@@ -169,9 +174,9 @@ export async function createHobbiesOfUser(email, hobbies) {
                     { email, hobby: hobbies[i] }
                 );
             }
-            return true;
+            return { success: true };
         } catch(err) {
-            console.log('err: ', err);
+            return { success: false, message: 'Error saving hobbies' };
         }
     }).catch((err) => {
         return err;
