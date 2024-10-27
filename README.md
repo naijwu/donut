@@ -10,12 +10,12 @@ UBC donuts makes it easy for you to make new friends through assigned hangouts, 
 - Node/Express
 
 ### Libraries/APIs
-- oauth + google
-- (web) pushAPI for notifications
-- cron/scheduler
+- oauth2.0 + google -> [view commit](https://github.com/naijwu/donut/commit/56050168f4bbe2c6a9dd1182b818ff8da63395a9)
+- (web) pushAPI for notifications -> [view commit](https://github.com/naijwu/donut/commit/41717a2f3bbe7d73ed1eeaf3bbb1e380ce8ff351)
+- ~cron/scheduler~
 - oracledb
-- openai
-- websockets?
+- ~openai~
+- websockets -> [view commit](https://github.com/naijwu/donut/commit/8a93afc77551efc21514066338ce42aec4c1999a)
 
 ## Dev roadmap
 ### Minimum viability (MVP)
